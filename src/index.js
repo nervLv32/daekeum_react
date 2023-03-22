@@ -4,12 +4,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import GlobalStyle from "./components/global/GlobalStyle";
+import GlobalFonts from "./components/global/GlobalFonts";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <GlobalStyle />
+      <GlobalFonts />
       <App />
     </BrowserRouter>
   </React.StrictMode>
