@@ -1,12 +1,19 @@
 import {rootRouter} from './RouterList'
 
-const RootRouter = rootRouter.map((item) => {
+const RootRouter = rootRouter.map((layoutRoute) => {
   return {
-    path: item.alias,
-    children: item.child?.map((subItem) => {
+    path: layoutRoute.alias,
+    element: layoutRoute.layout,
+    children: layoutRoute.child?.map((oneDepth) => {
       return {
-        path: subItem.alias,
-        element: subItem.element
+        path: oneDepth.alias,
+        element: oneDepth.element,
+        children: oneDepth.child?.map((secondDepth) => {
+          return {
+            path: secondDepth.alias,
+            element: secondDepth.element,
+          }
+        })
       }
     })
   }

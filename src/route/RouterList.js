@@ -1,9 +1,17 @@
-import HomeMain from "../pages/HomeMain";
+import Home from "../pages/Home";
 
-const Home = [
-  {title: '예치금 입금 현황', alias: '', path: '/', element: <HomeMain />},
+import Receipt from "../pages/Receipt";
+import DefaultLayout from "../layouts/DefaultLayout";
+
+const ReceiptList = [
+  {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt />},
+]
+
+const userRouter = [
+  {title: '홈', alias: '', path: '', element: <Home />},
+  {title: '접수', alias: 'receipt', path: 'receipt', child: ReceiptList},
 ]
 
 export const rootRouter = [
-  {title: '홈', alias: '', path: '', child: Home},
+  {title: '홈', alias: '', path: '', layout: <DefaultLayout />, child: userRouter},
 ]
