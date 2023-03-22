@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Title from "./item/Title";
+import UserInfo from "./item/UserInfo";
 
 const TopNaviWrap = styled.div`
   position: relative;
@@ -14,7 +15,7 @@ const TopNaviWrap = styled.div`
 const TopNavigation = () => {
   return<TopNaviWrap>
     <Title />
-
+    <UserInfo/>
   </TopNaviWrap>
 }
 

@@ -7,6 +7,7 @@ const TitleWrap = styled.div`
   text-align: center;
   color: #F7F7F7;
   align-items: center;
+  margin: 10px 0 20px;
 `
 
 const InfoWrap = styled.div`
@@ -23,10 +24,10 @@ const InfoWrap = styled.div`
 `
 
 const P = styled.p`
-  flex: 3;
+  flex: 2;
   display: inline-block;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 17px;
   line-height: 25px;
   text-align: center;
