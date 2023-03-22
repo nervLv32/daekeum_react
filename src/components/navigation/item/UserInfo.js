@@ -5,24 +5,14 @@ import ProfileImage from '../../../assets/dummyImage/profile.jpeg'
 import Typo from "../../atom/Typo";
 import {useEffect, useState} from "react";
 
-const UserInfoWrap = styled.div`
-  display: flex;
-`
-
-const Blank = styled.div`
-  flex: 1
-`
-
 const InfoWrap = styled.div`
-  flex: 12;
-  min-width: 180px;
-  margin: 0 auto;
+  padding: 30px;
   background: #0C1D87;
   border-radius: 20px;
+  filter: drop-shadow(3px 3px 15px #0C1D87);
 `
 
 const Welcome = styled.div`
-  margin: 30px;
   height: 60px;
   p{
     padding: 3px;
@@ -54,17 +44,13 @@ const UserInfo = () => {
     setUser({user_name: '한소희'})
   },[])
 
-  return<UserInfoWrap>
-    <Blank />
-    <InfoWrap>
-      <Welcome>
-        <Image src={ProfileImage} />
-        <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'} color={'rgba(239, 242, 255, 0.7)'}/>
-        <Typo text={`${user.user_name} 님`} fontSize={'19px'} fontWeight={'700'}/>
-      </Welcome>
-    </InfoWrap>
-    <Blank />
-  </UserInfoWrap>
+  return<InfoWrap>
+    <Welcome>
+      <Image src={ProfileImage} />
+      <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'} color={'rgba(239, 242, 255, 0.7)'}/>
+      <Typo text={`${user.user_name} 님`} fontSize={'19px'} fontWeight={'700'}/>
+    </Welcome>
+  </InfoWrap>
 }
 
 export default UserInfo

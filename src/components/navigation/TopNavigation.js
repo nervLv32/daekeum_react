@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import Title from "./item/Title";
 import UserInfo from "./item/UserInfo";
+import MainBtnWrap from "./item/MainBtnWrap";
+import InfoWrap from "../atom/InfoWrap";
 
 const TopNaviWrap = styled.div`
   position: relative;
@@ -15,7 +17,10 @@ const TopNaviWrap = styled.div`
 const TopNavigation = () => {
   return<TopNaviWrap>
     <Title />
-    <UserInfo/>
+    <InfoWrap>
+      <UserInfo/>
+      <MainBtnWrap />
+    </InfoWrap>
   </TopNaviWrap>
 }
 
