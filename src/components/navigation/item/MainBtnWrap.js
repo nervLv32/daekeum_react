@@ -14,6 +14,8 @@ const BtnGroup = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  max-width: 500px;
+  margin: 0 auto;
 `
 const BtnWrap = styled.div`
   position: relative;
