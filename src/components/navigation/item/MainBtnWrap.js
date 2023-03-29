@@ -15,21 +15,29 @@ const BtnGroup = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
 `
-
 const BtnWrap = styled.div`
-  min-width: 33%;
-  padding: 50px;
+  position: relative;
+  width: 33%;
+  max-width: 150px;
+  padding: 20px;
   text-align: center;
-
+`
+const Inner = styled.div`
+  position: relative;
+  &:after{
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
   p {
     margin-top: 10px;
   }
 `
 
 const Btn = styled.div`
-  position: relative;
-  height: 100px;
-  width: 100px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
   background: #FFFFFF;
   box-shadow: 3px 3px 15px #0C1D87;
@@ -40,8 +48,8 @@ const Btn = styled.div`
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
     fill: #1F319D;
-    width: 60px;
-    height: 60px;
+    width: 60%;
+    height: 60%;
   }
 `
 
@@ -50,39 +58,52 @@ const MainBtnWrap = () => {
   return <BtnGroup>
     {/* 메뉴 - 1 */}
     <BtnWrap>
-      <Btn> <CheckCompIco /> </Btn>
+      <Inner>
+        <Btn> <CheckCompIco /> </Btn>
+      </Inner>
       <p>접수메뉴</p>
     </BtnWrap>
 
     {/* 메뉴 - 2 */}
     <BtnWrap>
-      <Btn> <RegisIco /> </Btn>
+      <Inner>
+        <Btn> <RegisIco /> </Btn>
+      </Inner>
       <p>통합등록</p>
     </BtnWrap>
 
     {/* 메뉴 - 3 */}
     <BtnWrap>
-      <Btn> <InvIco /> </Btn>
+      <Inner>
+        <Btn> <InvIco /> </Btn>
+      </Inner>
       <p>재고</p>
     </BtnWrap>
 
     {/* 메뉴 - 4 */}
     <BtnWrap>
-      <Btn> <DocumentIco /> </Btn>
+      <Inner>
+        <Btn> <DocumentIco /> </Btn>
+      </Inner>
       <p>서류상신</p>
     </BtnWrap>
 
     {/* 메뉴 - 5 */}
     <BtnWrap>
-      <Btn> <SaleIco /> </Btn>
+      <Inner>
+        <Btn> <SaleIco /> </Btn>
+      </Inner>
       <p>영업등록</p>
     </BtnWrap>
 
     {/* 메뉴 - 6 */}
     <BtnWrap>
-      <Btn> <MoreViewIco /> </Btn>
+      <Inner>
+        <Btn> <MoreViewIco /> </Btn>
+      </Inner>
       <p>더보기</p>
     </BtnWrap>
+
   </BtnGroup>
 }
 
