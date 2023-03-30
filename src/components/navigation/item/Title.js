@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import {AccountIco, HomeIco, MenuIco} from "../../../assets/icon/Svg";
+import {useRecoilState} from "recoil";
+import menuAtom from "../../../recoil/menuAtom";
+import {useEffect} from "react";
 
 const TitleWrap = styled.div`
   width: 100%;
@@ -34,6 +37,9 @@ const P = styled.p`
 
 `
 const Title = () => {
+
+  const [menuState, setMenuState] = useRecoilState(menuAtom)
+
   return<TitleWrap>
 
     <InfoWrap>
@@ -44,7 +50,9 @@ const Title = () => {
 
     <InfoWrap>
       <AccountIco />
-      <MenuIco />
+      <a onClick={() => setMenuState({isOpen: !menuState.isOpen})}>
+        <MenuIco/>
+      </a>
     </InfoWrap>
 
   </TitleWrap>

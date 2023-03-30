@@ -4,6 +4,8 @@ import styled from "styled-components";
 import ProfileImage from '../../../assets/dummyImage/profile.jpeg'
 import Typo from "../../atom/Typo";
 import {useEffect, useState} from "react";
+import {useRecoilState} from "recoil";
+import userAtom from "../../../recoil/userAtom";
 
 const InfoWrap = styled.div`
   padding: 30px;
@@ -36,19 +38,17 @@ const Image = styled.div`
 `
 const UserInfo = () => {
 
-  const [user, setUser] = useState({
-    user_name: ''
-  })
+  const [user, setUser] = useRecoilState(userAtom)
 
   useEffect(() => {
-    setUser({user_name: '한소희'})
+    setUser({userName: '한소희'})
   },[])
 
   return<InfoWrap>
     <Welcome>
       <Image src={ProfileImage} />
       <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'} color={'rgba(239, 242, 255, 0.7)'}/>
-      <Typo text={`${user.user_name} 님`} fontSize={'19px'} fontWeight={'700'}/>
+      <Typo text={`${user.userName} 님`} fontSize={'19px'} fontWeight={'700'}/>
     </Welcome>
   </InfoWrap>
 }

@@ -8,7 +8,7 @@ const Navigation = styled.div`
   justify-content: center;
   padding: 10px;
 
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 80px;
   left: 0;

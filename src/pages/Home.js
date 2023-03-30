@@ -38,6 +38,7 @@ const Home = () => {
     {
       dummyData.map((item,key) =>{
         return <HomeListCard
+          key={key}
           no={item.no}
           date={item.data}
           company={item.company}
