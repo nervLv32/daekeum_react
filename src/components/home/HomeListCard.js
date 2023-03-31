@@ -25,8 +25,9 @@ const HomeListCard = ({
                         regionFirst,
                         regionSecond,
                         site,
+                        onClick
                       }) => {
-  return <CardBody>
+  return <CardBody onClick={onClick}>
     <Typo text={'NO.'} color={'#1F319D'}/> <Typo text={no} />
     <Typo text={'Date.'} color={'#1F319D'} /> <Typo text={moment(date).format('YYYY-MM-DD')} />
     <Typo text={'업체명'} color={'#1F319D'}/> <Typo text={company} />

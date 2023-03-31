@@ -82,6 +82,7 @@ const TitModalStyled = styled.div`
 const GlobalModalComponent = () => {
 
   const [modalDataState, setModalDataState] = useRecoilState(modalState);
+  console.log(modalDataState);
   const { isOpen } = modalDataState
   const { closeModal } = useModal();
 
@@ -103,7 +104,9 @@ const GlobalModalComponent = () => {
         <CloseModalStyled onClick={closeModal}>
           x마크
         </CloseModalStyled>
-        <ModalDetailsStyled>{getModalComponent()}</ModalDetailsStyled>
+        <ModalDetailsStyled>
+          {modalDataState.content}
+        </ModalDetailsStyled>
       </ModalCardStyled>
     </ModalWrapStyled>
   );
