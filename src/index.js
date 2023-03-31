@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import GlobalStyle from "./components/global/GlobalStyle";
 import {RecoilRoot} from "recoil";
+import GlobalModal from './components/global/GlobalModal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,6 +13,7 @@ root.render(
       <BrowserRouter>
         <GlobalStyle />
         <RecoilRoot>
+          <GlobalModal />
           <App />
         </RecoilRoot>
       </BrowserRouter>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import HomeListCard from "../components/home/HomeListCard";
+import { useModal } from "../hooks/useModal";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -33,8 +34,16 @@ const dummyData = [
   }
 ]
 const Home = () => {
+  const { openModal } = useModal();
+  const modalData = {
+    title: 'Modal Title',
+    content: 'Modal Content',
+    callback: () => alert('Modal Callback()'),
+  };
+
   return<HomeWrap>
     고객접수 상황
+    {/* <button onClick={() => openModal(modalData)}>여기클릭시 모달</button> */}
     {
       dummyData.map((item,key) =>{
         return <HomeListCard
