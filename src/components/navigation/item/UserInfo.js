@@ -3,7 +3,7 @@ import styled from "styled-components";
 //DummyImage
 import ProfileImage from '../../../assets/dummyImage/profile.jpeg'
 import Typo from "../../atom/Typo";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useRecoilState} from "recoil";
 import userAtom from "../../../recoil/userAtom";
 
@@ -16,14 +16,15 @@ const InfoWrap = styled.div`
 
 const Welcome = styled.div`
   height: 60px;
-  p{
+
+  p {
     padding: 3px;
   }
 `
 
 const Image = styled.div`
   box-sizing: border-box;
-  
+
   width: 60px;
   height: 100%;
   float: left;
@@ -41,14 +42,19 @@ const UserInfo = () => {
   const [user, setUser] = useRecoilState(userAtom)
 
   useEffect(() => {
-    setUser({userName: '한소희'})
-  },[])
+    setUser({
+      auth: {
+        userName: '한소희'
+      }
+    })
+  }, [])
 
-  return<InfoWrap>
+  return <InfoWrap>
     <Welcome>
-      <Image src={ProfileImage} />
-      <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'} color={'rgba(239, 242, 255, 0.7)'}/>
-      <Typo text={`${user.userName} 님`} fontSize={'19px'} fontWeight={'700'}/>
+      <Image src={ProfileImage}/>
+      <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'}
+            color={'rgba(239, 242, 255, 0.7)'}/>
+      <Typo text={`${user.auth.userName} 님`} fontSize={'19px'} fontWeight={'700'}/>
     </Welcome>
   </InfoWrap>
 }

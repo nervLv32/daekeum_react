@@ -27,7 +27,7 @@ const Navigation = () => {
 
   return<NavigationWrap>
     <p>
-      {user.userName}
+      {user.auth.userName}
     </p>
     <Ul>
       <li>접수메뉴</li>
