@@ -27,7 +27,6 @@ export const AuthRouterList = [
   {title: '로그인', alias: '', path: '', element: <Login/>},
 ]
 
-export const rootRouter = [
+export const HomeRouterList = [
   {title: '홈', alias: '', path: '', layout: <DefaultLayout/>, child: bottomNavigationRouterList},
-  {title: '인증', alias: 'auth', path: '/auth', layout: <AuthLayout/>, child: AuthRouterList},
 ]

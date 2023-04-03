@@ -1,12 +1,22 @@
-import {rootRouter} from './RouterList'
+import {AuthRouterList, HomeRouterList} from './RouterList'
 import ProtectRouter from "./ProtectRouter";
 
-const RootRouter = rootRouter.map((layoutRoute) => {
-  return {
-    path: '',
-    element: <ProtectRouter />,
-    children: {
-      // 레이아웃 설정
+const AuthRouter = {
+  path: '/auth',
+  children: AuthRouterList.map((route) => {
+    return {
+      path: route.alias,
+      element: route.element
+    }
+  })
+}
+
+
+const HomeRouter = {
+  path: '',
+  element: <ProtectRouter/>,
+  children :[HomeRouterList.map((layoutRoute) => {
+    return {
       path: layoutRoute.alias,
       element: layoutRoute.layout,
       children: layoutRoute.child?.map((oneDepth) => {
@@ -24,7 +34,12 @@ const RootRouter = rootRouter.map((layoutRoute) => {
         }
       })
     }
-  }
-})
+  })]
+}
+
+const RootRouter = [
+  HomeRouter,
+  AuthRouter
+]
 
 export default RootRouter

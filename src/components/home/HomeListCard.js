@@ -12,11 +12,11 @@ const CardBody = styled.div`
   font-size: 20px;
 `
 
-const No = styled.div`
+/*const No = styled.div`
   p{
     float: left;
   }
-`
+`*/
 
 const HomeListCard = ({
                         no,
