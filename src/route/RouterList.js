@@ -9,18 +9,38 @@ import {HomeIco, InvIco, ProdIco, ReceiptIco, RegisIco, SaleIco} from "../assets
 import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
 import Join from "../pages/auth/Join";
+import Regis from "../pages/Regis";
+import Inventory from "../pages/Inventory";
+import Report from "../pages/Report";
+import Sale from "../pages/Sale";
 
 const ReceiptList = [
-  {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt/>},
+  {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt />},
+]
+
+const RegisList = [
+  {title: '등록메인', alias: '', path: 'regis/', element: <Regis />},
+]
+
+const InventoryList = [
+  {title: '재고메인', alias: '', path: 'inventory/', element: <Inventory />},
+]
+
+const ReportList = [
+  {title: '상신메인', alias: '', path: 'report/', element: <Report />},
+]
+
+const SaleList = [
+  {title: '영업메인', alias: '', path: 'sale/', element: <Sale />},
 ]
 
 export const bottomNavigationRouterList = [
-  {title: '홈', alias: '', path: '', icon: <HomeIco/>, element: <Home/>},
+  {title: '홈', alias: '/', path: '/', icon: <HomeIco/>, element: <Home/>},
   {title: '접수', alias: 'receipt', path: 'receipt', icon: <ReceiptIco/>, child: ReceiptList},
-  {title: '등록', alias: 'receipt', path: 'receipt', icon: <RegisIco/>, child: ReceiptList},
-  {title: '재고', alias: 'receipt', path: 'receipt', icon: <InvIco/>, child: ReceiptList},
-  {title: '상신', alias: 'receipt', path: 'receipt', icon: <ProdIco/>, child: ReceiptList},
-  {title: '영업', alias: 'receipt', path: 'receipt', icon: <SaleIco/>, child: ReceiptList},
+  {title: '등록', alias: 'regis', path: 'regis', icon: <RegisIco/>, child: RegisList},
+  {title: '재고', alias: 'inventory', path: 'inventory', icon: <InvIco/>, child: InventoryList},
+  {title: '상신', alias: 'report', path: 'report', icon: <ProdIco/>, child: ReportList},
+  {title: '영업', alias: 'sale', path: 'sale', icon: <SaleIco/>, child: SaleList},
 ]
 
 export const AuthRouterList = [

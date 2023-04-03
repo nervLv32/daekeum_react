@@ -11,6 +11,7 @@ const Navigation = styled.div`
   position: fixed;
   width: 100vw;
   height: 80px;
+  padding: 15px;
   left: 0;
   bottom: 0;
 
@@ -20,33 +21,32 @@ const Navigation = styled.div`
 
 const NavStyle = styled(NavLink)`
   position: relative;
+  display: flex;
   flex: 1;
-  margin: 5px;
-  & > svg {
-    /* home */
-    pointer-events: none;
-    position: absolute;
-    left: 50%;
-    top: 20%;
-    fill:#9DA2AE;
-    transform: translateX(-50%) translateY(-50%);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 2px;;
+  }
+  & i > svg {
+    fill: #9DA2AE;
   }
   & > p {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 35%;
-    display: inline-block;
-    color: #1C1B1F;
-
     font-family: 'Noto Sans KR';
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
     line-height: 17px;
+    color: #9DA2AE;
   }
   &.active{
-    & > svg {
+    & i > svg {
       fill: #1F319D;
     }
     & > p {
@@ -62,7 +62,8 @@ const BottomNavigation = () => {
       {
         bottomNavigationRouterList.map((item, key) => {
           return <NavStyle key={key} to={item.path}>
-            {item.icon}
+            <i>{item.icon}
+            </i>
             <p>{item.title}</p>
           </NavStyle>
         })
