@@ -15,11 +15,13 @@ const AuthRouter = {
 const HomeRouter = {
   path: '',
   element: <ProtectRouter/>,
-  children :[HomeRouterList.map((layoutRoute) => {
+  children :HomeRouterList.map((layoutRoute) => {
+    console.log(layoutRoute)
     return {
       path: layoutRoute.alias,
       element: layoutRoute.layout,
       children: layoutRoute.child?.map((oneDepth) => {
+        console.log(oneDepth)
         //하단탭
         return {
           path: oneDepth.alias,
@@ -34,7 +36,7 @@ const HomeRouter = {
         }
       })
     }
-  })]
+  })
 }
 
 const RootRouter = [

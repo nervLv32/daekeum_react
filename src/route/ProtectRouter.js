@@ -8,7 +8,7 @@ const ProtectRouter = () => {
   console.log('tet')
 
   return<>
-    {auth.isLogin ? <Outlet/> : <Navigate to={'/auth'}/>}
+    {!auth.isLogin ? <Outlet/> : <Navigate to={'/auth'}/>}
   </>
 }
 
