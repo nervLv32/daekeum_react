@@ -10,7 +10,7 @@ const TitleWrap = styled.div`
   text-align: center;
   color: #F7F7F7;
   align-items: center;
-  margin: 10px 0 20px;
+  margin-top: 10px;
 `
 
 const InfoWrap = styled.div`

@@ -10,17 +10,14 @@ const TopNaviWrap = styled.div`
   /* Primary */
 
   background: #1F319D;
-  border-radius:0 0 20px 20px;
+  /* border-radius:0 0 20px 20px; */
   padding: 10px 10px 20px;
   color: white;
 `
 const TopNavigation = () => {
   return<TopNaviWrap>
     <Title />
-    <InfoWrap>
-      <UserInfo/>
-      <MainBtnWrap />
-    </InfoWrap>
+   
   </TopNaviWrap>
 }
 

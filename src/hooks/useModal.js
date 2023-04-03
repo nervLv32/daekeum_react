@@ -5,6 +5,7 @@ import modalState from "../recoil/modalState";
 export const useModal = () => {
   const [modalDataState, setModalDataState] = useRecoilState(modalState);
   
+  
   const closeModal = useCallback(
     () =>
       setModalDataState((prev) => {

@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import HomeListCard from "../components/home/HomeListCard";
-import HomeList from "../components/molecules/HomeList";
+import HomeList from "../base-components/modal-components/HomeList";
 import { useModal } from "../hooks/useModal";
+import InfoWrap from "../components/atom/InfoWrap";
+import UserInfo from "../components/navigation/item/UserInfo";
+import MainBtnWrap from "../components/navigation/item/MainBtnWrap";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -37,29 +40,35 @@ const dummyData = [
 const Home = () => {
   const { openModal } = useModal();
   const modalData = {
-    title: 'Modal Title',
+    title: 'HomeList Modal',
     content: <HomeList />,
     callback: () => alert('Modal Callback()'),
   };
-  
-  return<HomeWrap>
-    고객접수 상황
-    <button onClick={() => openModal(modalData)}>여기클릭시 모달</button>
-    {
-      dummyData.map((item,key) =>{
-        return <HomeListCard
-          key={key}
-          no={item.no}
-          date={item.data}
-          company={item.company}
-          regionFirst={item.regionFirst}
-          regionSecond={item.regionSecond}
-          site={item.site}
-          onClick={() => openModal({...modalData, content: <HomeList item={item} />})}
-        />
-      })
-    }
-  </HomeWrap>
+
+  return (<>
+    <InfoWrap>
+      <UserInfo />
+      <MainBtnWrap />
+    </InfoWrap>
+    <HomeWrap>
+      고객접수 상황
+      <button onClick={() => openModal(modalData)}>여기클릭시 모달</button>
+      {
+        dummyData.map((item, key) => {
+          return <HomeListCard
+            key={key}
+            no={item.no}
+            date={item.data}
+            company={item.company}
+            regionFirst={item.regionFirst}
+            regionSecond={item.regionSecond}
+            site={item.site}
+            onClick={() => openModal({ ...modalData, content: <HomeList item={item} /> })}
+          />
+        })
+      }
+    </HomeWrap>
+  </>)
 }
 
 export default Home

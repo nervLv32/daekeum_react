@@ -10,19 +10,35 @@ import {
   SaleIco
 } from "../../../assets/icon/Svg";
 
-const BtnGroup = styled.div`
+const BtnGroupWrap = styled.ul``
+
+const BtnGroup = styled.ul`
+  margin: 35px 0 45px;
+  padding: 0 15px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  max-width: 500px;
-  margin: 0 auto;
 `
-const BtnWrap = styled.div`
+const BtnWrap = styled.li`
   position: relative;
-  width: 33%;
-  max-width: 150px;
-  padding: 20px;
-  text-align: center;
+  width: calc(33.333% - 90px / 3);
+  margin-right: 30px;
+  list-style: none;
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+  &:nth-child(n+4) {
+    margin-top: 30px;
+  }
+  p {
+    margin-top: 6px;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+  }
 `
 const Inner = styled.div`
   position: relative;
