@@ -14,7 +14,7 @@ const BackgroundCircle = styled.div`
 const Logo = styled.img`
   position: absolute;
   top: -150px;
-  left: 50%
+  left: 50%;
   transform: translateX(-50%);
   width: 200px;
   height: 100px;
@@ -84,6 +84,22 @@ const Button = styled.button`
   border-radius: 999px;
   color: white;
 `
+const Footer = styled.p`
+  position: absolute;
+  bottom: 30px;
+  width: 100vw;
+  
+  text-align: center;
+  
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+
+  color: #777777;
+`
 
 const Login = () => {
   return<>
@@ -99,6 +115,7 @@ const Login = () => {
         LOG IN
       </Button>
     </LoginWrap>
+    <Footer>Copyright <b>DAEKUM GEOWELL</b> All rights reserved</Footer>
   </>
 }
 
