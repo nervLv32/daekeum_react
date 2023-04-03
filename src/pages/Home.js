@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import HomeListCard from "../components/home/HomeListCard";
-import HomeList from "../base-components/modal-components/HomeList";
+import HomeListModal from "../base-components/modal-components/HomeListModal";
 import { useModal } from "../hooks/useModal";
 import InfoWrap from "../components/atom/InfoWrap";
 import UserInfo from "../components/navigation/item/UserInfo";
@@ -41,7 +41,7 @@ const Home = () => {
   const { openModal } = useModal();
   const modalData = {
     title: 'HomeList Modal',
-    content: <HomeList />,
+    content: <HomeListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
@@ -63,7 +63,7 @@ const Home = () => {
             regionFirst={item.regionFirst}
             regionSecond={item.regionSecond}
             site={item.site}
-            onClick={() => openModal({ ...modalData, content: <HomeList item={item} /> })}
+            onClick={() => openModal({ ...modalData, content: <HomeListModal item={item} /> })}
           />
         })
       }

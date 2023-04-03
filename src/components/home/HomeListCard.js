@@ -19,20 +19,20 @@ const CardBody = styled.div`
 `*/
 
 const HomeListCard = ({
-                        no,
-                        date,
-                        company,
-                        regionFirst,
-                        regionSecond,
-                        site,
-                        onClick
-                      }) => {
+  no,
+  date,
+  company,
+  regionFirst,
+  regionSecond,
+  site,
+  onClick
+}) => {
   return <CardBody onClick={onClick}>
-    <Typo text={'NO.'} color={'#1F319D'}/> <Typo text={no} />
+    <Typo text={'NO.'} color={'#1F319D'} /> <Typo text={no} />
     <Typo text={'Date.'} color={'#1F319D'} /> <Typo text={moment(date).format('YYYY-MM-DD')} />
-    <Typo text={'업체명'} color={'#1F319D'}/> <Typo text={company} />
-    <Typo text={'지역'} color={'#1F319D'}/> <Typo text={`${regionFirst}- ${regionSecond}`} />
-    <Typo text={'현장명'} color={'#1F319D'}/> <Typo text={site} />
+    <Typo text={'업체명'} color={'#1F319D'} /> <Typo text={company} />
+    <Typo text={'지역'} color={'#1F319D'} /> <Typo text={`${regionFirst}- ${regionSecond}`} />
+    <Typo text={'현장명'} color={'#1F319D'} /> <Typo text={site} />
   </CardBody>
 }
 

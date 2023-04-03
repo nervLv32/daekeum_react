@@ -3,6 +3,7 @@ import {AccountIco, HomeIco, MenuIco} from "../../../assets/icon/Svg";
 import {useRecoilState} from "recoil";
 import menuAtom from "../../../recoil/menuAtom";
 import {useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 
 const TitleWrap = styled.div`
   width: 100%;

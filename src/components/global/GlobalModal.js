@@ -39,7 +39,7 @@ const ModalWrapStyled = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 1;
+  z-index: 9999;
   animation: popup 0.3s linear;
 `;
 
@@ -55,29 +55,11 @@ const CloseModalStyled = styled.div`
 
 const ModalCardStyled = styled.div`
   width: 100%;
-  height: 400px;
   margin: 0 auto;
   position: relative;
-  background-color: #fff;
-  border-radius: 16px 16px 0 0;
   overflow: hidden;
-  box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const ModalDetailsStyled = styled.div`
-  height: calc(100% - 48px);
-  position: relative;
-  /* top: 32px; */
-  overflow: auto;
-  padding: 16px;
-`;
-
-const TitModalStyled = styled.div`
-  height: 48px;
-  padding-left: 16px;
-  /* background-color: var(--color-point); */
-  background-color: #555;
-`;
 
 const GlobalModalComponent = () => {
 
@@ -98,15 +80,15 @@ const GlobalModalComponent = () => {
   return (
     <ModalWrapStyled onClick={closeModal}>
       <ModalCardStyled>
-        <TitModalStyled>
+        {/* <TitModalStyled>
         {getModalTitle()}
         </TitModalStyled>
         <CloseModalStyled onClick={closeModal}>
           x마크
-        </CloseModalStyled>
-        <ModalDetailsStyled>
+        </CloseModalStyled> */}
+        {/* <ModalDetailsStyled> */}
           {modalDataState.content}
-        </ModalDetailsStyled>
+        {/* </ModalDetailsStyled> */}
       </ModalCardStyled>
     </ModalWrapStyled>
   );
