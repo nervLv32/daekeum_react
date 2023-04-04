@@ -19,7 +19,7 @@ const DefaultLayout = () => {
       <TopNavigation />
       <Outlet />
     </DefaultWrap>
-    {/*{menuState.isOpen ? <Navigation /> : null}*/}
+    {/* {menuState.isOpen ? <Navigation /> : null} */}
     <BottomNavigation />
   </>
 }

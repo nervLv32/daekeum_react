@@ -15,6 +15,7 @@ const TopNaviWrap = styled.div`
   /* border-radius:0 0 20px 20px; */
   padding: 10px 10px 20px;
   color: white;
+  border-radius: 20px 20px 0 0;
 `
 
 const TopBg = styled.div`

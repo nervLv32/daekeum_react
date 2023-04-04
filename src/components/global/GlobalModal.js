@@ -38,10 +38,23 @@ const ModalWrapStyled = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
+  z-index: 2000;
   animation: popup 0.3s linear;
 `;
+
+const ModalDim = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform: translate(-50%, 0);
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+`
+
 
 const CloseModalStyled = styled.div`
   display: inline-block;
@@ -78,7 +91,8 @@ const GlobalModalComponent = () => {
     console.log(2);
   }
   return (
-    <ModalWrapStyled onClick={closeModal}>
+    <ModalWrapStyled>
+      <ModalDim onClick={closeModal} />
       <ModalCardStyled>
         {/* <TitModalStyled>
         {getModalTitle()}

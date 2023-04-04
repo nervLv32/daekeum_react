@@ -5,7 +5,7 @@ import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/ReceiptListModal";
 
 const ReceiptWrap = styled.div`
-  padding: 28px 30px;
+  padding: 28px 30px 0;
   
 `
 

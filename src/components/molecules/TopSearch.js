@@ -4,7 +4,7 @@ import styled from "styled-components";
 const TopSearchWrap = styled.div`
   background-color: #1F319D;
   border-radius: 0 0 20px 20px;
-  padding: 30px;
+  padding: 0 30px 30px 30px;
   .search-wrap{
     display: flex;
     align-items: center;

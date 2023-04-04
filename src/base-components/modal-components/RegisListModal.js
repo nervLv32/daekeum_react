@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../components/atom/OrderStateBtn";
+import { useModal } from "../../hooks/useModal";
 
-const ReceiptListModalWrap = styled.div`
+const RegisListModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
   .modal-top {
@@ -27,7 +28,9 @@ const ReceiptListModalWrap = styled.div`
           font-weight: 600;
           font-size: 14px;
           line-height: 14px;
-          margin-right: 4px;
+          margin-right: 12px;
+          width: 50px;
+          text-align-last: justify;
         }
         dd {
           color: #1c1b1f;
@@ -53,12 +56,6 @@ const ReceiptListModalWrap = styled.div`
         display: flex;
         align-items: center;
         font-family: var(--font-mont);
-        &:first-child {
-          dt {
-            width: 63px;
-            text-align-last: justify;
-          }
-        }
         &:nth-child(2) {
           margin-left: 15px;
         }
@@ -67,6 +64,8 @@ const ReceiptListModalWrap = styled.div`
           color: #1f319d;
           font-weight: 600;
           font-size: 12px;
+          width: 63px;
+          text-align-last: justify;
         }
         dd {
           font-weight: 400;
@@ -157,59 +156,37 @@ const ReceiptListModalWrap = styled.div`
     }
     .primary-btn {
       height: 34px;
-      padding: 0 22px;
+      padding: 0 30px;
       font-size: 14px;
       font-weight: 700;
       background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
       border-radius: 10px;
       color: #fff;
     }
-    .modify-btn {
-      height: 34px;
-      padding: 0 20px;
-      font-size: 14px;
-      font-weight: 700;
-      background : #5A55CA;
-      border-radius: 10px;
-      color: #fff;
-    }
-    .call-btn {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #EA583F;
-      border-radius: 10px;
-    }
     .del-btn {
-      width: 34px;
+      padding: 0 15px;
       height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #9DA2AE;
+      border: 1px solid #1F319D;
       border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #555;
     }
   }
 `
 
-const ReceiptListModal = ({ item }) => {
-
-  const [changeStateWrap, setChangeStateWrap] = useState(false);
-  console.log(changeStateWrap)
-  const changeState = () => setChangeStateWrap(prev => !prev);
+const RegisListModal = ({ item }) => {
+  const { closeModal } = useModal();
   return (
-    <ReceiptListModalWrap>
+    <RegisListModalWrap>
       <div className="modal-top">
         <div className="dl-wrap">
           <dl>
-            <dt>NO.</dt>
-            <dd>{item.no}</dd>
-          </dl>
-          <dl>
-            <dt>Date.</dt>
-            <dd>{item.date}</dd>
+            <dt>현 장 명</dt>
+            <dd>{item.company}</dd>
           </dl>
         </div>
         <div className="state-wrap">
@@ -219,34 +196,25 @@ const ReceiptListModal = ({ item }) => {
       <ul className="modal-body">
         <li>
           <dl>
-            <dt>업 체 명</dt>
-            <dd>{item.company}</dd>
+            <dt>대 표 자</dt>
+            <dd>{item.ceo}</dd>
           </dl>
           <dl>
-            <dt>지역</dt>
-            <dd>{item.regionFirst}-{item.regionSecond}</dd>
+            <dt>사 업 자 번 호</dt>
+            <dd>{item.companyNum}</dd>
           </dl>
         </li>
         <li>
           <dl>
-            <dt>현 장 명</dt>
-            <dd className="oneLine">{item.site}</dd>
+            <dt>업 태</dt>
+            <dd>{item.sector}</dd>
+          </dl>
+          <dl>
+            <dt>업 태</dt>
+            <dd>{item.sectorNum}</dd>
           </dl>
         </li>
-        {
-          item.manager && (
-            <li>
-              <dl>
-                <dt>현 장 담 당 자</dt>
-                <dd>{item.manager}</dd>
-              </dl>
-              <dl>
-                <dt>현 장 연 락 처</dt>
-                <dd>{item.managerPhone}</dd>
-              </dl>
-            </li>
-          )
-        }
+        
         <li>
           <dl>
             <dt>현 장 주 소</dt>
@@ -255,47 +223,22 @@ const ReceiptListModal = ({ item }) => {
         </li>
         <li>
           <dl>
-            <dt>접 수 내 용</dt>
-            <dd className="oneLine">{item.detail}</dd>
+            <dt>현 장 담 당 자</dt>
+            <dd>{item.manager}</dd>
+          </dl>
+          <dl>
+            <dt>현 장 연 락 처</dt>
+            <dd>{item.managerPhone}</dd>
           </dl>
         </li>
       </ul>
       <div className="modal-btm">
-        <div className="primary-btn-wrap">
-          <button className="primary-btn" onClick={changeState}>접수상태변경</button>
-          {
-            changeStateWrap && (<ul className="btn-state-wrap">
-              <li>
-                <button className="ready">
-                  <i></i>
-                  <span>접수완료</span>
-                </button>
-              </li>
-              <li>
-                <button className="add">
-                  <i></i>
-                  <span>접수대기</span>
-                </button>
-              </li>
-              <li>
-                <button className="done">
-                  <i></i>
-                  <span>처리완료</span>
-                </button>
-              </li>
-            </ul>)
-          }
-        </div>
-        <button className="modify-btn">수정</button>
-        <button className="call-btn">
-          <img src="../icons/modal-call-icon.png" alt="call icon" />
-        </button>
-        <button className="del-btn">
-          <img src="../icons/modal-del-icon.png" alt="del icon" />
-        </button>
+        <button className="primary-btn">현장조회</button>
+        <button className="primary-btn">업체수정</button>
+        <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
-    </ReceiptListModalWrap>
+    </RegisListModalWrap>
   )
 }
 
-export default ReceiptListModal;
+export default RegisListModal;
