@@ -12,12 +12,25 @@ const CardBody = styled.div`
   font-size: 20px;
 `
 
-/*const No = styled.div`
+const Line = styled.div`
+  clear: both;
   p{
+    font-family: 'Montserrat';
+    font-size: 11px;
     float: left;
+    margin-bottom: 5px;
+    &:first-child {
+      margin-right: 20px;
+    }
+    b{
+      color: #1F319D
+    }
   }
-`*/
-
+`
+const Blank = styled.div`
+  width: 100%;
+  height: 10px;
+`
 const HomeListCard = ({
   no,
   date,
@@ -28,11 +41,18 @@ const HomeListCard = ({
   onClick
 }) => {
   return <CardBody onClick={onClick}>
-    <Typo text={'NO.'} color={'#1F319D'} /> <Typo text={no} />
-    <Typo text={'Date.'} color={'#1F319D'} /> <Typo text={moment(date).format('YYYY-MM-DD')} />
-    <Typo text={'업체명'} color={'#1F319D'} /> <Typo text={company} />
-    <Typo text={'지역'} color={'#1F319D'} /> <Typo text={`${regionFirst}- ${regionSecond}`} />
-    <Typo text={'현장명'} color={'#1F319D'} /> <Typo text={site} />
+    <Line>
+      <p><b>No.</b>{no}</p>
+      <p><b>Date. </b>{moment(date).format('YYYY-MM-DD')}</p>
+    </Line>
+    <Line>
+      <p><b>업체명</b> {company}</p>
+      <p><b>지역</b> {`${regionFirst} - ${regionSecond}`}</p>
+    </Line>
+    <Line>
+      <p><b>현장명</b> {site}</p>
+    </Line>
+    <Blank/>
   </CardBody>
 }
 
