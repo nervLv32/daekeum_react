@@ -2,18 +2,17 @@ import styled from "styled-components";
 import {
   CheckCompIco,
   DocumentIco,
-  HomeIco,
   InvIco,
   MoreViewIco,
-  ProdIco,
   RegisIco,
   SaleIco
 } from "../../../assets/icon/Svg";
 
-const BtnGroupWrap = styled.ul``
 
 const BtnGroup = styled.ul`
-  margin: 35px 0 45px;
+  margin: 35px auto 45px;
+  max-width: 500px;
+  min-width: 300px;
   padding: 0 15px;
   display: flex;
   align-items: center;
