@@ -3,63 +3,12 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import RegisListModal from "../../base-components/modal-components/regis/RegisListModal";
 import RegisInfoList from "../../components/regis/RegisInfoList";
+import RegisTabNavi from "../../components/regis/RegisTabNavi";
+import RegisTapWrap from "../../components/regis/RegisTapWrap";
 
 import { useModal } from "../../hooks/useModal";
 
 const RegisWrap = styled.div``
-
-const RegisTapWrap = styled.div`
-  height: 30px;
-  background-color: rgb(31, 49, 157);
-  position: relative;
-  border-radius: 0 0 20px 20px;
-  z-index: 20;
-  .top-tab-wrap {
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    width: calc(100% - 70px);
-    display :flex;
-    align-items: center;
-    height: 35px;
-    background-color: #fff;
-    border: 1px solid #1F319D;
-    border-radius: 10px;
-    li {
-      width: 25%;
-      text-align: center;
-      height: 100%;
-      a {
-        display: block;
-        line-height: 33px;
-        font-size: 12px;
-        font-weight: 700;
-        color: #1c1b1f;
-        cursor: pointer;
-      }
-      &.active {
-        a {
-          color: #fff;position: relative;
-          &::after {
-            content: '';
-            display: block;
-            width: calc(100% + 2px);
-            height: calc(100% + 2px);
-            border-radius: 10px;
-            background-color: #1F319D;
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            z-index: -1;
-            box-shadow: 1px 1px 4px rgba(12, 29, 135, 0.7);
-          }
-        }
-      }
-    }
-  }
-`
 
 const RegisTabSearch = styled.div`
   padding: 45px 30px 15px; 
@@ -164,38 +113,9 @@ const Regis = () => {
     },
   ]
   return <RegisWrap>
-    <RegisTapWrap>
-      <ul className="top-tab-wrap">
-        <li className="active">
-          <NavLink to="/regis">
-            업체정보
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/regis/site">
-            현장정보
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/regis/equipment">
-            장비정보
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/regis/DKNO">
-            DKNO
-          </NavLink>
-        </li>
-      </ul>
-    </RegisTapWrap>
+    <RegisTapWrap title="업체정보" />
     <RegisTabSearch>
-      <ul className="tab-navigation">
-        <li>업체명</li>
-        <img src="../icons/tab-navi-rightarrow.png" alt="right arrow" />
-        <li>현장명</li>
-        <img src="../icons/tab-navi-rightarrow.png" alt="right arrow" />
-        <li>장비정보</li>
-      </ul>
+      <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" />
         <button className="search-btn" />
