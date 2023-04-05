@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { AccountIco, HomeIco, MenuIco } from "../../../assets/icon/Svg";
 import { useRecoilState } from "recoil";
 import menuAtom from "../../../recoil/menuAtom";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 
 const TitleWrap = styled.div`
   width: 100%;
@@ -35,8 +35,49 @@ const InfoWrap = styled.div`
 `
 
 const Title = () => {
-
   const [menuState, setMenuState] = useRecoilState(menuAtom)
+  const [pageName, setpageName] = useState("메인페이지")
+
+  const location = useLocation();
+  console.log("locationPath::::", location.pathname)
+
+  const currentPage = [
+    {
+      pathname: '/',
+      title : '메인페이지'
+    },
+    {
+      pathname: '/receipt',
+      title : '고객접수'
+    },
+    {
+      pathname: '/regis',
+      title : '통합등록'
+    },
+    {
+      pathname: '/inventory',
+      title : '재고'
+    },
+    {
+      pathname: '/report',
+      title : '입출고서류상신'
+    },
+    {
+      pathname: '/sale',
+      title : '영업등록'
+    },
+  ]
+
+  const getPageName = () => {
+    for(let i = 0; i < currentPage.length; i++) {
+      if (currentPage[i].pathname === location.pathname) {
+        setpageName(currentPage[i].title);
+      } 
+    }
+  }
+  useEffect(() => {
+    getPageName();
+  }, [location.pathname]);
 
   return <TitleWrap>
 
@@ -46,7 +87,7 @@ const Title = () => {
       </button>
     </InfoWrap>
 
-    <TitleText> 메인페이지 </TitleText>
+    <TitleText> {pageName} </TitleText>
 
     <InfoWrap>
       <AccountIco />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import RegisListModal from "../../base-components/modal-components/RegisListModal";
+import RegisListModal from "../../base-components/modal-components/regis/RegisListModal";
 import RegisInfoList from "../../components/regis/RegisInfoList";
 
 import { useModal } from "../../hooks/useModal";
@@ -30,26 +31,30 @@ const RegisTapWrap = styled.div`
       width: 25%;
       text-align: center;
       height: 100%;
-      line-height: 33px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #1c1b1f;
-      cursor: pointer;
+      a {
+        display: block;
+        line-height: 33px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #1c1b1f;
+        cursor: pointer;
+      }
       &.active {
-        color: #fff;
-        position: relative;
-        &::after {
-          content: '';
-          display: block;
-          width: calc(100% + 2px);
-          height: calc(100% + 2px);
-          border-radius: 10px;
-          background-color: #1F319D;
-          position: absolute;
-          top: -1px;
-          left: -1px;
-          z-index: -1;
-          box-shadow: 1px 1px 4px rgba(12, 29, 135, 0.7);
+        a {
+          color: #fff;position: relative;
+          &::after {
+            content: '';
+            display: block;
+            width: calc(100% + 2px);
+            height: calc(100% + 2px);
+            border-radius: 10px;
+            background-color: #1F319D;
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            z-index: -1;
+            box-shadow: 1px 1px 4px rgba(12, 29, 135, 0.7);
+          }
         }
       }
     }
@@ -123,8 +128,6 @@ const RegisInfoListWrap = styled.ul``
 
 const Regis = () => {
 
-  const [tabState, setTabState] = useState("업체정보");
-
   const { openModal } = useModal();
   const modalData = {
     title: 'RegisInfoList Modal',
@@ -163,10 +166,26 @@ const Regis = () => {
   return <RegisWrap>
     <RegisTapWrap>
       <ul className="top-tab-wrap">
-        <li className={tabState === "업체정보" ? "active" : null} onClick={() => { setTabState("업체정보") }}>업체정보</li>
-        <li className={tabState === "현장정보" ? "active" : null} onClick={() => { setTabState("현장정보") }}>현장정보</li>
-        <li className={tabState === "장비정보" ? "active" : null} onClick={() => { setTabState("장비정보") }}>장비정보</li>
-        <li className={tabState === "DKNO" ? "active" : null} onClick={() => { setTabState("DKNO") }}>DKNO</li>
+        <li className="active">
+          <NavLink to="/regis">
+            업체정보
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/">
+            현장정보
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/">
+            장비정보
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/">
+            DKNO
+          </NavLink>
+        </li>
       </ul>
     </RegisTapWrap>
     <RegisTabSearch>
@@ -183,27 +202,23 @@ const Regis = () => {
       </div>
     </RegisTabSearch>
 
-    {
-      /* 업체 정보 */
-      tabState === "업체정보" && (
-        <CompanyInfoWrap>
-          <RegisInfoListWrap>
-            {
-              dummyData.map((item, idx) => {
-                return (<RegisInfoList
-                  key={item.no}
-                  company={item.company}
-                  ceo={item.ceo}
-                  companyNum={item.companyNum}
-                  onClick={() => openModal({ ...modalData, content: <RegisListModal item={item} /> })}
-                />
-                )
-              })
-            }
-          </RegisInfoListWrap>
-        </CompanyInfoWrap>
-      )
-    }
+    <CompanyInfoWrap>
+      <RegisInfoListWrap>
+        {
+          dummyData.map((item, idx) => {
+            return (<RegisInfoList
+              key={item.no}
+              company={item.company}
+              ceo={item.ceo}
+              companyNum={item.companyNum}
+              onClick={() => openModal({ ...modalData, content: <RegisListModal item={item} /> })}
+            />
+            )
+          })
+        }
+      </RegisInfoListWrap>
+    </CompanyInfoWrap>
+
   </RegisWrap>
 }
 

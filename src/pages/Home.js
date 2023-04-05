@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import HomeListCard from "../components/home/HomeListCard";
-import HomeListModal from "../base-components/modal-components/HomeListModal";
+import HomeListModal from "../base-components/modal-components/home/HomeListModal";
 import { useModal } from "../hooks/useModal";
 import InfoWrap from "../components/atom/InfoWrap";
 import UserInfo from "../components/navigation/item/UserInfo";

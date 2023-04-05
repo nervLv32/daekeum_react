@@ -2,7 +2,7 @@ import styled from "styled-components"
 import TopSearch from "../../components/molecules/TopSearch"
 import { useModal } from "../../hooks/useModal";
 import ReceiptCard from "../../components/receipt/ReceiptCard";
-import ReceiptListModal from "../../base-components/modal-components/ReceiptListModal";
+import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0;
