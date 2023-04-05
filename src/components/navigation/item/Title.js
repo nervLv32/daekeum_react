@@ -3,7 +3,7 @@ import { AccountIco, HomeIco, MenuIco } from "../../../assets/icon/Svg";
 import { useRecoilState } from "recoil";
 import menuAtom from "../../../recoil/menuAtom";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useNavigation } from "react-router-dom";
 
 const TitleWrap = styled.div`
   width: 100%;
@@ -82,16 +82,18 @@ const Title = () => {
   return <TitleWrap>
 
     <InfoWrap>
-      <button onClick={() => setMenuState({ isOpen: !menuState.isOpen })}>
+      <NavLink to="/">
         <HomeIco />
-      </button>
+      </NavLink>
     </InfoWrap>
 
     <TitleText> {pageName} </TitleText>
 
     <InfoWrap>
       <AccountIco />
+      <button onClick={() => setMenuState({ isOpen: !menuState.isOpen })}>
       <MenuIco />
+      </button>
     </InfoWrap>
 
   </TitleWrap>

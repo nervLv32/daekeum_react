@@ -9,11 +9,11 @@ const NavigationWrapper = styled.div`
   height: 100vh;
   position: fixed;
   top: 0;
-  left: -100%;
+  right: -100%;
   z-index: 300;
-  transition: left 0.3s linear;
+  transition: right 0.3s linear;
   &.view {
-    left: 0;
+    right: 0;
     .navigation-dim {
       visibility: visible;
       opacity: 1;
@@ -38,7 +38,7 @@ const NavigationWrap = styled.div`
   height: 100vh;
   background: #1F319D url("../images/sidemenu-bg.png") 100% bottom no-repeat;
   top: 0;
-  left: 0;
+  right: 0;
   color: white;
   border-radius: 0 20px 20px 0;
   z-index: 300;

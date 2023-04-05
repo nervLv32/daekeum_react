@@ -172,17 +172,17 @@ const Regis = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/">
+          <NavLink to="/regis/site">
             현장정보
           </NavLink>
         </li>
         <li>
-          <NavLink to="/">
+          <NavLink to="/regis/equipment">
             장비정보
           </NavLink>
         </li>
         <li>
-          <NavLink to="/">
+          <NavLink to="/regis/DKNO">
             DKNO
           </NavLink>
         </li>
