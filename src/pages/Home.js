@@ -5,6 +5,7 @@ import { useModal } from "../hooks/useModal";
 import InfoWrap from "../components/atom/InfoWrap";
 import UserInfo from "../components/navigation/item/UserInfo";
 import MainBtnWrap from "../components/navigation/item/MainBtnWrap";
+import Floating from "../components/molecules/Floating";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -45,6 +46,24 @@ const Home = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  const dummyFloatingData = [
+    {
+      name : ' menu 1 ',
+      path : '/'
+    },
+    {
+      name : ' menu 2 ',
+      path : '/'
+    },
+    {
+      name : ' menu 3 ',
+      path : '/'
+    },
+    {
+      name : ' menu 4 ',
+      path : '/'
+    },
+  ]
   return (<>
     <InfoWrap>
       <UserInfo />
@@ -67,6 +86,7 @@ const Home = () => {
           />
         })
       }
+      <Floating itemList={dummyFloatingData}/>
     </HomeWrap>
   </>)
 }
