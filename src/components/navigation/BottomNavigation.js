@@ -61,6 +61,7 @@ const BottomNavigation = () => {
     <Navigation>
       {
         bottomNavigationRouterList.map((item, key) => {
+          console.log(item.path)
           return <NavStyle key={key} to={item.path}>
             <i>{item.icon}
             </i>

@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import {AccountIco, HomeIco, MenuIco} from "../../../assets/icon/Svg";
-import {useRecoilState} from "recoil";
+import { AccountIco, HomeIco, MenuIco } from "../../../assets/icon/Svg";
+import { useRecoilState } from "recoil";
 import menuAtom from "../../../recoil/menuAtom";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TitleWrap = styled.div`
@@ -12,10 +12,17 @@ const TitleWrap = styled.div`
   color: #F7F7F7;
   align-items: center;
   margin-top: 10px;
+  padding: 0 20px;
+  justify-content: space-between;
+`
+
+const TitleText = styled.p`
+  font-size: 17px;
+  font-weight: 500;
+  color: #fff;
 `
 
 const InfoWrap = styled.div`
-  flex: 1;
   svg{
     position: relative;
     top: 50%;
@@ -27,33 +34,23 @@ const InfoWrap = styled.div`
   }
 `
 
-const P = styled.p`
-  flex: 2;
-  display: inline-block;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 25px;
-  text-align: center;
-
-`
 const Title = () => {
 
   const [menuState, setMenuState] = useRecoilState(menuAtom)
 
-  return<TitleWrap>
+  return <TitleWrap>
 
     <InfoWrap>
-      <HomeIco />
+      <button onClick={() => setMenuState({ isOpen: !menuState.isOpen })}>
+        <HomeIco />
+      </button>
     </InfoWrap>
 
-    <P> 메인페이지 </P>
+    <TitleText> 메인페이지 </TitleText>
 
     <InfoWrap>
       <AccountIco />
-      <a onClick={() => setMenuState({isOpen: !menuState.isOpen})}>
-        <MenuIco/>
-      </a>
+      <MenuIco />
     </InfoWrap>
 
   </TitleWrap>

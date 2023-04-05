@@ -6,7 +6,7 @@ const userAtom = atom({
     isLogin : false,
     auth:{
       userEmail: '',
-      userName: '',
+      userName: '팜윤태',
       userJob: '',
       profileImage : '',
     }
