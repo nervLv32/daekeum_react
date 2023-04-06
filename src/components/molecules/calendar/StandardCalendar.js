@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import moment from "moment";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const StandardCalenderContainer = styled.div`
   width: 100%;
@@ -14,7 +14,6 @@ const StandardCalenderContainer = styled.div`
     background-color: #fff;
     color: #222;
     border-radius: 8px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     line-height: 1.125em;
   }
   .react-calendar__navigation{
@@ -86,16 +85,27 @@ const StandardCalenderContainer = styled.div`
     background: #0129FF;
     color: white;
   }
-  
+`
 
+const SelectDateRange = styled.div`
+  padding: 10px;
+  background-color: #fff;
 `
 const StandardCalendar = () => {
   const [date, setDate] = useState(new Date())
 
+  useEffect(() =>{
+    console.log(date)
+    console.log(moment(date[0]).format('Y-M-D'))
+  },[date])
+
   return <StandardCalenderContainer>
+    <SelectDateRange>
+      <input id={'rangeStart'} type={'date'} defaultValue={moment(date[0]).format('Y-M-D')}/>
+      <input id={'rangeEnd'} type={'date'} defaultValue={moment(date[1]).format('Y-M-D')}/>
+    </SelectDateRange>
     <Calendar
       onChange={setDate}
-      value={date}
       formatDay={(locale, date) => moment(date).format("DD")}
       selectRange={true}
       locale={'kr'}
