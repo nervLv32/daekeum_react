@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const RegisInfoListComponent = styled.li`
+const RegisDKNOListComponent = styled.li`
   cursor: pointer;
   &:not(:last-child) {
     margin-bottom: 15px;
@@ -48,42 +48,67 @@ const RegisInfoListComponent = styled.li`
     padding: 12px 18px;
     background-color: #f7f7f7;
     border-radius: 0 0 10px 10px;
-    display: flex;
-    align-items: center;
-    dl {
-      font-size: 12px;
-      &:first-child {
-        margin-right: 14px;
+    > div {
+      display: flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-bottom: 9px;
+      }
+      dl {
+        font-size: 12px;
+        &:not(:last-child) {
+          margin-right: 14px;
+        }
       }
     }
   }
 `
 
-const RegisInfoList = ({
-  company,
-  ceo,
-  companyNum,
+const RegisDKNOList = ({
+  installCate,
+  date,
+  model,
+  type,
+  mcno,
+  bolt,
+  direction,
   onClick
 }) => {
-  return <RegisInfoListComponent onClick={onClick}>
+  return <RegisDKNOListComponent onClick={onClick}>
     <div className="list-top">
       <dl>
-        <dt>업체명</dt>
-        <dd>{company}</dd>
+        <dt>DKNO</dt>
+        <dd>{installCate}</dd>
       </dl>
       <button className="viewmore-btn" />
     </div>
     <div className="list-body">
-      <dl>
-        <dt>대표자</dt>
-        <dd>{ceo}</dd>
-      </dl>
-      <dl>
-        <dt>사업자번호</dt>
-        <dd>{companyNum}</dd>
-      </dl>
+      <div>
+        <dl>
+          <dt>모델</dt>
+          <dd>{model}</dd>
+        </dl>
+        <dl>
+          <dt>매출타입</dt>
+          <dd>{type}</dd>
+        </dl>
+      </div>
+      <div>
+        <dl>
+          <dt>MCNO</dt>
+          <dd>{mcno}</dd>
+        </dl>
+        <dl>
+          <dt>전압</dt>
+          <dd>{bolt}</dd>
+        </dl>
+        <dl>
+          <dt>방향</dt>
+          <dd>{direction}</dd>
+        </dl>
+      </div>
     </div>
-  </RegisInfoListComponent>
+  </RegisDKNOListComponent>
 }
 
-export default RegisInfoList
+export default RegisDKNOList

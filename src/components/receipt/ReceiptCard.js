@@ -121,7 +121,7 @@ const ReceiptCard = ({
           <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
         </i>
       </div>
-      <div classNanme="body-wrap">
+      <div className="body-wrap">
         <dl>
           <dt>현장명</dt>
           <dd>{site}</dd>

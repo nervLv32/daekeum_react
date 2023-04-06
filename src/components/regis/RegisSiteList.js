@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const RegisInfoListComponent = styled.li`
+const RegisSiteListComponent = styled.li`
   cursor: pointer;
   &:not(:last-child) {
     margin-bottom: 15px;
@@ -59,31 +59,32 @@ const RegisInfoListComponent = styled.li`
   }
 `
 
-const RegisInfoList = ({
-  company,
-  ceo,
-  companyNum,
+const RegisSiteList = ({
+  site,
+  regionFirst,
+  regionLast,
+  sector,
   onClick
 }) => {
-  return <RegisInfoListComponent onClick={onClick}>
+  return <RegisSiteListComponent onClick={onClick}>
     <div className="list-top">
       <dl>
-        <dt>업체명</dt>
-        <dd>{company}</dd>
+        <dt>현장명</dt>
+        <dd>{site}</dd>
       </dl>
       <button className="viewmore-btn" />
     </div>
     <div className="list-body">
       <dl>
-        <dt>대표자</dt>
-        <dd>{ceo}</dd>
+        <dt>지역분류</dt>
+        <dd>{regionFirst}-{regionLast}</dd>
       </dl>
       <dl>
-        <dt>사업자번호</dt>
-        <dd>{companyNum}</dd>
+        <dt>담당센터</dt>
+        <dd>{sector}</dd>
       </dl>
     </div>
-  </RegisInfoListComponent>
+  </RegisSiteListComponent>
 }
 
-export default RegisInfoList
+export default RegisSiteList

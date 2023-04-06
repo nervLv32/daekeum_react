@@ -3,7 +3,7 @@ import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 
-const RegisListModalWrap = styled.div`
+const RegisDKNOListModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
   .modal-top {
@@ -52,11 +52,18 @@ const RegisListModalWrap = styled.div`
         padding-bottom: 13px;
         margin-bottom: 13px;
       }
+      &.three-item {
+        dl {
+          &:nth-child(n+2) {
+            margin-left: 25px;
+          }
+        }
+      }
       dl {
         display: flex;
         align-items: center;
         font-family: var(--font-mont);
-        &:nth-child(2) {
+        &:nth-child(n+2) {
           margin-left: 15px;
         }
         dt {
@@ -64,8 +71,10 @@ const RegisListModalWrap = styled.div`
           color: #1f319d;
           font-weight: 600;
           font-size: 12px;
-          width: 63px;
-          text-align-last: justify;
+          &.justify {
+            width: 50px;
+            text-align-last: justify;
+          }
         }
         dd {
           font-weight: 400;
@@ -93,17 +102,9 @@ const RegisListModalWrap = styled.div`
     > button {
       cursor: pointer;
     }
-    .primary-btn {
-      height: 34px;
-      padding: 0 30px;
-      font-size: 14px;
-      font-weight: 700;
-      background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
-      border-radius: 10px;
-      color: #fff;
-    }
     .del-btn {
       padding: 0 15px;
+      width:100%;
       height: 34px;
       display: flex;
       align-items: center;
@@ -117,64 +118,76 @@ const RegisListModalWrap = styled.div`
   }
 `
 
-const RegisListModal = ({ item }) => {
+const RegisDKNOListModal = ({ item }) => {
+  
   const { closeModal } = useModal();
   return (
-    <RegisListModalWrap>
+    <RegisDKNOListModalWrap>
       <div className="modal-top">
         <div className="dl-wrap">
           <dl>
-            <dt>현 장 명</dt>
-            <dd>{item.company}</dd>
+            <dt>DKNO</dt>
+            <dd>{item.installCate}</dd>
           </dl>
         </div>
       </div>
       <ul className="modal-body">
         <li>
           <dl>
-            <dt>대 표 자</dt>
-            <dd>{item.ceo}</dd>
+            <dt className="justify">모 델</dt>
+            <dd>{item.model}</dd>
           </dl>
           <dl>
-            <dt>사 업 자 번 호</dt>
-            <dd>{item.companyNum}</dd>
-          </dl>
-        </li>
-        <li>
-          <dl>
-            <dt>업 태</dt>
-            <dd>{item.sector}</dd>
-          </dl>
-          <dl>
-            <dt>업 태</dt>
-            <dd>{item.sectorNum}</dd>
+            <dt>매 출 타 입</dt>
+            <dd>{item.type}</dd>
           </dl>
         </li>
-        
-        <li>
+        <li className="three-item">
           <dl>
-            <dt>현 장 주 소</dt>
-            <dd className="oneLine">{item.siteAddress}</dd>
+            <dt>MCNO</dt>
+            <dd>{item.mcno}</dd>
+          </dl>
+          <dl>
+            <dt>전압</dt>
+            <dd>{item.bolt}</dd>
+          </dl>
+          <dl>
+            <dt>방향</dt>
+            <dd>{item.direction}</dd>
           </dl>
         </li>
-        <li>
+        <li className="three-item">
           <dl>
-            <dt>현 장 담 당 자</dt>
+            <dt>업체명</dt>
+            <dd>{item.company}</dd>
+          </dl>
+          <dl>
+            <dt>센터명</dt>
+            <dd>{item.center}</dd>
+          </dl>
+          <dl>
+            <dt>담당자</dt>
             <dd>{item.manager}</dd>
           </dl>
+        </li>
+        <li>
           <dl>
-            <dt>현 장 연 락 처</dt>
-            <dd>{item.managerPhone}</dd>
+            <dt className="justify">현 장 명</dt>
+            <dd>{item.site}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>주 소</dt>
+            <dd>{item.siteAddress}</dd>
           </dl>
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">현장조회</button>
-        <button className="primary-btn">업체수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
-    </RegisListModalWrap>
+    </RegisDKNOListModalWrap>
   )
 }
 
-export default RegisListModal;
+export default RegisDKNOListModal;

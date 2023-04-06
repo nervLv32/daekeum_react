@@ -3,7 +3,7 @@ import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 
-const RegisListModalWrap = styled.div`
+const RegisSiteListModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
   .modal-top {
@@ -117,27 +117,27 @@ const RegisListModalWrap = styled.div`
   }
 `
 
-const RegisListModal = ({ item }) => {
+const RegisSiteListModal = ({ item }) => {
   const { closeModal } = useModal();
   return (
-    <RegisListModalWrap>
+    <RegisSiteListModalWrap>
       <div className="modal-top">
         <div className="dl-wrap">
           <dl>
             <dt>현 장 명</dt>
-            <dd>{item.company}</dd>
+            <dd>{item.site}</dd>
           </dl>
         </div>
       </div>
       <ul className="modal-body">
         <li>
           <dl>
-            <dt>대 표 자</dt>
-            <dd>{item.ceo}</dd>
+            <dt>지 역 분 류</dt>
+            <dd>{item.regionFirst}-{item.regionLast}</dd>
           </dl>
           <dl>
-            <dt>사 업 자 번 호</dt>
-            <dd>{item.companyNum}</dd>
+            <dt>담 당 센 터</dt>
+            <dd>{item.center}</dd>
           </dl>
         </li>
         <li>
@@ -146,7 +146,7 @@ const RegisListModal = ({ item }) => {
             <dd>{item.sector}</dd>
           </dl>
           <dl>
-            <dt>업 태</dt>
+            <dt>사 업 자 번 호</dt>
             <dd>{item.sectorNum}</dd>
           </dl>
         </li>
@@ -167,14 +167,20 @@ const RegisListModal = ({ item }) => {
             <dd>{item.managerPhone}</dd>
           </dl>
         </li>
+        <li>
+          <dl>
+            <dt>이 메 일</dt>
+            <dd className="oneLine">{item.email}</dd>
+          </dl>
+        </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">현장조회</button>
-        <button className="primary-btn">업체수정</button>
+        <button className="primary-btn">장비조회</button>
+        <button className="primary-btn">현장수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
-    </RegisListModalWrap>
+    </RegisSiteListModalWrap>
   )
 }
 
-export default RegisListModal;
+export default RegisSiteListModal;

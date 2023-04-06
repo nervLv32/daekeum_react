@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import RegisEquipListModal from "../../base-components/modal-components/regis/RegisEquipListModal";
+import RegisEquipList from "../../components/regis/RegisEquipList";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
+import { useModal } from "../../hooks/useModal";
 
 const RegisEquipmentWrap = styled.div``
 
@@ -47,8 +50,56 @@ const RegisTabSearch = styled.div`
   }
 `
 
+const paddingWrap = styled.div`
+  padding: 20px 30px 0;
+`
+
+const EquipmentInfoWrap = styled(paddingWrap)`
+
+`
+
+
 
 const RegisEquipment = () => {
+
+  const dummyData = [
+    {
+      no: 41377,
+      date: "2023-02-01",
+      dkno: "13666",
+      mcno: "C652",
+      model: "R10DN",
+      installCate:"회수",
+      warehousingCate:"출고",
+      bolt:"380",
+      direction:"정방향",
+      center: "수도권4",
+      manager: '정명길',
+    },
+    {
+      no: 41378,
+      date: "2023-02-01",
+      dkno: "13666",
+      mcno: "C652",
+      model: "R10DN",
+      installCate:"회수",
+      warehousingCate:"출고",
+      bolt:"380",
+      direction:"정방향",
+      center: "수도권1",
+      manager: '팜윤태',
+    },
+  ]
+
+
+  const { openModal } = useModal();
+  const modalData = {
+    title: 'RegisEquipList Modal',
+    content: <RegisEquipListModal />,
+    callback: () => alert('Modal Callback()'),
+  };
+
+
   return <RegisEquipmentWrap>
     <RegisTapWrap title="장비정보" />
     <RegisTabSearch>
@@ -58,6 +109,24 @@ const RegisEquipment = () => {
         <button className="search-btn" />
       </div>
     </RegisTabSearch>
+
+    <EquipmentInfoWrap>
+      {
+        dummyData.map((item, idx) => {
+          return (<RegisEquipList
+            key={item.no}
+            dkno={item.dkno}
+            date={item.date}
+            mcno={item.mcno}
+            model={item.model}
+            installCate={item.installCate}
+            warehousingCate={item.warehousingCate}
+            onClick={() => openModal({ ...modalData, content: <RegisEquipListModal item={item} /> })}
+          />
+          )
+        })
+      }
+    </EquipmentInfoWrap>
   </RegisEquipmentWrap>
 }
 

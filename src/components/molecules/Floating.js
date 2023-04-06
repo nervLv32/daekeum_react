@@ -2,29 +2,32 @@ import {useState} from "react";
 import styled from "styled-components";
 
 const FloatingWrap = styled.div`
-  position: fixed;
-`
-const FloatingMenu = styled.button`
+  width: 54px;
+  height: 54px;
+  background-color: ${props => props.bgColor || '#1F319D'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+  z-index: 100;
+  cursor: pointer;
+  .default-icon {
+    width: 31px;
+    height: 31px;
+    background: url('../icons/icon-floating-add.png') no-repeat 50% center / cover;
+  }
+  .close-icon {
+    width: 18px;
+    height: 18px;
+    background: url('../icons/icon-floating-x.png') no-repeat 50% center / cover;
+  }
 `
 
-const FloatingItem = styled.ul`
-  
-`
+const Floating = ({ children, isFOpen, onClick, bgColor }) => {
 
-const Floating = ({itemList}) => {
-  const [isShow, setShow] = useState(false);
-
-  return<FloatingWrap>
-    <FloatingMenu onClick={() => setShow(!isShow)}> Floating </FloatingMenu>
-    {
-      isShow ? <FloatingItem>
-        {
-          itemList.map((item, key) => {
-            return <li key={key}> <a href={item.path}> {item.name}</a> </li>
-          })
-        }
-      </FloatingItem> : null
-    }
+  return <FloatingWrap onClick={onClick} bgColor={bgColor}>
+    {children}
   </FloatingWrap>
 }
 

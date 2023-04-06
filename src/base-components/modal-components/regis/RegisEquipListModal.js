@@ -3,7 +3,7 @@ import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 
-const RegisListModalWrap = styled.div`
+const RegisEquipListModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
   .modal-top {
@@ -56,15 +56,13 @@ const RegisListModalWrap = styled.div`
         display: flex;
         align-items: center;
         font-family: var(--font-mont);
-        &:nth-child(2) {
-          margin-left: 15px;
-        }
+        width: 50%;
         dt {
           letter-spacing: -0.03em;
           color: #1f319d;
           font-weight: 600;
           font-size: 12px;
-          width: 63px;
+          width: 50px;
           text-align-last: justify;
         }
         dd {
@@ -72,10 +70,6 @@ const RegisListModalWrap = styled.div`
           font-size: 12px;
           color: #1c1b1f;
           margin-left: 10px;
-          &.oneLine {
-            width: calc(100% - 63px);
-            line-height: 17px;
-          }
         }
       }
     }
@@ -92,10 +86,10 @@ const RegisListModalWrap = styled.div`
       }
     > button {
       cursor: pointer;
+      width: 145px;
+      height: 34px;
     }
     .primary-btn {
-      height: 34px;
-      padding: 0 30px;
       font-size: 14px;
       font-weight: 700;
       background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
@@ -103,8 +97,6 @@ const RegisListModalWrap = styled.div`
       color: #fff;
     }
     .del-btn {
-      padding: 0 15px;
-      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -117,64 +109,66 @@ const RegisListModalWrap = styled.div`
   }
 `
 
-const RegisListModal = ({ item }) => {
+const RegisEquipListModal = ({ item }) => {
   const { closeModal } = useModal();
   return (
-    <RegisListModalWrap>
+    <RegisEquipListModalWrap>
       <div className="modal-top">
         <div className="dl-wrap">
           <dl>
-            <dt>현 장 명</dt>
-            <dd>{item.company}</dd>
+            <dt>DKNO</dt>
+            <dd>{item.dkno}</dd>
           </dl>
         </div>
       </div>
       <ul className="modal-body">
         <li>
           <dl>
-            <dt>대 표 자</dt>
-            <dd>{item.ceo}</dd>
+            <dt>M C N O</dt>
+            <dd>{item.mcno}</dd>
           </dl>
           <dl>
-            <dt>사 업 자 번 호</dt>
-            <dd>{item.companyNum}</dd>
-          </dl>
-        </li>
-        <li>
-          <dl>
-            <dt>업 태</dt>
-            <dd>{item.sector}</dd>
-          </dl>
-          <dl>
-            <dt>업 태</dt>
-            <dd>{item.sectorNum}</dd>
-          </dl>
-        </li>
-        
-        <li>
-          <dl>
-            <dt>현 장 주 소</dt>
-            <dd className="oneLine">{item.siteAddress}</dd>
+            <dt>모 델</dt>
+            <dd>{item.model}</dd>
           </dl>
         </li>
         <li>
           <dl>
-            <dt>현 장 담 당 자</dt>
+            <dt>설 치 구 분</dt>
+            <dd>{item.installCate}</dd>
+          </dl>
+          <dl>
+            <dt>입 출 고</dt>
+            <dd>{item.warehousingCate}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>전 압</dt>
+            <dd>{item.bolt}</dd>
+          </dl>
+          <dl>
+            <dt>방 향</dt>
+            <dd>{item.direction}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>센 터 명</dt>
+            <dd>{item.center}</dd>
+          </dl>
+          <dl>
+            <dt>담 당 자</dt>
             <dd>{item.manager}</dd>
-          </dl>
-          <dl>
-            <dt>현 장 연 락 처</dt>
-            <dd>{item.managerPhone}</dd>
           </dl>
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">현장조회</button>
-        <button className="primary-btn">업체수정</button>
+        <button className="primary-btn">장비조회</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
-    </RegisListModalWrap>
+    </RegisEquipListModalWrap>
   )
 }
 
-export default RegisListModal;
+export default RegisEquipListModal;
