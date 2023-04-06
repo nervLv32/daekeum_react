@@ -75,14 +75,7 @@ const CompanyInfoWrap = styled(paddingWrap)`
 `
 const SaleInfoListWrap = styled.ul``
 
-const Sale = () => {
-
-  const { openModal } = useModal();
-  const modalData = {
-    title: 'SaleInfoList Modal',
-    content: <SaleListModal />,
-    callback: () => alert('Modal Callback()'),
-  };
+const SaleVisit = () => {
 
   const dummyData = [
     {
@@ -113,33 +106,17 @@ const Sale = () => {
     },
   ]
   return <SaleWrap>
-    <SaleTapWrap title="업체정보" />
+    <SaleTapWrap title="방문이력" />
     <SaleTabSearch>
-      <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
+      <RegisTabNavi dep1="주)대금지오웰" dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" />
         <button className="search-btn" />
       </div>
     </SaleTabSearch>
 
-    <CompanyInfoWrap>
-      <SaleInfoListWrap>
-        {
-          dummyData.map((item, idx) => {
-            return (<SaleInfoList
-              key={item.no}
-              company={item.company}
-              ceo={item.ceo}
-              companyNum={item.companyNum}
-              onClick={() => openModal({ ...modalData, content: <SaleListModal item={item} /> })}
-            />
-            )
-          })
-        }
-      </SaleInfoListWrap>
-    </CompanyInfoWrap>
 
   </SaleWrap>
 }
 
-export default Sale
+export default SaleVisit

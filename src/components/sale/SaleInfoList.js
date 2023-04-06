@@ -26,6 +26,7 @@ const SaleInfoListComponent = styled.li`
     border-radius: 10px 10px 0px 0px;
     position: relative;
     dl {
+      font-size: 11px;
       dt {
         font-weight: 700;
       }
@@ -50,6 +51,7 @@ const SaleInfoListComponent = styled.li`
     display: flex;
     align-items: center;
     dl {
+      font-size: 12px;
       &:first-child {
         margin-right: 14px;
       }

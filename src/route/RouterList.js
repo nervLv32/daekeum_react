@@ -17,6 +17,8 @@ import RegisSite from "../pages/Regis/regisSite";
 import RegisDKNO from "../pages/Regis/regisDKNO";
 import RegisEquipment from "../pages/Regis/regisEquipment";
 import ComponentTestPage from "../pages/ComponentTestPage";
+import SaleVisit from "../pages/Sale/saleVisit";
+import SaleSite from "../pages/Sale/saleSite";
 
 const ReceiptList = [
   {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt />},
@@ -38,7 +40,9 @@ const ReportList = [
 ]
 
 const SaleList = [
-  {title: '영업메인', alias: '', path: 'sale/', element: <Sale />},
+  {title: '업체정보', alias: '/sale', path: '/sale', element: <Sale />},
+  {title: '현장정보', alias: '/sale/site', path: '/sale/site', element: <SaleSite />},
+  {title: '방문이력', alias: '/sale/visit', path: '/sale/visit', element: <SaleVisit />},
 ]
 
 export const bottomNavigationRouterList = [

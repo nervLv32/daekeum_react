@@ -39,7 +39,6 @@ const Title = () => {
   const [pageName, setpageName] = useState("메인페이지")
 
   const location = useLocation();
-  console.log("locationPath::::", location.pathname)
 
   const currentPage = [
     {

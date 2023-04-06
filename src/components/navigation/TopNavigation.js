@@ -31,7 +31,6 @@ const TopBg = styled.div`
 
 const TopNavigation = () => {
   const location = useLocation();
-  console.log(location.pathname === "/");
   
   return<TopNaviWrap>
     <Title />
