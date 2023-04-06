@@ -16,6 +16,7 @@ import Sale from "../pages/Sale";
 import RegisSite from "../pages/Regis/regisSite";
 import RegisDKNO from "../pages/Regis/regisDKNO";
 import RegisEquipment from "../pages/Regis/regisEquipment";
+import ComponentTestPage from "../pages/ComponentTestPage";
 
 const ReceiptList = [
   {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt />},
@@ -55,4 +56,5 @@ export const AuthRouterList = [
 
 export const HomeRouterList = [
   {title: '홈', alias: '', path: '', layout: <DefaultLayout/>, child: bottomNavigationRouterList},
+  {title: '영업', alias: 'comp-test', path: 'comp-test',  layout: <ComponentTestPage />},
 ]
