@@ -77,7 +77,6 @@ const ModalCardStyled = styled.div`
 const GlobalModalComponent = () => {
 
   const [modalDataState, setModalDataState] = useRecoilState(modalState);
-  console.log(modalDataState);
   const { isOpen } = modalDataState
   const { closeModal } = useModal();
 

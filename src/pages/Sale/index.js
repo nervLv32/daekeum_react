@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
+import Floating from "../../components/molecules/Floating";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import SaleInfoList from "../../components/sale/SaleInfoList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
@@ -75,6 +76,13 @@ const CompanyInfoWrap = styled(paddingWrap)`
 `
 const SaleInfoListWrap = styled.ul``
 
+const FloatingWrap = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom : 100px;
+  z-index: 100;
+`
+
 const Sale = () => {
 
   const { openModal } = useModal();
@@ -138,6 +146,12 @@ const Sale = () => {
         }
       </SaleInfoListWrap>
     </CompanyInfoWrap>
+
+    <FloatingWrap>
+      <Floating onClick={console.log(1)}>
+        <i className="default-icon"></i>
+      </Floating>
+    </FloatingWrap>
 
   </SaleWrap>
 }

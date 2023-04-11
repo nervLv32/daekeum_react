@@ -63,7 +63,7 @@ const FloatingWrap = styled.div`
   position: fixed;
   right: 20px;
   bottom : 100px;
-  z-index: 1000;
+  z-index: 100;
 `
 
 const FloatingBody = styled.div``

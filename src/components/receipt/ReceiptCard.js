@@ -4,7 +4,6 @@ import { getOrderState } from "../../util/utils";
 import OrderStateBtn from "../atom/OrderStateBtn";
 
 const ReceiptCardComponent = styled.li`
-  cursor: pointer;
   &:not(:last-child) {
     margin-bottom: 16px;
   }
@@ -71,7 +70,9 @@ const ReceiptCardComponent = styled.li`
       .view-more {
         position: absolute;
         top: 0;
-        right: 10px;
+        right: 0;
+        width: 14px;
+        height: 14px;
         cursor: pointer;
       }
     }
@@ -91,7 +92,7 @@ const ReceiptCard = ({
 }) => {
 
 
-  return <ReceiptCardComponent onClick={onClick}>
+  return <ReceiptCardComponent>
     <div className="receipt-top">
       <div className="dl-wrap">
         <dl className="number">
@@ -117,7 +118,7 @@ const ReceiptCard = ({
           <dt>지역</dt>
           <dd>{regionFirst}-{regionSecond}</dd>
         </dl>
-        <i className="view-more" onClick={() => console.log('111')}>
+        <i className="view-more" onClick={onClick}>
           <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
         </i>
       </div>

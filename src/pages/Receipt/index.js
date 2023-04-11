@@ -3,10 +3,20 @@ import TopSearch from "../../components/molecules/TopSearch"
 import { useModal } from "../../hooks/useModal";
 import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
+import { useState } from "react";
+import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 
 const ReceiptWrap = styled.div`
-  padding: 28px 30px 0;
-  
+  padding: 28px 30px 0; 
+`
+
+// 메뉴가 3개 4개 5개로 나뉘어져서 부득이하게
+// wrapper 잡아야함. li에 대한 스타일은 TopSearchMenu에 있습니다
+const TopSearchcMenuWrap = styled.ul`
+  width: 175px;
+  height: 240px;
+  background: url('../images/topmenu-search-bg.png') no-repeat 50% center / cover;;
+  padding: 43px 30px 0px 25px;
 `
 
 const Receipt = () => {
@@ -99,9 +109,43 @@ const Receipt = () => {
     },
   ]
 
+  const [topMenu, setTopMenu] = useState(false);
+  
   return (
     <>
-      <TopSearch />
+      <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
+      {
+        topMenu && (
+        <TopSearchMenu>
+          <TopSearchcMenuWrap>
+            <li>
+              <i>
+                <img src="../icons/icon-topmenu-list.png" alt="topmenu icon" />
+              </i>
+              <span>전체</span>
+            </li>
+            <li>
+              <i>
+                <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
+              </i>
+              <span>신규접수</span>
+            </li>
+            <li>
+              <i>
+                <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
+              </i>
+              <span>접수확인</span>
+            </li>
+            <li>
+              <i>
+                <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
+              </i>
+              <span>처리완료</span>
+            </li>
+          </TopSearchcMenuWrap>
+        </TopSearchMenu>
+        )
+      }
       <ReceiptWrap>
         {
           dummyData.map((item, key) => {

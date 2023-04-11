@@ -136,7 +136,6 @@ const NavigationWrap = styled.div`
 
 const Navigation = () => {
   const [user, setUser] = useRecoilState(userAtom)
-  console.log(user)
   const [menuState, setMenuState] = useRecoilState(menuAtom)
 
   const sideMenuNavi = [

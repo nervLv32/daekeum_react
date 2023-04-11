@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const SaleInfoListComponent = styled.li`
-  cursor: pointer;
   &:not(:last-child) {
     margin-bottom: 15px;
   }
@@ -36,10 +35,10 @@ const SaleInfoListComponent = styled.li`
     }
     .viewmore-btn {
       width: 13px;
-      height: 3px;
-      background : url('../icons/regis-viewmore-icon.png') no-repeat 50% center / cover;
+      height: 14px;
+      background : url('../icons/regis-viewmore-icon.png') no-repeat 50% center;
       position: absolute;
-      top: 14px;
+      top: 8px;
       right:18px;
       cursor: pointer;
     }
@@ -65,13 +64,13 @@ const SaleInfoList = ({
   companyNum,
   onClick
 }) => {
-  return <SaleInfoListComponent onClick={onClick}>
+  return <SaleInfoListComponent>
     <div className="list-top">
       <dl>
         <dt>업체명</dt>
         <dd>{company}</dd>
       </dl>
-      <button className="viewmore-btn" />
+      <button className="viewmore-btn" onClick={onClick} />
     </div>
     <div className="list-body">
       <dl>

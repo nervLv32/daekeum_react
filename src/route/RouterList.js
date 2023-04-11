@@ -19,6 +19,8 @@ import RegisEquipment from "../pages/Regis/regisEquipment";
 import ComponentTestPage from "../pages/ComponentTestPage";
 import SaleVisit from "../pages/Sale/saleVisit";
 import SaleSite from "../pages/Sale/saleSite";
+import InventoryRequest from "../pages/Inventory/inventoryRequest";
+import InventoryWait from "../pages/Inventory/inventoryWait";
 
 const ReceiptList = [
   {title: '접수메인', alias: '', path: 'receipt/', element: <Receipt />},
@@ -32,7 +34,9 @@ const RegisList = [
 ]
 
 const InventoryList = [
-  {title: '재고메인', alias: '', path: 'inventory/', element: <Inventory />},
+  {title: '재고메인', alias: '/inventory', path: '/inventory', element: <Inventory />},
+  {title: '자재요청', alias: '/inventory/request', path: '/inventory/request', element: <InventoryRequest />},
+  {title: '입고대기', alias: '/inventory/wait', path: '/inventory/wait', element: <InventoryWait />},
 ]
 
 const ReportList = [

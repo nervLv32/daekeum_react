@@ -58,6 +58,14 @@ const Title = () => {
       title : '재고'
     },
     {
+      pathname: '/inventory/request',
+      title : '자재요청'
+    },
+    {
+      pathname: '/inventory/wait',
+      title : '입고대기'
+    },
+    {
       pathname: '/report',
       title : '입출고서류상신'
     },

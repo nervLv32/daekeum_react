@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
+import SaleVisitListModal from "../../base-components/modal-components/sale/SaleVisitListModal";
+import Floating from "../../components/molecules/Floating";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import SaleInfoList from "../../components/sale/SaleInfoList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
+import SaleVisitList from "../../components/sale/SaleVisitList";
 
 import { useModal } from "../../hooks/useModal";
 
@@ -75,34 +78,46 @@ const CompanyInfoWrap = styled(paddingWrap)`
 `
 const SaleInfoListWrap = styled.ul``
 
+const FloatingWrap = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom : 100px;
+  z-index: 100;
+`
+
 const SaleVisit = () => {
+
+  const { openModal } = useModal();
+  const modalData = {
+    title: 'SaleInfoList Modal',
+    content: <SaleVisitListModal />,
+    callback: () => alert('Modal Callback()'),
+  };
 
   const dummyData = [
     {
-      no: 41377,
+      no: 1,
       date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
+      salesManager: "정명길",
+      companyManager: "정명길",
+      position: "사원",
+      text:`세륜기 순회점검 방문, 세륜기 확인하였으나 오랫동안
+      방치된 상태 현장 사무실 없어서 담당자 통화하였으며,
+      현장 추가계약 못하여 지호건설은 철수 기존 설치된
+      세륜기는 후속업체 정해지면 임대 형식으로 3개월 임대
+      및 추후 철수예정`
     },
     {
-      no: 41378,
+      no: 2,
       date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
+      salesManager: "공나현",
+      companyManager: "팜윤태",
+      position: "주임",
+      text:`세륜기 순회점검 방문, 세륜기 확인하였으나 오랫동안
+      방치된 상태 현장 사무실 없어서 담당자 통화하였으며,
+      현장 추가계약 못하여 지호건설은 철수 기존 설치된
+      세륜기는 후속업체 정해지면 임대 형식으로 3개월 임대
+      및 추후 철수예정`
     },
   ]
   return <SaleWrap>
@@ -115,7 +130,30 @@ const SaleVisit = () => {
       </div>
     </SaleTabSearch>
 
+    <CompanyInfoWrap>
+      <SaleInfoListWrap>
+        {
+          dummyData.map((item, idx) => {
+            return (<SaleVisitList
+              key={item.no}
+              no={item.no}
+              date={item.date}
+              salesManager={item.salesManager}
+              companyManager={item.companyManager}
+              position={item.position}
+              onClick={() => openModal({ ...modalData, content: <SaleVisitListModal item={item} /> })}
+            />
+            )
+          })
+        }
+      </SaleInfoListWrap>
+    </CompanyInfoWrap>
 
+    <FloatingWrap>
+      <Floating onClick={console.log(1)}>
+        <i className="default-icon"></i>
+      </Floating>
+    </FloatingWrap>
   </SaleWrap>
 }
 
