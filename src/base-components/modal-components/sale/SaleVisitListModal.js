@@ -129,19 +129,19 @@ const SaleVisitListModalWrap = styled.div`
             &.ready {
               background-color: #5A55CA;
               i {
-                background : url('../icons/receipt-ready-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-ready-icon.png') no-repeat 50% center / cover;
               }
             }
             &.add {
               background-color: #EA583F;
               i {
-                background : url('../icons/receipt-add-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-add-icon.png') no-repeat 50% center / cover;
               }
             }
             &.done {
               background-color: #0CA35A;
               i {
-                background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-done-icon.png') no-repeat 50% center / cover;
               }
             }
             i {

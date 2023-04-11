@@ -15,12 +15,12 @@ const FloatingWrap = styled.div`
   .default-icon {
     width: 31px;
     height: 31px;
-    background: url('../icons/icon-floating-add.png') no-repeat 50% center / cover;
+    background: url('icons/icon-floating-add.png') no-repeat 50% center / cover;
   }
   .close-icon {
     width: 18px;
     height: 18px;
-    background: url('../icons/icon-floating-x.png') no-repeat 50% center / cover;
+    background: url('icons/icon-floating-x.png') no-repeat 50% center / cover;
   }
 `
 

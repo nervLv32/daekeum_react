@@ -119,19 +119,19 @@ const ReceiptListModalWrap = styled.div`
             &.ready {
               background-color: #5A55CA;
               i {
-                background : url('../icons/receipt-ready-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-ready-icon.png') no-repeat 50% center / cover;
               }
             }
             &.add {
               background-color: #EA583F;
               i {
-                background : url('../icons/receipt-add-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-add-icon.png') no-repeat 50% center / cover;
               }
             }
             &.done {
               background-color: #0CA35A;
               i {
-                background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
+                background : url('icons/receipt-done-icon.png') no-repeat 50% center / cover;
               }
             }
             i {
@@ -288,10 +288,10 @@ const ReceiptListModal = ({ item }) => {
         </div>
         <button className="modify-btn">수정</button>
         <button className="call-btn">
-          <img src="../icons/modal-call-icon.png" alt="call icon" />
+          <img src="icons/modal-call-icon.png" alt="call icon" />
         </button>
         <button className="del-btn">
-          <img src="../icons/modal-del-icon.png" alt="del icon" />
+          <img src="icons/modal-del-icon.png" alt="del icon" />
         </button>
       </div>
     </ReceiptListModalWrap>

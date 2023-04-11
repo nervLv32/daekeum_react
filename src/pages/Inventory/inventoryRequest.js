@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import InventoryRequestListModal from "../../base-components/modal-components/inventory/InventoryRequestListModal";
 import InventoryRequestModal from "../../base-components/modal-components/inventory/InventoryRequestModal";
 import InventoryRequestList from "../../components/inventory/InventoryRequestList";
 import Floating from "../../components/molecules/Floating";
@@ -17,7 +18,7 @@ const InventoryRequestListWrap = styled.ul``
 const TopSearchcMenuWrap = styled.ul`
   width: 175px;
   height: 206px;
-  background: url('../images/topmenu-search-threebg.png') no-repeat 50% center / cover;;
+  background: url('images/topmenu-search-threebg.png') no-repeat 50% center / cover;;
   padding: 47px 30px 0px 25px;
 `
 
@@ -35,7 +36,6 @@ const InventoryRequest = () => {
   const { openModal } = useModal();
   const modalData = {
     title: 'Inventory Request Modal',
-    content: <InventoryRequestModal />,
     callback: () => alert('Modal Callback()'),
   };
 
@@ -47,7 +47,7 @@ const InventoryRequest = () => {
       materialManager: '팜윤태',
       writer: "정명길",
       site: "01.음성공장",
-      sateManager: "공나현"
+      stateManager: "공나현"
     },
     {
       no: 14800,
@@ -56,7 +56,7 @@ const InventoryRequest = () => {
       materialManager: '팜윤태',
       writer: "정명길",
       site: "01.음성공장",
-      sateManager: "공나현"
+      stateManager: "공나현"
     },
     {
       no: 14801,
@@ -65,7 +65,7 @@ const InventoryRequest = () => {
       materialManager: '팜윤태',
       writer: "정명길",
       site: "01.음성공장",
-      sateManager: "공나현"
+      stateManager: "공나현"
     }
   ]
 
@@ -79,7 +79,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory">
                   <i>
-                    <img src="../icons/icon-topmenu-allindex.png" alt="topmenu icon" />
+                    <img src="icons/icon-topmenu-allindex.png" alt="topmenu icon" />
                   </i>
                   <span>재고</span>
                 </NavLink>
@@ -87,7 +87,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory/request">
                   <i>
-                    <img src="../icons/icon-topmenu-question.png" alt="topmenu icon" />
+                    <img src="icons/icon-topmenu-question.png" alt="topmenu icon" />
                   </i>
                   <span>자재요청</span>
                 </NavLink>
@@ -95,7 +95,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory/wait">
                   <i>
-                    <img src="../icons/icon-topmenu-readmore.png" alt="topmenu icon" />
+                    <img src="icons/icon-topmenu-readmore.png" alt="topmenu icon" />
                   </i>
                   <span>입고대기</span>
                 </NavLink>
@@ -116,7 +116,8 @@ const InventoryRequest = () => {
                 materialManager={item.materialManager}
                 writer={item.writer}
                 site={item.site}
-                sateManager={item.sateManager}
+                stateManager={item.stateManager}
+                onClick={() => openModal({ ...modalData, content: <InventoryRequestListModal item={item} />})}
               />
             })
           }

@@ -112,7 +112,8 @@ const Home = () => {
           고객접수 상황
         </p>
         <NavLink to="/receipt">
-          <img src="../icons/icon-main-rightarrow.png" alt="right arrow" />
+          <img src="icons/icon-main-rightarrow.png" alt="right arrow" />
+          {/* ../../../assets/dummyImage/profile.jpeg */}
         </NavLink>
       </HomeListTitle>
       {

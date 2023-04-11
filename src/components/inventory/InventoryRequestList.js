@@ -41,6 +41,28 @@ const InventoryRequestListComponent = styled.li`
       }
     }
   }
+  .list-body {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #F6F6F6;
+    position: relative;
+    border-radius: 0 0 10px 10px;
+    dl {
+      &:first-child {
+        margin-right: 35px;
+      }
+    }
+    .view-more {
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+      }
+  }
 `
 
 const InventoryRequestList = ({
@@ -50,7 +72,8 @@ const InventoryRequestList = ({
   materialManager,
   writer,
   site,
-  sateManager,
+  stateManager,
+  onClick
 }) => {
   return <InventoryRequestListComponent>
     <div className="list-top">
@@ -69,7 +92,17 @@ const InventoryRequestList = ({
       </div>
     </div>
     <div className="list-body">
-
+      <dl>
+        <dt>자제요청자</dt>
+        <dd>{materialManager}</dd>
+      </dl>
+      <dl>
+        <dt>작성자</dt>
+        <dd>{writer}</dd>
+      </dl>
+      <i className="view-more" onClick={onClick}>
+          <img src="icons/receipt-viewmore-icon.png" alt="view-more btn" />
+        </i>
     </div>
   </InventoryRequestListComponent >
 }

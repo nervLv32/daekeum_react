@@ -22,7 +22,7 @@ const TopBg = styled.div`
   display: block;
   width: 298px;
   height: 113px;
-  background: url('../images/main-btnwrap-bg.png') no-repeat 100% bottom;
+  background: url('images/main-btnwrap-bg.png') no-repeat 100% bottom;
   position: absolute;
   top: 20px;
   right: 0;

@@ -36,7 +36,7 @@ const NavigationWrap = styled.div`
   width: 70%;
   
   height: 100vh;
-  background: #1F319D url("../images/sidemenu-bg.png") 100% bottom no-repeat;
+  background: #1F319D url("images/sidemenu-bg.png") 100% bottom no-repeat;
   top: 0;
   right: 0;
   color: white;
@@ -188,7 +188,7 @@ const Navigation = () => {
                 return <li key={key}>
                   <NavLink to={item.path} onClick={() => setMenuState({ isOpen: false })}>
                     <i>
-                      <img src={`../icons/${item.iconSrc}`} alt="sidemenu icon" />
+                      <img src={`icons/${item.iconSrc}`} alt="sidemenu icon" />
                     </i>
                     <p>{item.title}</p>
                   </NavLink>
@@ -200,7 +200,7 @@ const Navigation = () => {
         <div className="logout">
           LOGOUT
           <i>
-            <img src="../icons/icon-logout.png" alt="logout btn" />
+            <img src="icons/icon-logout.png" alt="logout btn" />
           </i>
         </div>
       </NavigationWrap>

@@ -8,15 +8,16 @@ const TopSearchMenuWrap = styled.div`
   z-index: 99;
   ul {
     li {
-      background-color: #fff;
       width: 100%;
-      border-radius: 20px;
       display: flex;
       align-items: center;
-      padding: 6px 20px;
       cursor: pointer;
       a {
         display: flex;
+        background-color: #fff;
+        border-radius: 20px;
+        width: 100%;
+        padding: 6px 20px;
         align-items: center;
       }
       &:not(:last-child) {
