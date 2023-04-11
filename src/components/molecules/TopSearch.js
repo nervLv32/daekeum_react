@@ -74,11 +74,11 @@ const TopSearch = ({ topMenu, setTopMenu }) => {
         {
           topMenu ? (
             <i>
-              <img src="icons/topmenu-close-x.png" alt="widget icon" />
+              <img src="../icons/topmenu-close-x.png" alt="widget icon" />
             </i>
           ) : (
             <i>
-              <img src="icons/widgets-icon.png" alt="widget icon" />
+              <img src="../icons/widgets-icon.png" alt="widget icon" />
             </i>
           )
         }

@@ -5,6 +5,7 @@ import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 import { useState } from "react";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
+import { NavLink } from "react-router-dom";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -110,40 +111,48 @@ const Receipt = () => {
   ]
 
   const [topMenu, setTopMenu] = useState(false);
-  
+
   return (
     <>
       <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
       {
         topMenu && (
-        <TopSearchMenu>
-          <TopSearchcMenuWrap>
-            <li>
-              <i>
-                <img src="icons/icon-topmenu-list.png" alt="topmenu icon" />
-              </i>
-              <span>전체</span>
-            </li>
-            <li>
-              <i>
-                <img src="icons/icon-topmenu-addbox.png" alt="topmenu icon" />
-              </i>
-              <span>신규접수</span>
-            </li>
-            <li>
-              <i>
-                <img src="icons/icon-topmenu-checklist.png" alt="topmenu icon" />
-              </i>
-              <span>접수확인</span>
-            </li>
-            <li>
-              <i>
-                <img src="icons/icon-topmenu-done.png" alt="topmenu icon" />
-              </i>
-              <span>처리완료</span>
-            </li>
-          </TopSearchcMenuWrap>
-        </TopSearchMenu>
+          <TopSearchMenu>
+            <TopSearchcMenuWrap>
+              <li>
+                <NavLink to="/">
+                  <i>
+                    <img src="icons/icon-topmenu-list.png" alt="topmenu icon" />
+                  </i>
+                  <span>전체</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/">
+                  <i>
+                    <img src="icons/icon-topmenu-addbox.png" alt="topmenu icon" />
+                  </i>
+                  <span>신규접수</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/">
+                  <i>
+                    <img src="icons/icon-topmenu-checklist.png" alt="topmenu icon" />
+                  </i>
+                  <span>접수확인</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/">
+                  <i>
+                    <img src="icons/icon-topmenu-done.png" alt="topmenu icon" />
+                  </i>
+                  <span>처리완료</span>
+                </NavLink>
+              </li>
+            </TopSearchcMenuWrap>
+          </TopSearchMenu>
         )
       }
       <ReceiptWrap>

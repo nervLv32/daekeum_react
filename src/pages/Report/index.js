@@ -36,7 +36,7 @@ const Report = () => {
   ]
 
   return <>
-    <TopSearch />
+    <TopSearch setTopMenu={() => console.log(1)}/>
     <ReportWrap>
       <ReportMainTableTop />
       {
