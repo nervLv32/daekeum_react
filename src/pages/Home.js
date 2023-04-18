@@ -28,14 +28,14 @@ const HomeListTitle = styled.div`
 const FMenuWrap = styled.ul`
   width: 160px;
   height: 200px;
-  background: url('../icons/icon-floating-bg.png') no-repeat 50% center / cover;
+  background: url('../../icons/icon-floating-bg.png') no-repeat 50% center / cover;
   position: absolute;
   bottom : 25px;
   right: -15px;
   padding: 27px 20px 0 15px;
   z-index: 99;
   &.dep2 {
-    background: url('../icons/icon-floating-bg-dep2.png') no-repeat 50% center / cover;
+    background: url('../../icons/icon-floating-bg-dep2.png') no-repeat 50% center / cover;
   }
   li {
     width: 100%;
@@ -112,7 +112,7 @@ const Home = () => {
           고객접수 상황
         </p>
         <NavLink to="/receipt">
-          <img src="icons/icon-main-rightarrow.png" alt="right arrow" />
+          <img src="../icons/icon-main-rightarrow.png" alt="right arrow" />
           {/* ../../../assets/dummyImage/profile.jpeg */}
         </NavLink>
       </HomeListTitle>
@@ -150,15 +150,15 @@ const Home = () => {
             isFOpen ? (
               <FMenuWrap>
                 <li onClick={() => setIsFDep2(prev => !prev)}>
-                  <i><img src="../icons/icon-f-calendar.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>기간별조회</span>
                 </li>
                 <li>
-                  <i><img src="../icons/icon-f-location.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
                   <span>지역별조회</span>
                 </li>
                 <li>
-                  <i><img src="../icons/icon-f-books.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
                   <span>신규접수</span>
                 </li>
               </FMenuWrap>
@@ -168,15 +168,15 @@ const Home = () => {
             isFOpen && isFDep2? (
               <FMenuWrap className="dep2">
                 <li>
-                  <i><img src="../icons/icon-f-calendar.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>년도별조회</span>
                 </li>
                 <li>
-                  <i><img src="../icons/icon-f-table.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-table.png" alt="floating icon" /></i>
                   <span>월별조회</span>
                 </li>
                 <li>
-                  <i><img src="../icons/icon-f-viewday.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-viewday.png" alt="floating icon" /></i>
                   <span>일자별조회</span>
                 </li>
               </FMenuWrap>

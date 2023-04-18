@@ -119,7 +119,7 @@ const ReceiptCard = ({
           <dd>{regionFirst}-{regionSecond}</dd>
         </dl>
         <i className="view-more" onClick={onClick}>
-          <img src="icons/receipt-viewmore-icon.png" alt="view-more btn" />
+          <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
         </i>
       </div>
       <div className="body-wrap">

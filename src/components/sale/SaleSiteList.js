@@ -36,7 +36,7 @@ const SaleSiteListComponent = styled.li`
     .viewmore-btn {
       width: 13px;
       height: 14px;
-      background : url('icons/regis-viewmore-icon.png') no-repeat 50% center;
+      background : url('../icons/regis-viewmore-icon.png') no-repeat 50% center;
       position: absolute;
       top: 10px;
       right:18px;

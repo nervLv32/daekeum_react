@@ -101,7 +101,7 @@ const InventoryRequestList = ({
         <dd>{writer}</dd>
       </dl>
       <i className="view-more" onClick={onClick}>
-          <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
+          <img src="../../icons/receipt-viewmore-icon.png" alt="view-more btn" />
         </i>
     </div>
   </InventoryRequestListComponent >

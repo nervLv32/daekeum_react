@@ -18,7 +18,7 @@ const InventoryRequestListWrap = styled.ul``
 const TopSearchcMenuWrap = styled.ul`
   width: 175px;
   height: 206px;
-  background: url('images/topmenu-search-threebg.png') no-repeat 50% center / cover;;
+  background: url('../images/topmenu-search-threebg.png') no-repeat 50% center / cover;;
   padding: 47px 30px 0px 25px;
 `
 
@@ -79,7 +79,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory">
                   <i>
-                    <img src="../icons/icon-topmenu-allindex.png" alt="topmenu icon" />
+                    <img src="../../icons/icon-topmenu-allindex.png" alt="topmenu icon" />
                   </i>
                   <span>재고</span>
                 </NavLink>
@@ -87,7 +87,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory/request">
                   <i>
-                    <img src="../icons/icon-topmenu-question.png" alt="topmenu icon" />
+                    <img src="../../icons/icon-topmenu-question.png" alt="topmenu icon" />
                   </i>
                   <span>자재요청</span>
                 </NavLink>
@@ -95,7 +95,7 @@ const InventoryRequest = () => {
               <li>
                 <NavLink to="/inventory/wait">
                   <i>
-                    <img src="../icons/icon-topmenu-readmore.png" alt="topmenu icon" />
+                    <img src="../../icons/icon-topmenu-readmore.png" alt="topmenu icon" />
                   </i>
                   <span>입고대기</span>
                 </NavLink>

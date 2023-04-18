@@ -32,7 +32,7 @@ const InventoryRequestModal = () => {
           <dd>
             2023-02-08
             <i>
-              <img src="icons/icon-modal-calender.png" alt="calender icon" />
+              <img src="../icons/icon-modal-calender.png" alt="calender icon" />
             </i>
           </dd>
         </dl>

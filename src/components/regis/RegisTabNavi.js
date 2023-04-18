@@ -21,9 +21,9 @@ const RegisTabNavi = ({ dep1, dep2, dep3 }) => {
   return (
     <RegisTabNavigation>
       <li>{dep1}</li>
-      <img src="../icons/tab-navi-rightarrow.png" alt="right arrow" />
+      <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
       <li>{dep2}</li>
-      <img src="../icons/tab-navi-rightarrow.png" alt="right arrow" />
+      <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
       <li>{dep3}</li>
     </RegisTabNavigation>
   )

@@ -64,7 +64,7 @@ const SaleTabSearch = styled.div`
       border: 1px solid rgba(238, 241, 255, 0.4);
       box-shadow: 3px 3px 15px rgba(28, 27, 31, 0.2);
       border-radius: 10px;
-      background: #555 url('icons/search-icon.png') no-repeat 50% center / 14px;
+      background: #555 url('../icons/search-icon.png') no-repeat 50% center / 14px;
       cursor: pointer;
       margin-left: 4px;
     }

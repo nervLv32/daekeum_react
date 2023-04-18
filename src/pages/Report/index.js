@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import RPCase0101Modal from "../../base-components/modal-components/inventory/document/Case01/RPCase0101Modal";
+import RPCase0201Modal from "../../base-components/modal-components/inventory/document/Case02/RPCase0201Modal";
 import TopSearch from "../../components/molecules/TopSearch";
+import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import ReportMainTable from "../../components/report/ReportMainTable";
 import ReportMainTableTop from "../../components/report/ReportMainTableTop";
+import { useModal } from "../../hooks/useModal";
 
 const ReportWrap = styled.div`
   padding: 28px 30px 0;
 `
+
+const TopSearchcMenuWrap = styled.ul`
+  width: 260px;
+  height: 283px;
+  background: url('../images/topmenu-search-fivebg.png') no-repeat 50% center;
+  padding: 47px 30px 0px;
+`
+
 
 const Report = () => {
 
@@ -34,9 +47,65 @@ const Report = () => {
       regionSecond: "동작구",
     },
   ]
+  const [topMenu, setTopMenu] = useState(false);
+
+  const { openModal } = useModal();
+  const modalData = {
+    title: 'RPCase Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
 
   return <>
-    <TopSearch setTopMenu={() => console.log(1)}/>
+    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
+    {
+      topMenu && (
+        <TopSearchMenu>
+          <TopSearchcMenuWrap>
+            <li>
+              <a onClick={() => openModal({ ...modalData, content: <RPCase0101Modal /> })}>
+                <i>
+                  <img src="../icons/icon-topmenu-outbox.png" alt="topmenu icon" />
+                </i>
+                <span>출고요청서(세륜,축중)</span>
+              </a>
+            </li>
+            <li>
+              <a onClick={() => openModal({ ...modalData, content: <RPCase0201Modal /> })}>
+                <i>
+                  <img src="../icons/icon-topmenu-outbox.png" alt="topmenu icon" />
+                </i>
+                <span>출고요청서(신사업)</span>
+              </a>
+            </li>
+            <li>
+              <NavLink to="/">
+                <i>
+                  <img src="../icons/icon-topmenu-inbox.png" alt="topmenu icon" />
+                </i>
+                <span>입고요청서</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/">
+                <i>
+                  <img src="../icons/icon-topmenu-microwave.png" alt="topmenu icon" />
+                </i>
+                <span>수리기입고요청서</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/">
+                <i>
+                  <img src="../icons/icon-topmenu-microwave.png" alt="topmenu icon" />
+                </i>
+                <span>수리기출고요청서</span>
+              </NavLink>
+            </li>
+          </TopSearchcMenuWrap>
+        </TopSearchMenu>
+      )
+    }
     <ReportWrap>
       <ReportMainTableTop />
       {

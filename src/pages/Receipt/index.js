@@ -16,7 +16,7 @@ const ReceiptWrap = styled.div`
 const TopSearchcMenuWrap = styled.ul`
   width: 175px;
   height: 240px;
-  background: url('images/topmenu-search-bg.png') no-repeat 50% center / cover;;
+  background: url('../images/topmenu-search-bg.png') no-repeat 50% center / cover;;
   padding: 43px 30px 0px 25px;
 `
 
@@ -122,7 +122,7 @@ const Receipt = () => {
               <li>
                 <NavLink to="/">
                   <i>
-                    <img src="icons/icon-topmenu-list.png" alt="topmenu icon" />
+                    <img src="../icons/icon-topmenu-list.png" alt="topmenu icon" />
                   </i>
                   <span>전체</span>
                 </NavLink>
@@ -130,7 +130,7 @@ const Receipt = () => {
               <li>
                 <NavLink to="/">
                   <i>
-                    <img src="icons/icon-topmenu-addbox.png" alt="topmenu icon" />
+                    <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
                   </i>
                   <span>신규접수</span>
                 </NavLink>
@@ -138,7 +138,7 @@ const Receipt = () => {
               <li>
                 <NavLink to="/">
                   <i>
-                    <img src="icons/icon-topmenu-checklist.png" alt="topmenu icon" />
+                    <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
                   </i>
                   <span>접수확인</span>
                 </NavLink>
@@ -146,7 +146,7 @@ const Receipt = () => {
               <li>
                 <NavLink to="/">
                   <i>
-                    <img src="icons/icon-topmenu-done.png" alt="topmenu icon" />
+                    <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
                   </i>
                   <span>처리완료</span>
                 </NavLink>
