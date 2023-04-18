@@ -3,6 +3,9 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import RPCase0101Modal from "../../base-components/modal-components/inventory/document/Case01/RPCase0101Modal";
 import RPCase0201Modal from "../../base-components/modal-components/inventory/document/Case02/RPCase0201Modal";
+import RPCase0301Modal from "../../base-components/modal-components/inventory/document/Case03/RPCase0301Modal";
+import RPCase0401Modal from "../../base-components/modal-components/inventory/document/Case04/RPCase0401Modal";
+import RPCase0501Modal from "../../base-components/modal-components/inventory/document/Case05/RPCase0501Modal";
 import TopSearch from "../../components/molecules/TopSearch";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import ReportMainTable from "../../components/report/ReportMainTable";
@@ -79,28 +82,28 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <NavLink to="/">
+              <a onClick={() => openModal({ ...modalData, content: <RPCase0301Modal /> })}>
                 <i>
                   <img src="../icons/icon-topmenu-inbox.png" alt="topmenu icon" />
                 </i>
                 <span>입고요청서</span>
-              </NavLink>
+              </a>
             </li>
             <li>
-              <NavLink to="/">
+              <a onClick={() => openModal({ ...modalData, content: <RPCase0401Modal /> })}>
                 <i>
                   <img src="../icons/icon-topmenu-microwave.png" alt="topmenu icon" />
                 </i>
                 <span>수리기입고요청서</span>
-              </NavLink>
+              </a>
             </li>
             <li>
-              <NavLink to="/">
+              <a onClick={() => openModal({ ...modalData, content: <RPCase0501Modal /> })}>
                 <i>
                   <img src="../icons/icon-topmenu-microwave.png" alt="topmenu icon" />
                 </i>
                 <span>수리기출고요청서</span>
-              </NavLink>
+              </a>
             </li>
           </TopSearchcMenuWrap>
         </TopSearchMenu>

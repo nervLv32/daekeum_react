@@ -73,7 +73,7 @@ const RPCase0102Modal = () => {
       <button className="primary-btn" onClick={() => {
         closeModal()
         openModal({ ...modalData, content: <RPDoc01Modal /> })
-      }}>현장검색</button>
+      }}>확인</button>
       <button className="del-btn" onClick={() => {
         closeModal()
         openModal({ ...modalData, content: <RPCase0101Modal />})

@@ -7,15 +7,16 @@ import RPModalListTop from "../../../../../components/report/RPModalListTop";
 import RPModalSearch from "../../../../../components/report/RPModalSearch";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import { useModal } from "../../../../../hooks/useModal";
-import RPCase0202Modal from "./RPCase0202Modal";
+
+import RPCase0402Modal from "./RPCase0402Modal";
 
 
-const RPCase0201ModalWrap = styled.div`
+const RPCase0401ModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
 `
 
-const RPCase0201Modal = () => {
+const RPCase0401Modal = () => {
   const { openModal, closeModal } = useModal();
 
   const dummyData = [
@@ -122,14 +123,13 @@ const RPCase0201Modal = () => {
   ]
 
   const modalData = {
-    title: 'RPCase0202 Modal',
-    // content: <RPCase0102Modal />,
+    title: 'RPCase0402Modal',
     callback: () => alert('Modal Callback()'),
   };
 
-  /******* 입출고 서류상신 - 출고요청서(신사업) case 02의 첫 번째 스텝 *******/
-  return <RPCase0201ModalWrap>
-    <RPModalTop title="출고서류상신" />
+  /******* 입출고 서류상신 - 수리기입고요청서 case 04의 첫 번째 스텝 *******/
+  return <RPCase0401ModalWrap>
+    <RPModalTop title="수리기서류상신" />
     <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" />
     <RPModalBody>
       <RPModalListTop type="type01" dep1="업체명" dep2="대표자" dep3="사업자번호" />
@@ -142,11 +142,11 @@ const RPCase0201Modal = () => {
     <RPModalBottom>
       <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RPCase0202Modal />})
-      }}>현장검색</button>
+        openModal({ ...modalData, content: <RPCase0402Modal />})
+      }}>수리기검색</button>
       <button className="del-btn" onClick={closeModal}>취소</button>
     </RPModalBottom>
-  </RPCase0201ModalWrap>
+  </RPCase0401ModalWrap>
 }
 
-export default RPCase0201Modal;
+export default RPCase0401Modal;
