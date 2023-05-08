@@ -22,7 +22,7 @@ const RPStepDepsWrap = styled.div`
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      width: 60px;
+      width: 70px;
       &.active {
         i {
           &::after {

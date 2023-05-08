@@ -3,25 +3,33 @@ import styled from "styled-components";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
-import RPCase0102Modal from "../../documentModal/Case01/RPCase0102Modal";
-import RPStep02Modal from "./RPStep02Modal";
 
-const RPStep01ModalWrap = styled.div`
+import RPCase0303Modal from "../../documentModal/Case03/RPCase0303Modal";
+import RPC03Step02Modal from "./RPC03Step02Modal";
+
+const RPC03Step01ModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
+  max-height: 70vh;
+  overflow-y: scroll;
+  width: 100%;
 `
 
-const RPStep01ModalBody = styled.div`
+const RPC03Step01ModalBody = styled.div`
   overflow-y: scroll;
+  padding-bottom: 70px;
 `
 
 const CustomerStatusWrap = styled.div`
   padding-bottom: 10px;
   background-color: #ebecef;
   .title-wrap {
+    height: 40px;
     padding: 8px 30px;
     background-color: #fff;
     border-bottom : 1px solid #EBECEF;
+    display: flex;
+    align-items: center;
     .title-text {
       font-size: 14px;
       font-weight: 700;
@@ -97,6 +105,11 @@ const ModalBtm = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
   & > *:not(:last-child) {
       margin-right: 10px;
     }
@@ -128,7 +141,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const RPStep01Modal = () => {
+const RPC03Step01Modal = () => {
 
   const { openModal, closeModal } = useModal();
 
@@ -137,9 +150,9 @@ const RPStep01Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  /******* 출고요청서 *******/
-  return <RPStep01ModalWrap>
-    <RPModalTop title="출고요청서" />
+  /******* 입고요청서 케이스의 첫번째 *******/
+  return <RPC03Step01ModalWrap>
+    <RPModalTop title="입고요청서" />
     <RPStepDeps
       dep="dep1"
       dep1title="거래처현황 세부정보"
@@ -148,7 +161,7 @@ const RPStep01Modal = () => {
       dep4title="축중기체크"
     />
     {/* 거래처 현황 */}
-    <RPStep01ModalBody>
+    <RPC03Step01ModalBody>
 
       <CustomerStatusWrap>
         <div className="title-wrap">
@@ -256,15 +269,15 @@ const RPStep01Modal = () => {
       <ModalBtm>
         <button className="del-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RPCase0102Modal /> })
+        openModal({ ...modalData, content: <RPCase0303Modal /> })
       }}>이전</button>
         <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RPStep02Modal /> })
+        openModal({ ...modalData, content: <RPC03Step02Modal /> })
       }}>다음</button>
       </ModalBtm>
-    </RPStep01ModalBody>
-  </RPStep01ModalWrap>
+    </RPC03Step01ModalBody>
+  </RPC03Step01ModalWrap>
 }
 
-export default RPStep01Modal;
+export default RPC03Step01Modal;

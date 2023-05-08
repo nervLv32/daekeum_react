@@ -7,9 +7,10 @@ import RPModalListTop from "../../../../../components/report/RPModalListTop";
 import RPModalSearch from "../../../../../components/report/RPModalSearch";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import { useModal } from "../../../../../hooks/useModal";
-import RPStep01Modal from "../../stepModal/Case01/RPStep01Modal";
+import RPStep01Modal from "../../stepModal/Case01/RPC01Step01Modal";
 
 import RPCase0101Modal from "./RPCase0101Modal";
+import RPC01Step01Modal from "../../stepModal/Case01/RPC01Step01Modal";
 
 
 const RPCase0102ModalWrap = styled.div`
@@ -74,7 +75,7 @@ const RPCase0102Modal = () => {
     <RPModalBottom>
       <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RPStep01Modal /> })
+        openModal({ ...modalData, content: <RPC01Step01Modal /> })
       }}>확인</button>
       <button className="del-btn" onClick={() => {
         closeModal()
