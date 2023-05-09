@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
+import { useNavigate } from "react-router-dom";
 
 const RegisEquipListModalWrap = styled.div`
   background-color: #fff;
@@ -111,6 +112,9 @@ const RegisEquipListModalWrap = styled.div`
 
 const RegisEquipListModal = ({ item }) => {
   const { closeModal } = useModal();
+
+  const navigate = useNavigate();
+
   return (
     <RegisEquipListModalWrap>
       <div className="modal-top">
@@ -164,7 +168,10 @@ const RegisEquipListModal = ({ item }) => {
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">장비조회</button>
+        <button className="primary-btn" onClick={() => {
+          closeModal();
+          navigate('/regis/DKNO')
+        }}>장비조회</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
     </RegisEquipListModalWrap>

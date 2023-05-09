@@ -9,6 +9,7 @@ import RPModalTop from "../../../../../components/report/RPModalTop";
 import { useModal } from "../../../../../hooks/useModal";
 
 import RPCase0501Modal from "./RPCase0501Modal";
+import RPC05Step01Modal from "../../stepModal/Case05/RPC05Step01Modal";
 
 
 const RPCase0502ModalWrap = styled.div`
@@ -52,7 +53,7 @@ const RPCase0502Modal = () => {
     <RPModalBottom>
       <button className="primary-btn" onClick={() => {
         closeModal()
-        // openModal({ ...modalData, content: <RPDoc01Modal /> })
+        openModal({ ...modalData, content: <RPC05Step01Modal /> })
       }}>확인</button>
       <button className="del-btn" onClick={() => {
         closeModal()

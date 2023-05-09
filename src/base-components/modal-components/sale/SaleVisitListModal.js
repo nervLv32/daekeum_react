@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
+import SaleSubmitModal from "./SaleSubmitModal";
 
 const SaleVisitListModalWrap = styled.div`
   background-color: #fff;
@@ -192,7 +193,12 @@ const SaleVisitListModalWrap = styled.div`
 
 const SaleVisitListModal = ({ item }) => {
   console.log(item)
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
+  const modalData = {
+    title: 'SaleSubmitModal Modal',
+    content: <SaleSubmitModal />,
+    callback: () => alert('Modal Callback()'),
+  };
   return (
     <SaleVisitListModalWrap>
       <div className="modal-top">
@@ -231,7 +237,7 @@ const SaleVisitListModal = ({ item }) => {
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">영업등록</button>
+        <button className="primary-btn" onClick={() => openModal({ ...modalData, content: <SaleSubmitModal />})}>영업등록</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
     </SaleVisitListModalWrap>
