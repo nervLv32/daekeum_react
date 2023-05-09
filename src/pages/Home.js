@@ -6,6 +6,8 @@ import MainBtnWrap from "../components/navigation/item/MainBtnWrap";
 import Floating from "../components/molecules/Floating";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useModal } from "../hooks/useModal";
+import DStep01Modal from "../base-components/modal-components/Diary/DStep01Modal";
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -97,6 +99,13 @@ const dummyData = [
 ]
 const Home = () => {
 
+  const { openModal, closeModal } = useModal();
+
+  const modalData = {
+    title: 'RPDoc01Modal Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
 
@@ -129,6 +138,11 @@ const Home = () => {
           />
         })
       }
+
+      <p onClick={() => {
+        closeModal()
+        openModal({ ...modalData, content: <DStep01Modal /> })
+      }}>dhdjdh</p>
       <FloatingWrap>
         <Floating isFOpen={isFOpen} onClick={() => {
           if (isFDep2) {
