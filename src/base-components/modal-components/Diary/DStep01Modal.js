@@ -111,6 +111,7 @@ const ModalWrap = styled.div`
           font-size: 1.2rem;
           font-weight: 500;
           color: #1c1b1f;
+          padding: 0 1.5rem;
         }
       }
     }
@@ -153,6 +154,18 @@ const DStep01Modal = () => {
           <dt className="essential">일지번호</dt>
           <dd>
             <input type="text" />
+          </dd>
+        </dl>
+        <dl>
+          <dt className="essential">장비정보</dt>
+          <dd>
+            <label>
+              <input type="text" />
+              <button type="button">
+                <i></i>
+                <span>장비검색</span>
+              </button>
+            </label>
           </dd>
         </dl>
       </div>
