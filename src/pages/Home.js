@@ -52,13 +52,6 @@ const dummyData = [
 ]
 const Home = () => {
 
-  const { openModal, closeModal } = useModal();
-
-  const modalData = {
-    title: 'RPDoc01Modal Modal',
-    callback: () => alert('Modal Callback()'),
-  };
-
   return (<>
     <InfoWrap>
       <UserInfo />
@@ -87,11 +80,6 @@ const Home = () => {
           />
         })
       }
-
-      <p onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <DStep01Modal /> })
-      }}>일지 스텝 모달</p>
     </HomeWrap>
   </>)
 }

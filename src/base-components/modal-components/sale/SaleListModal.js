@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
+import { useNavigate } from "react-router-dom";
+import SaleAddNewModal from "./SaleAddNewModal";
 
 const SaleListModalWrap = styled.div`
   background-color: #fff;
@@ -179,7 +181,14 @@ const SaleListModalWrap = styled.div`
 `
 
 const SaleListModal = ({ item }) => {
-  const { closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
+  const navigate = useNavigate();
+
+  const modalData = {
+    title: 'Modal',
+    callback: () => alert('Modal Callback()'),
+  };
   return (
     <SaleListModalWrap>
       <div className="modal-top">
@@ -233,8 +242,14 @@ const SaleListModal = ({ item }) => {
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn">현장조회</button>
-        <button className="primary-btn">업체수정</button>
+      <button className="primary-btn" onClick={() => {
+          closeModal();
+          navigate('/sale/site')
+          }}>현장조회</button>
+        <button className="primary-btn" onClick={() => {
+        closeModal()
+        openModal({ ...modalData, content: <SaleAddNewModal /> })
+      }}>업체수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
     </SaleListModalWrap>

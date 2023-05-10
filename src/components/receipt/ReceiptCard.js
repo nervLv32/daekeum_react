@@ -4,6 +4,7 @@ import { getOrderState } from "../../util/utils";
 import OrderStateBtn from "../atom/OrderStateBtn";
 import ReceiptCheckModal from "./ReceiptCheckModal";
 import { useModal } from "../../hooks/useModal";
+import DStep01Modal from "../../base-components/modal-components/Diary/DStep01Modal";
 
 const ReceiptCardComponent = styled.li`
   &:not(:last-child) {
@@ -99,8 +100,6 @@ const ReceiptCard = ({
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
-
-
   return <ReceiptCardComponent>
     <div className="receipt-top">
       <div className="dl-wrap">
@@ -113,7 +112,14 @@ const ReceiptCard = ({
           <dd>{date}</dd>
         </dl>
       </div>
-      <div className="state-wrap" onClick={() => openModal({ ...modalData, content: <ReceiptCheckModal /> })}>
+      <div className="state-wrap" 
+      onClick={() => {
+        if(state == '접수완료') {
+          openModal({ ...modalData, content: <ReceiptCheckModal /> })
+        } else {
+          openModal({ ...modalData, content: <DStep01Modal /> })
+        } 
+      }}>
         <OrderStateBtn state={state} />
       </div>
     </div>

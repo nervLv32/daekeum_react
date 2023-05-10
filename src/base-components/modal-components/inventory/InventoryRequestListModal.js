@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
+import SimpleInputModal from "./SimpleInputModal";
 
 const InventoryRequestListModalWrap = styled.div`
   background-color: #fff;
@@ -161,7 +162,13 @@ const InventoryRequestListModalWrap = styled.div`
 `
 
 const InventoryRequestListModal = ({ item }) => {
-  const { closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
+  const modalData = {
+    title: 'Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
 
   return <InventoryRequestListModalWrap>
     <div className="list-top">
@@ -252,8 +259,12 @@ const InventoryRequestListModal = ({ item }) => {
       </ul>
     </div>
     <div className="modal-btm">
-      <button className="primary-btn">입력완료</button>
-      <button className="del-btn">닫기</button>
+      <button className="primary-btn" onClick={() => {
+        openModal({ ...modalData, content: <SimpleInputModal item={item} /> })
+      }}>입력완료</button>
+      <button className="del-btn" onClick={() => {
+        closeModal()
+      }}>닫기</button>
     </div>
   </InventoryRequestListModalWrap>
 }
