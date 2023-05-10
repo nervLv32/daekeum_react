@@ -7,6 +7,7 @@ import {
   RegisIco,
   SaleIco
 } from "../../../assets/icon/Svg";
+import { useNavigate } from "react-router-dom";
 
 
 const BtnGroup = styled.ul`
@@ -71,10 +72,13 @@ const Btn = styled.div`
 `
 
 const MainBtnWrap = () => {
+  const navigate = useNavigate();
   /*  */
   return <BtnGroup>
     {/* 메뉴 - 1 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/receipt')
+    }}>
       <Inner>
         <Btn> <CheckCompIco /> </Btn>
       </Inner>
@@ -82,7 +86,9 @@ const MainBtnWrap = () => {
     </BtnWrap>
 
     {/* 메뉴 - 2 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/regis')
+    }}>
       <Inner>
         <Btn> <RegisIco /> </Btn>
       </Inner>
@@ -90,7 +96,9 @@ const MainBtnWrap = () => {
     </BtnWrap>
 
     {/* 메뉴 - 3 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/inventory')
+    }}>
       <Inner>
         <Btn> <InvIco /> </Btn>
       </Inner>
@@ -98,7 +106,9 @@ const MainBtnWrap = () => {
     </BtnWrap>
 
     {/* 메뉴 - 4 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/report')
+    }}>
       <Inner>
         <Btn> <DocumentIco /> </Btn>
       </Inner>
@@ -106,7 +116,9 @@ const MainBtnWrap = () => {
     </BtnWrap>
 
     {/* 메뉴 - 5 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/sale')
+    }}>
       <Inner>
         <Btn> <SaleIco /> </Btn>
       </Inner>
@@ -114,7 +126,9 @@ const MainBtnWrap = () => {
     </BtnWrap>
 
     {/* 메뉴 - 6 */}
-    <BtnWrap>
+    <BtnWrap onClick={() => {
+      navigate('/receipt')
+    }}>
       <Inner>
         <Btn> <MoreViewIco /> </Btn>
       </Inner>
