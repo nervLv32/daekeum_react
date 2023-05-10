@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep03Modal from './DStep03Modal'
 import DStep05Modal from './DStep05Modal'
+import ProductInfo from "../../../components/diary/ProductInfo";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -88,8 +89,108 @@ const ModalWrap = styled.div`
     }
   }
   .modal-body {
-    padding: 3rem 3rem 2.5rem;
-    
+    .product-list-wrap {
+      padding: 3rem;
+      .add-ons {
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1.5rem;
+        padding-left: 1.3rem;
+        .all-check {
+          display: flex;
+          align-items: center;
+          input[type="checkbox"] {
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #FFFFFF;
+            border: 0.1rem solid #9DA2AE;
+            border-radius: 0.3rem;
+            box-sizing: border-box;
+            margin: 0;
+            position: relative;
+            z-index: 9;
+            cursor: pointer;
+            &::after {
+              content: '';
+              display: block;
+              width: 1.3rem;
+              height: 1.3rem;
+              background: url('../../icons/icon-check-off.png') no-repeat center / cover;
+              position: absolute;
+              left: 0;
+              top: 0;
+              z-index: -1;
+              border-radius: 0.3rem;
+            }
+            &:checked {
+              &::after {
+                background: url('../../icons/icon-check-on.png') no-repeat center / cover #1F319D;
+              }
+            }
+          }
+          span {
+            display: inline-block;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #555;
+            margin-left: 0.9rem;
+          }
+        }
+        .btn-wrap {
+          display: flex;
+          button {
+            width: 6rem;
+            height: 2.1rem;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            &:not(:first-child) {
+              margin-left: 0.3rem;
+            }
+            &.btn-outline-gray {
+              background: #fff;
+              border: 0.1rem solid #9DA2AE;
+              color: #1c1b1f;
+            }
+            &.btn-blue {
+              background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+              border: 0.1rem solid #9DA2AE;
+              color: #fff;
+            }
+          }
+        }
+      }
+      .list-wrap {
+        ul {
+          li {
+            &:not(:last-child) {
+              margin-bottom: 2rem;
+            }
+          }
+        }
+      }
+    }
+    .total-price-info {
+      padding: 2rem 3rem;
+      border-top: 0.1rem solid rgba(157, 162, 174, 0.3);
+      dl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #555;
+        &:not(:last-child) {
+          margin-bottom: 0.8rem;
+        }
+        &:first-child {
+          margin-bottom: 1.6rem;
+        }
+      }
+    }
   }
 `
 
@@ -150,22 +251,48 @@ const DStep04Modal = () => {
         </ul>
       </div>
       <div className="modal-body">
-        <div className="">
-          <label className="all-check">
-            <input type="checkbox" />
-            <span>전체선택</span>
-          </label>
-          <div className="btn-wrap">
-            <button type="button" className="btn-outline-gray">선택삭제</button>
-            <button type="button" className="btn-blue">품목추가</button>
+        <div className="product-list-wrap">
+          <div className="add-ons">
+            <label className="all-check">
+              <input type="checkbox" />
+              <span>전체선택</span>
+            </label>
+            <div className="btn-wrap">
+              <button type="button" className="btn-outline-gray">선택삭제</button>
+              <button type="button" className="btn-blue">품목추가</button>
+            </div>
+          </div>
+          <div className="list-wrap">
+            <ul>
+              <li>
+                <ProductInfo />
+              </li>
+              <li>
+                <ProductInfo />
+              </li>
+              <li>
+                <ProductInfo />
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="info-wrap">
-          <ul>
-            <li>
-              
-            </li>
-          </ul>
+        <div className="total-price-info">
+          <dl>
+            <dt>합계</dt>
+            <dd><strong>45,000</strong> 원(VAT별도)</dd>
+          </dl>
+          <dl>
+            <dt>계산서발행일</dt>
+            <dd>2023-03-13</dd>
+          </dl>
+          <dl>
+            <dt>결제예정일</dt>
+            <dd>2023-03-13</dd>
+          </dl>
+          <dl>
+            <dt>결제방식</dt>
+            <dd>현금결제</dd>
+          </dl>
         </div>
       </div>
       <BtnWrap>
