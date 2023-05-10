@@ -188,6 +188,21 @@ const ModalWrap = styled.div`
         }
         &:first-child {
           margin-bottom: 1.6rem;
+          dt {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1c1b1f;
+          }
+          dd {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1c1b1f;
+            strong {
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: #ea583f;
+            }
+          }
         }
       }
     }
