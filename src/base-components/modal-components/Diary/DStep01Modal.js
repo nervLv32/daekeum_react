@@ -197,21 +197,22 @@ const ModalWrap = styled.div`
       }
     }
   }
-  .btn-wrap {
+`
+
+const BtnWrap = styled.div`
+  width: 100%;
+  height: auto;
+  padding: 1.7rem 3rem;
+  background: #F7F7F7;
+  border-radius: 2rem 2rem 0px 0px;
+  button {
     width: 100%;
-    height: auto;
-    padding: 1.7rem 3rem;
-    background: #F7F7F7;
-    border-radius: 2rem 2rem 0px 0px;
-    button {
-      width: 100%;
-      height: 3.4rem;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
-      border-radius: 1rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #f7f7f7;
-    }
+    height: 3.4rem;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f7f7f7;
   }
 `
 
@@ -295,7 +296,7 @@ const DStep01Modal = () => {
           </dl>
         </div>
       </div>
-      <div className="btn-wrap">
+      <BtnWrap>
         <button 
           type="button"
           onClick={() => {
@@ -305,7 +306,7 @@ const DStep01Modal = () => {
         >
           다음
         </button>
-      </div>
+      </BtnWrap>
     </ModalWrap>
   )
 }

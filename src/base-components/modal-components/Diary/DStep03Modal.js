@@ -88,9 +88,6 @@ const ModalWrap = styled.div`
     }
   }
   .modal-body {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     padding: 3rem 3rem 2.5rem;
     .input-info {
       width: 100%;
@@ -166,30 +163,31 @@ const ModalWrap = styled.div`
       }
     }
   }
-  .btn-wrap {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    padding: 1.7rem 3rem;
-    background: #F7F7F7;
-    border-radius: 2rem 2rem 0px 0px;
-    button {
-      width: calc(50% - 0.5rem);
-      height: 3.4rem;
-      border-radius: 1rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      &.btn-outline-gray {
-        color: #1F319D;
-        background: #FFFFFF;
-        border: 0.1rem solid #9DA2AE;
-      }
-      &.btn-blue {
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
-        color: #f7f7f7;
-      } 
+`
+
+const BtnWrap = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.7rem 3rem;
+  background: #F7F7F7;
+  border-radius: 2rem 2rem 0px 0px;
+  button {
+    width: calc(50% - 0.5rem);
+    height: 3.4rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    &.btn-outline-gray {
+      color: #1F319D;
+      background: #FFFFFF;
+      border: 0.1rem solid #9DA2AE;
     }
+    &.btn-blue {
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+      color: #f7f7f7;
+    } 
   }
 `
 
@@ -249,7 +247,7 @@ const DStep03Modal = () => {
           </dd>
         </dl>
       </div>
-      <div className="btn-wrap">
+      <BtnWrap>
         <button 
           type="button" 
           className="btn-outline-gray"
@@ -266,7 +264,7 @@ const DStep03Modal = () => {
             openModal({ ...modalData, content: <DStep04Modal /> })
           }}
         >다음</button>
-      </div>
+      </BtnWrap>
     </ModalWrap>
   )
 }
