@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, {useState} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
+import ProductListItem from "../../../components/diary/ProductListItem";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -19,267 +20,191 @@ const ModalWrap = styled.div`
       color: #1c1b1f;
     }
   }
-  .step-list {
-    background-color: #f7f7f7;
-    padding: 1.5rem 3rem;
-    ul {
-      width: 100%;
-      height: auto;
+  .modal-body {
+    padding-bottom: 6rem;
+  }
+`
+
+const BtnWrap = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.7rem 3rem;
+  background: #F7F7F7;
+  border-radius: 2rem 2rem 0px 0px;
+  button {
+    width: calc(50% - 0.5rem);
+    height: 3.4rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    &.btn-outline-gray {
+      color: #1F319D;
+      background: #FFFFFF;
+      border: 0.1rem solid #9DA2AE;
+    }
+    &.btn-blue {
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+      color: #f7f7f7;
+    } 
+  }
+`
+
+const ItemAddList = styled.div`
+  width: 100%;
+  height: auto;
+  ul {
+    width: 100%;
+    height: auto;
+    li {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      position: relative;
-      &::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 0.1rem;
-        background-color: #9da2ae;
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
+      &.hd {
+        height: 3.5rem;
+        background: rgba(157, 162, 174, 0.5);
       }
-      li {
+      >div {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #1c1b1f;
+        word-break: break-all;
+        padding: 0 0.5rem;
         position: relative;
-        z-index: 9;
-        &::before {
-          content: '';
-          display: block;
-          width: 0.8rem;
-          height: 0.3rem;
-          background-color: #f7f7f7;
-          position: absolute;
-          right: -0.8rem;
-          top: 50%;
-          transform: translateY(-50%);
-        }
         &::after {
           content: '';
           display: block;
-          width: 0.8rem;
-          height: 0.3rem;
-          background-color: #f7f7f7;
+          width: 0.1rem;
+          height: 2rem;
+          background-color: rgba(157, 162, 174, 0.2);
           position: absolute;
-          left: -0.8rem;
+          right: 0;
           top: 50%;
           transform: translateY(-50%);
         }
-        span {
-          display: block;
-          width: 1.8rem;
-          height: 1.8rem;
-          line-height: 1.8rem;
-          border-radius: 50%;
-          background: #9da2ae;
-          text-align: center;
-          font-size: 1.2rem;
-          font-weight: 500;
-          color: #fff;
-          &.on {
-            box-sizing: content-box;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
-            border: 0.2rem solid #A9B5FF;
-          }
-        }
       }
-    }
-  }
-  .modal-body {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 3rem 3rem 2.5rem;
-    .input-info {
-      width: 100%;
-      height: auto;
-      &:not(:last-of-type) {
-        margin-bottom: 1rem;
+      .check-box {
+        width: 12%;
       }
-      &.w50 {
-        width: calc(50% - 0.4rem);
+      .code {
+        width: 18%;
       }
-      dt {
-        display: inline-block;
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: #1c1b1f;
-        margin-bottom: 0.4rem;
-        position: relative;
-        &.essential {
-          &::after {
-            content: '';
-            display: block;
-            width: 0.4rem;
-            height: 0.4rem;
-            border-radius: 50%;
-            background-color: #fb0606;
-            position: absolute;
-            right: -0.6rem;
-            top: 0;
-          }
-        }
+      .part {
+        width: 12%;
       }
-      dd {
-        width: 100%;
-        height: auto;
-        input {
-          width: 100%;
-          height: 3.3rem;
-          background: #fff;
-          border: 0.1rem solid #8885CB;
-          border-radius: 1rem;
-          font-size: 1.2rem;
-          font-weight: 500;
-          color: #1c1b1f;
-          padding: 0 1.5rem;
-          &.bg {
-            background: #F7F7F7;
-          }
-          &::placeholder {
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: #9da2ae;
-          }
-        }
+      .name {
+        width: 26%;
       }
-    }
-  }
-  .btn-wrap {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    padding: 1.7rem 3rem;
-    background: #F7F7F7;
-    border-radius: 2rem 2rem 0px 0px;
-    button {
-      width: calc(50% - 0.5rem);
-      height: 3.4rem;
-      border-radius: 1rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      &.btn-outline-gray {
-        color: #1F319D;
+      .standard {
+        width: 20%;
+      }
+      .count {
+        width: 12%;
+      }
+      input[type="checkbox"] {
+        width: 1.3rem;
+        height: 1.3rem;
         background: #FFFFFF;
         border: 0.1rem solid #9DA2AE;
+        border-radius: 0.3rem;
+        box-sizing: border-box;
+        margin: 0;
+        position: relative;
+        z-index: 9;
+        cursor: pointer;
+        &::after {
+          content: '';
+          display: block;
+          width: 1.1rem;
+          height: 1.1rem;
+          background: url('../../icons/icon-check-off.png') no-repeat center / cover;
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: -1;
+          border-radius: 0.3rem;
+        }
+        &:checked {
+          &::after {
+            background: url('../../icons/icon-check-on.png') no-repeat center / cover #1F319D;
+          }
+        }
       }
-      &.btn-blue {
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
-        color: #f7f7f7;
-      } 
     }
   }
 `
 
 const DStep04Modal = () => {
 
-  const { openModal, closeModal } = useModal();
+  const { closeModal } = useModal();
 
-  const modalData = {
-    title: 'DStep04Modal Modal',
-    callback: () => alert('Modal Callback()'),
-  };
+  // 체크박스 상태
+  const [allCheckStatus, setAllCheckStatus] = useState(false);
+
+  // 아이템 배열
+  const itemList = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  ]
 
   return (
     <ModalWrap>
       <div className="title">
-        <h3>일지작성</h3>
-      </div>
-      <div className="step-list">
-        <ul>
-          <li>
-            <span>1</span>
-          </li>
-          <li>
-            <span className="on">2</span>
-          </li>
-          <li>
-            <span>3</span>
-          </li>
-          <li>
-            <span>4</span>
-          </li>
-        </ul>
+        <h3>품목등록리스트</h3>
       </div>
       <div className="modal-body">
-        <dl className="input-info">
-          <dt>업체명</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>현장명</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>현장담당자</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">현장 연락처</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">현장 담당자 연락처</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">접수일시</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">처리일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">도착일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">종료일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">점검요원</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">사용자 연락처</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
+        <ItemAddList>
+          <ul>
+            <li className="hd">
+              <div className="check-box">
+                <input 
+                  type="checkbox" 
+                  checked={allCheckStatus} 
+                  onChange={() => setAllCheckStatus(!allCheckStatus)} 
+                />
+              </div>
+              <div className="code">
+                품목코드
+              </div>
+              <div className="part">
+                파트
+              </div>
+              <div className="name">
+                품명
+              </div>
+              <div className="standard">
+                규격
+              </div>
+              <div className="count">
+                재고
+              </div>
+            </li>
+            {
+              itemList?.length > 0 && itemList.map((item, index) => {
+                return (
+                  <ProductListItem key={index} allCheckStatus={allCheckStatus} />
+                )
+              })
+            }
+          </ul>
+        </ItemAddList>
       </div>
-      <div className="btn-wrap">
-        <button 
-          type="button" 
-          className="btn-outline-gray"
-        >이전</button>
+      <BtnWrap>
         <button 
           type="button" 
           className="btn-blue"
-        >다음</button>
-      </div>
+          onClick={() => {
+            closeModal()
+          }}
+          >확인</button>
+        <button 
+          type="button" 
+          className="btn-outline-gray"
+          onClick={() => {
+            closeModal()
+          }}
+        >취소</button>
+      </BtnWrap>
     </ModalWrap>
   )
 }
