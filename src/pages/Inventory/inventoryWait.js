@@ -4,11 +4,14 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import TopSearch from "../../components/molecules/TopSearch";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
+import InventoryWaitList from "../../components/inventory/InventoryWaitList";
+import InventoryWaitTop from "../../components/inventory/InventoryWaitTop";
+import InventoryWaitModal from "../../components/inventory/InventoryWaitModal";
+import { useModal } from "../../hooks/useModal";
 
-const InventoryRequestWrap = styled.div`
+const InventoryWaitWrap = styled.div`
   padding: 28px 30px 0;
 `
-const InventoryRequestListWrap = styled.ul``
 
 const TopSearchcMenuWrap = styled.ul`
   width: 175px;
@@ -19,6 +22,57 @@ const TopSearchcMenuWrap = styled.ul`
 
 const InventoryWait = () => {
   const [topMenu, setTopMenu] = useState(false);
+
+  const { openModal, closeModal } = useModal();
+  const modalData = {
+    title: 'Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
+  const dummyData = [
+    {
+      no: 1,
+      sendday: "2023-02-08",
+      reqday: "2023-02-08",
+      code: "TNUGM03002",
+      count: "1.0",
+      part: "모형절단품",
+      name: "G/M(대금감속기)",
+      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
+      model: "R10D-06",
+      sector: "11. 수도권",
+      manager: "정명길",
+      memo: "입고요청일 20230216"
+    },
+    {
+      no: 2,
+      sendday: "2023-02-08",
+      reqday: "2023-02-08",
+      code: "TNUGM03002",
+      count: "1.0",
+      part: "모형절단품",
+      name: "G/M(대금감속기)",
+      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
+      model: "R10D-06",
+      sector: "11. 수도권",
+      manager: "팜윤태",
+      memo: "입고요청일 20230216"
+    },
+    {
+      no: 3,
+      sendday: "2023-02-08",
+      reqday: "2023-02-08",
+      code: "TNUGM03002",
+      count: "1.0",
+      part: "모형절단품",
+      name: "G/M(대금감속기)",
+      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
+      model: "R10D-06",
+      sector: "11. 수도권",
+      manager: "정명길",
+      memo: "입고요청일 20230216"
+    }
+  ]
 
   return <>
     <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
@@ -54,6 +108,18 @@ const InventoryWait = () => {
           </TopSearchMenu>
         )
       }
+      <InventoryWaitWrap>
+      <InventoryWaitTop />
+      {
+        dummyData.map((list, idx) => {
+          return (
+            <InventoryWaitList key={idx} list={list} 
+              onClick={() => openModal({ ...modalData, content: <InventoryWaitModal item={list} /> })}
+            />
+          )
+        })
+      }
+    </InventoryWaitWrap>
   </>
 }
 
