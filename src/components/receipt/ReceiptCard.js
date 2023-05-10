@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { getOrderState } from "../../util/utils";
 import OrderStateBtn from "../atom/OrderStateBtn";
+import ReceiptCheckModal from "./ReceiptCheckModal";
+import { useModal } from "../../hooks/useModal";
 
 const ReceiptCardComponent = styled.li`
   &:not(:last-child) {
@@ -91,6 +93,13 @@ const ReceiptCard = ({
   onClick
 }) => {
 
+  const { openModal, closeModal } = useModal();
+
+  const modalData = {
+    title: 'Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
 
   return <ReceiptCardComponent>
     <div className="receipt-top">
@@ -104,7 +113,7 @@ const ReceiptCard = ({
           <dd>{date}</dd>
         </dl>
       </div>
-      <div className="state-wrap">
+      <div className="state-wrap" onClick={() => openModal({ ...modalData, content: <ReceiptCheckModal /> })}>
         <OrderStateBtn state={state} />
       </div>
     </div>

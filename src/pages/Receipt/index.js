@@ -7,6 +7,8 @@ import { useState } from "react";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import { NavLink } from "react-router-dom";
 import Floating from "../../components/molecules/Floating";
+import NewRegisModal from "../../components/global/NewRegisModal";
+import SearchRegionModal from "../../components/global/SearchRegionModal";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -68,7 +70,7 @@ const FloatingBody = styled.div``
 
 const Receipt = () => {
 
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'Receipt Modal',
     content: <ReceiptListModal />,
@@ -250,11 +252,17 @@ const Receipt = () => {
                   <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>기간별조회</span>
                 </li>
-                <li>
+                <li onClick={() => {
+                    closeModal()
+                    openModal({ ...modalData, content: <SearchRegionModal /> })
+                  }}>
                   <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
                   <span>지역별조회</span>
                 </li>
-                <li>
+                <li onClick={() => {
+                    closeModal()
+                    openModal({ ...modalData, content: <NewRegisModal /> })
+                  }}>
                   <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
                   <span>신규접수</span>
                 </li>
