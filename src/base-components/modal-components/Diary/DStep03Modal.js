@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep02Modal from './DStep02Modal'
+import DStep04Modal from './DStep04Modal'
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -87,12 +88,18 @@ const ModalWrap = styled.div`
     }
   }
   .modal-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding: 3rem 3rem 2.5rem;
     .input-info {
       width: 100%;
       height: auto;
       &:not(:last-of-type) {
-        margin-bottom: 1rem;
+        margin-bottom: 1.6rem;
+      }
+      &.w50 {
+        width: calc(50% - 0.4rem);
       }
       dt {
         display: inline-block;
@@ -129,7 +136,7 @@ const ModalWrap = styled.div`
           color: #1c1b1f;
           padding: 0 1.5rem;
           &.bg {
-            background: #EFF2FF;
+            background: #F7F7F7;
           }
           &::placeholder {
             font-size: 1.2rem;
@@ -137,62 +144,24 @@ const ModalWrap = styled.div`
             color: #9da2ae;
           }
         }
-        label {
-          display: block;
-          position: relative;
-          input {
-            padding-right: 10.8rem;
-          }
-          button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 9.3rem;
-            height: 3.3rem;
-            position: absolute;
-            right: 0;
-            top: 0;
-            background: #5A55CA;
-            border: 0.1rem solid #8885CB;
-            border-radius: 1rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-            img {
-              display: block;
-              width: 1.6rem;
-              margin-right: 0.4rem;
-            }
-          }
-        }
-      }
-    }
-    .product-info {
-      width: 100%;
-      height: auto;
-      background: #F7F7F7;
-      border: 0.1rem solid #CACCD1;
-      border-radius: 1rem;
-      padding: 2rem 1.7rem;
-      margin-top: 1rem;
-      dl {
-        display: flex;
-        align-items: center;
-        &:not(:last-child) {
-          margin-bottom: 1.4rem;
-        }
-        dt {
-          width: 9rem;
-          padding-right: 1.2rem;
+        textarea {
+          width: 100%;
+          height: auto;
+          min-height: 8.7rem;
+          background: #fff;
+          border: 0.1rem solid #8885CB;
+          border-radius: 1rem;
           font-size: 1.2rem;
-          line-height: 1.2rem;
           font-weight: 500;
-          color: #555;
-        }
-        dd {
-          width: calc(100% - 9rem);
-          height: 1.2rem;
-          border-bottom: 0.1rem solid #9DA2AE;
+          color: #1c1b1f;
+          padding: 1rem 1.5rem;
+          background-color: #fff;
+          resize: none;
+          &::placeholder {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #9da2ae;
+          }
         }
       }
     }
@@ -200,27 +169,36 @@ const ModalWrap = styled.div`
   .btn-wrap {
     width: 100%;
     height: auto;
+    display: flex;
+    justify-content: space-between;
     padding: 1.7rem 3rem;
     background: #F7F7F7;
     border-radius: 2rem 2rem 0px 0px;
     button {
-      width: 100%;
+      width: calc(50% - 0.5rem);
       height: 3.4rem;
-      background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
       border-radius: 1rem;
       font-size: 1.4rem;
       font-weight: 700;
-      color: #f7f7f7;
+      &.btn-outline-gray {
+        color: #1F319D;
+        background: #FFFFFF;
+        border: 0.1rem solid #9DA2AE;
+      }
+      &.btn-blue {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+        color: #f7f7f7;
+      } 
     }
   }
 `
 
-const DStep01Modal = () => {
+const DStep03Modal = () => {
 
   const { openModal, closeModal } = useModal();
 
   const modalData = {
-    title: 'DStep01Modal Modal',
+    title: 'DStep03Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
 
@@ -232,13 +210,13 @@ const DStep01Modal = () => {
       <div className="step-list">
         <ul>
           <li>
-            <span className="on">1</span>
+            <span>1</span>
           </li>
           <li>
             <span>2</span>
           </li>
           <li>
-            <span>3</span>
+            <span className="on">3</span>
           </li>
           <li>
             <span>4</span>
@@ -247,67 +225,50 @@ const DStep01Modal = () => {
       </div>
       <div className="modal-body">
         <dl className="input-info">
-          <dt className="essential">일지번호</dt>
+          <dt>요청사항</dt>
           <dd>
-            <input type="text" className="bg" />
+            <textarea placeholder="요청사항을 입력하세요."></textarea>
           </dd>
         </dl>
         <dl className="input-info">
-          <dt className="essential">장비정보</dt>
+          <dt>원인(점검요원소견)</dt>
           <dd>
-            <label>
-              <input type="text" placeholder="해당업체 장비를 검색하세요." />
-              <button type="button">
-                <img src="../icons/search-icon.png" alt="검색 아이콘" />
-                <span>장비검색</span>
-              </button>
-            </label>
+            <textarea placeholder="원인을 입력하세요."></textarea>
           </dd>
         </dl>
-        <div className="product-info">
-          <dl>
-            <dt>MODEL-NO</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>수조</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>박스</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>MFG-NO</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>사용전압</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>설치방향</dt>
-            <dd></dd>
-          </dl>
-          <dl>
-            <dt>침전제</dt>
-            <dd></dd>
-          </dl>
-        </div>
+        <dl className="input-info">
+          <dt>업무내용</dt>
+          <dd>
+            <textarea placeholder="업무내용을 입력하세요."></textarea>
+          </dd>
+        </dl>
+        <dl className="input-info">
+          <dt>다음순회점검 예정일</dt>
+          <dd>
+            <input type="text" placeholder="다음순회점검 예정일을 입력하세요." />
+          </dd>
+        </dl>
       </div>
       <div className="btn-wrap">
         <button 
-          type="button"
+          type="button" 
+          className="btn-outline-gray"
           onClick={() => {
             closeModal()
             openModal({ ...modalData, content: <DStep02Modal /> })
           }}
-        >
-          다음
-        </button>
+        >이전</button>
+        <button 
+          type="button" 
+          className="btn-blue"
+          onClick={() => {
+            closeModal()
+            openModal({ ...modalData, content: <DStep04Modal /> })
+          }}
+        >다음</button>
       </div>
     </ModalWrap>
   )
 }
 
-export default DStep01Modal;
+export default DStep03Modal;
