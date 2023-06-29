@@ -111,7 +111,9 @@ const Login = () => {
         <InputAuthInfo type={'text'} placeholder={'ID'} />
         <InputAuthInfo type={'password'} placeholder={'Password'} />
       </InputWrap>
-      <Button>
+      <Button
+        onClick={() => alert(1)}
+      >
         LOG IN
       </Button>
     </LoginWrap>
