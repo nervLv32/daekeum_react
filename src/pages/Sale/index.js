@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
@@ -8,6 +8,9 @@ import SaleInfoList from "../../components/sale/SaleInfoList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
+import { useRecoilState } from "recoil";
+import {salesAtom} from "../../recoil/salesAtom"
+import axios from 'axios';
 
 const SaleWrap = styled.div``
 
@@ -84,7 +87,9 @@ const FloatingWrap = styled.div`
 `
 
 const Sale = () => {
-
+  
+  const [sales, setSales] = useRecoilState(salesAtom);
+  
   const { openModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
@@ -92,34 +97,42 @@ const Sale = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
-    },
-  ]
+  const search = (keyword, currentPage) => {
+    
+    return axios(
+      process.env.REACT_APP_API_URL + '/sales/clientList',
+      {
+        method: 'post',
+        data: {
+          searchword: keyword,
+          pageSize: 10, 
+          currentPage: currentPage
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        //console.log(res)
+        const { data } = res.data
+        console.log(data)
+
+        setSales(oldData => [
+          ...oldData,
+          ...data
+        ])
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+  
+  useEffect(() => {
+    search('', 0)
+  }, [])
+
   return <SaleWrap>
     <SaleTapWrap title="업체정보" />
     <SaleTabSearch>
@@ -133,12 +146,12 @@ const Sale = () => {
     <CompanyInfoWrap>
       <SaleInfoListWrap>
         {
-          dummyData.map((item, idx) => {
+          sales.map((item, idx) => {
             return (<SaleInfoList
-              key={item.no}
-              company={item.company}
-              ceo={item.ceo}
-              companyNum={item.companyNum}
+              key={idx}
+              company={item.업체명}
+              ceo={item.대표자성명}
+              companyNum={item.사업자번호}
               onClick={() => openModal({ ...modalData, content: <SaleListModal item={item} /> })}
             />
             )

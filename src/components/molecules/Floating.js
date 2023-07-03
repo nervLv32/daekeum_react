@@ -25,7 +25,7 @@ const FloatingWrap = styled.div`
 `
 
 const Floating = ({ children, isFOpen, onClick, bgColor }) => {
-
+  
   return <FloatingWrap onClick={onClick} bgColor={bgColor}>
     {children}
   </FloatingWrap>
