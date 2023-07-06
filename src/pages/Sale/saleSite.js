@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useLocation  } from "react-router-dom";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
 import SaleSiteListModal from "../../base-components/modal-components/sale/SaleSiteListModal";
@@ -10,7 +10,10 @@ import SaleSiteList from "../../components/sale/SaleSiteList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
-
+import { useRecoilState } from "recoil";
+import { companyAtom, siteListAtom, keywordAtom, pagingAtom, salesStateAtom, siteDetailAtom } from "../../recoil/salesAtom"
+import axios from 'axios';
+import SaleAddPlaceModal from '../../base-components/modal-components/sale/SaleAddPlaceModal'
 const SaleWrap = styled.div`
   
 `
@@ -87,66 +90,100 @@ const FloatingWrap = styled.div`
   z-index: 100;
 `
 
-
 const SaleSite = () => {
+  
+  const location = useLocation();
+  const 거래처코드 = location.state?.거래처코드
+  const 업체명 = location.state?.업체명
 
-  const { openModal } = useModal();
+  const [siteList, setSiteList] = useRecoilState(siteListAtom)
+  const [company, setCompany] = useRecoilState(companyAtom)
+  const [keyword, setKeyword] = useRecoilState(keywordAtom)
+  const [paging, setPaging] = useRecoilState(pagingAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+  const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
+  
+  const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleSiteList Modal',
     content: <SaleSiteListModal />,
     callback: () => alert('Modal Callback()'),
   };
+  
+  const search = () => {
+    
+    return axios(
+      process.env.REACT_APP_API_URL + '/sales/siteList',
+      {
+        method: 'post',
+        data: {
+          searchword: keyword.site,
+          pageSize: paging.size,
+          currentPage: paging.site,
+          거래처코드 : 거래처코드 || company.거래처코드 
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        const { data } = res.data
+        
+        setSiteList(oldData => [
+          ...data
+        ])
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+  
+  const setValue = e =>{
+    let val = e.target.value 
+    
+    setKeyword(oldData =>{
+      return {
+        ...oldData,
+        site : val      
+      }
+    })  
+  }
 
-  const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      site: "DMC리버시티(A6블록)",
-      regionFirst: "경기도",
-      regionLast: "고양시",
-      center: "수도권4",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      email: "jjsh2544@daekeum.co.kr"
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      site: "DMC리버시티(A6블록)",
-      regionFirst: "경기도",
-      regionLast: "고양시",
-      center: "수도권4",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      email: "jjsh2544@daekeum.co.kr"
-    },
-  ]
+  useEffect(() => {
+    if(거래처코드) setCompany({
+      거래처코드: 거래처코드,
+      업체명: 업체명
+    })
+    search()
+    setSalesState(oldData =>{
+      return {
+        ...oldData,
+        site: 0
+      }
+    })
+  }, [salesState.site])
+  
   return <SaleWrap>
     <SaleTapWrap title="현장정보" />
     <SaleTabSearch>
-      <RegisTabNavi dep1="주)대금지오웰" dep2="현장명" dep3="장비정보" />
+      <RegisTabNavi dep1={company.업체명} dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" />
-        <button className="search-btn" />
+        <input type="text" placeholder="Search" value={keyword.site} onChange={setValue}/>
+        <button className="search-btn" onClick={search}/>
       </div>
     </SaleTabSearch>
 
     <CompanyInfoWrap>
       <SaleInfoListWrap>
         {
-          dummyData.map((item, idx) => {
+          siteList.map((item, idx) => {
             return (<SaleSiteList
-              key={item.no}
-              site={item.site}
-              regionFirst={item.regionFirst}
-              regionLast={item.regionLast}
-              center={item.center}
+              key={idx}
+              site={item.현장명}
+              region={item.지역분류}
+              center={item.담당부서명}
               onClick={() => openModal({ ...modalData, content: <SaleSiteListModal item={item} /> })}
             />
             )
@@ -156,7 +193,11 @@ const SaleSite = () => {
     </CompanyInfoWrap>
 
     <FloatingWrap>
-      <Floating onClick={console.log(1)}>
+      <Floating onClick={() => {
+         setSiteDetail({}) 
+        closeModal()
+        openModal({ ...modalData, content: <SaleAddPlaceModal item={{거래처코드: 거래처코드}} /> })
+      }}>
         <i className="default-icon"></i>
       </Floating>
     </FloatingWrap>

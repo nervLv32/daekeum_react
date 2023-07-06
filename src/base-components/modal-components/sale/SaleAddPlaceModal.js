@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
-
+import { useRecoilState } from "recoil";
+import {siteDetailAtom, siteListAtom, salesStateAtom} from '../../../recoil/salesAtom'
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 const SaleAddPlaceModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -141,8 +144,102 @@ const ModalBtm = styled.div`
   }
 `
 
-const SaleAddPlaceModal = () => {
+const SaleAddPlaceModal = ({item}) => {
+  const 거래처코드 = item.거래처코드
+  const 현장코드 = item.현장코드 
+  
+
+  const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
+  const [siteList, setSiteList] = useRecoilState(siteListAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+
   const { closeModal } = useModal();
+  const navigate = useNavigate();
+  
+  const detail = (거래처코드,현장코드) => {
+    return axios(
+      process.env.REACT_APP_API_URL + '/enroll/siteDetail',
+      {
+        method: 'post',
+        data: {
+          거래처코드: 거래처코드,
+          현장코드: 현장코드 
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        const { data } = res.data
+        //console.log(data[0])
+        setSiteDetail(data[0])
+        
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+
+  const setValue = e =>{
+    let val = e.target.value 
+    let key = e.target.id
+    //console.log('key:',key ,'val:',val)
+    setSiteDetail(oldData =>{
+      return {
+        ...oldData,
+        [key] : val      
+      }
+    })
+  }
+
+  const setSite = () => {
+    
+    let url = '/enroll/siteAdd'
+    if(현장코드) url = '/enroll/siteUpdate'
+    
+    return axios(
+      process.env.REACT_APP_API_URL + url,
+      {
+        method: 'post',
+        data: {
+          ...siteDetail,
+          EmpNo: 1111,
+          EmpNm: '강민아'
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        console.log(res)
+        const { data } = res.data
+        
+        if(!현장코드){
+          setSiteList((oldSiteList) => [
+            data[0],
+            ...oldSiteList.slice(0,oldSiteList.length-1)
+          ])
+        }
+        closeModal()
+      },
+      error => {
+        // todo 어떻게 처리 ? 
+        console.log(error)
+      }
+    )
+  
+  }
+
+  useEffect(() => {
+    if(현장코드) detail(거래처코드, 현장코드)
+    else {
+      setSiteDetail({ 거래처코드: 거래처코드 })
+    }
+  }, [])
+
   return (
     <SaleAddPlaceModalWrap>
       <div className="modal-top">
@@ -152,84 +249,88 @@ const SaleAddPlaceModal = () => {
         <InputList>
           <li className="full required">
             <p>현장코드</p>
-            <input type="text"  placeholder="현장코드를 입력하세요"/>
+            <input type="text"  readOnly  value={siteDetail.현장코드} />
           </li>
+          
           <li className="full">
-            <p className="red-point">지역분류</p>
-            <input type="text"  placeholder="현장명을 입력하세요"/>
+            <p className="red-point">현장명</p>
+            <input type="text"  placeholder="현장명을 입력하세요" id="현장명" value={siteDetail.현장명 || ''} onChange={setValue} />
           </li>
           <li>
             <p>담당자</p>
-            <input type="text"  placeholder="담당자를 입력하세요"/>
+            <input type="text"  placeholder="담당자를 입력하세요" id="담당자" value={siteDetail.담당자 || ''} onChange={setValue} />
           </li>
           <li>
             <p>직위</p>
-            <input type="text"  placeholder="직위를 입력하세요"/>
+            <input type="text"  placeholder="직위를 입력하세요" id="직위" value={siteDetail.직위 || ''} onChange={setValue} />
           </li>
           <li>
             <p>휴대폰</p>
-            <input type="text"  placeholder="휴대폰을 입력하세요"/>
+            <input type="text"  placeholder="휴대폰을 입력하세요" id="휴대폰" value={siteDetail.휴대폰 || ''} onChange={setValue} />
           </li>
           <li>
             <p>이메일</p>
-            <input type="text"  placeholder="이메일을 입력하세요"/>
+            <input type="text"  placeholder="이메일을 입력하세요" id="이메일" value={siteDetail.이메일 || ''} onChange={setValue} />
           </li>
           <li>
             <p>전화번호</p>
-            <input type="text"  placeholder="전화번호를 입력하세요"/>
+            <input type="text"  placeholder="전화번호를 입력하세요" id="전화번호" value={siteDetail.전화번호 || ''} onChange={setValue} />
           </li>
           <li>
             <p>팩스번호</p>
-            <input type="text"  placeholder="팩스번호를 입력하세요"/>
+            <input type="text"  placeholder="팩스번호를 입력하세요" id="팩스번호" value={siteDetail.팩스번호 || ''} onChange={setValue} />
           </li>
           <li className="full">
             <p>주소</p>
-            <input type="text"  placeholder="주소를 입력하세요"/>
+            <input type="text"  placeholder="주소를 입력하세요" id="주소" value={siteDetail.주소 || ''} onChange={setValue} />
           </li>
           <li>
             <p>종료예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요"/>
+            <input type="text"  placeholder="날짜를 입력하세요" id="종료예정일" value={siteDetail.종료예정일 || ''} onChange={setValue} />
           </li>
           <li>
             <p>설치예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요"/>
+            <input type="text"  placeholder="날짜를 입력하세요" id="설치예정일" value={siteDetail.설치예정일 || ''} onChange={setValue} />
           </li>
           <li>
             <p>알림</p>
-            <input type="text"  placeholder="알림을 입력하세요"/>
+            <input type="text"  placeholder="알림을 입력하세요" id="접속시알림" value={siteDetail.접속시알림 || ''} onChange={setValue} />
           </li>
           <li>
             <p>고객분류</p>
-            <input type="text"  placeholder="고객분류를 입력하세요"/>
+            <input type="text"  placeholder="고객분류를 입력하세요" id="고객분류" value={siteDetail.고객분류 || ''} onChange={setValue} />
           </li>
           <li>
             <p className="red-point">지역분류</p>
-            <input type="text"  placeholder="지역분류를 입력하세요"/>
+            <input type="text"  placeholder="지역분류를 입력하세요" id="지역분류" value={siteDetail.지역분류 || ''} onChange={setValue} />
           </li>
           <li>
             <p className="red-point">현장분류</p>
-            <input type="text"  placeholder="현장분류를 입력하세요"/>
+            <input type="text"  placeholder="현장분류를 입력하세요" id="현장분류" value={siteDetail.현장분류 || ''} onChange={setValue} />
           </li>
           <li>
             <p>고객접점</p>
-            <input type="text"  placeholder="고객접점을 입력하세요"/>
+            <input type="text"  placeholder="고객접점을 입력하세요" id="고객접점" value={siteDetail.고객접점 || ''} onChange={setValue} />
           </li>
           <li>
             <p>담당센터</p>
-            <input type="text"  placeholder="담당센터를 입력하세요"/>
+            <input type="text"  placeholder="담당센터를 입력하세요" id="담당부서명" value={siteDetail.담당부서명 || ''} onChange={setValue} />
           </li>
+          
         </InputList>
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
-        closeModal()
-        // openModal({ ...modalData, content: <RPC01Step03Modal /> })
-      }}>저장</button>
-       <button className="del-btn" onClick={() => {
-        closeModal()
-        // openModal({ ...modalData, content: <RPC01Step01Modal /> })
-      }}>취소</button>
+          setSite()
+          
+          // openModal({ ...modalData, content: <RPC01Step03Modal /> })
+        }}>저장</button>
+        <button className="del-btn" onClick={() => {
+          setSiteDetail({})
+          closeModal()
+          // openModal({ ...modalData, content: <RPC01Step01Modal /> })
+        }}>취소</button>
       </ModalBtm>
     </SaleAddPlaceModalWrap>
   )

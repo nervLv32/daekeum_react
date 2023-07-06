@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
+import { useRecoilState } from "recoil";
+import { companyDetailAtom, companyListAtom, salesStateAtom } from "../../../recoil/salesAtom"
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 const SaleAddNewModalWrap = styled.div`
   max-height: 70vh;
@@ -141,8 +145,104 @@ const ModalBtm = styled.div`
   }
 `
 
-const SaleAddNewModal = () => {
+const SaleAddNewModal = ({item}) => {
+  const 거래처코드 = item.거래처코드
+  
+  const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
+  const [companyList, setCompanyList] = useRecoilState(companyListAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+
   const { closeModal } = useModal();
+  const navigate = useNavigate();
+  
+  const detail = (거래처코드) =>{
+    return axios(
+      process.env.REACT_APP_API_URL + '/sales/clientDetail',
+      {
+        method: 'post',
+        data: {
+          거래처코드: 거래처코드
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        //console.log(res)
+        const { data } = res.data
+        setCompanyDetail(data[0])
+      },
+      error => {
+        console.log(error)
+      }
+    )
+
+  }
+
+  const setValue = e =>{
+    let val = e.target.value 
+    let key = e.target.id
+    //console.log('key:',key ,'val:',val)
+    setCompanyDetail(oldData =>{
+      return {
+        ...oldData,
+        [key] : val      
+      }
+    })
+  }
+  
+  const setCompany = () => {
+    
+    let url = '/enroll/clientAdd'
+    if(거래처코드) url = '/sales/clientUpdate'
+    
+    return axios(
+      process.env.REACT_APP_API_URL + url,
+      {
+        method: 'post',
+        data: companyDetail
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        const { data } = res.data
+
+        /*
+        if(!거래처코드){
+          setCompanyList((oldCompanyList) => [
+            data[0],
+            ...oldCompanyList.slice(0,oldCompanyList.legnth-1)
+          ])
+        }
+        */
+        setSalesState(oldData => {
+          return {
+            ...oldData,
+            company: 1
+          }
+        })
+        navigate('/sale')
+
+        
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+
+  useEffect(() => {
+    if(거래처코드) {
+      detail(거래처코드)
+    } 
+    else {
+      setCompanyDetail({})
+    }
+  }, [])
+
   return (
     <SaleAddNewModalWrap>
       <div className="modal-top">
@@ -152,77 +252,78 @@ const SaleAddNewModal = () => {
         <InputList>
           <li className="full required">
             <p>거래처코드</p>
-            <input type="text"  placeholder="거래처코드를 입력하세요"/>
+            <input type="text" readOnly value={companyDetail.거래처코드}/>
           </li>
           <li>
             <p className="red-point">업체명</p>
-            <input type="text"  placeholder="업체명을 입력하세요"/>
+            <input type="text"  placeholder="업체명을 입력하세요" id="업체명" value={companyDetail.업체명 || ''} onChange={setValue} />
           </li>
           <li>
             <p className="red-point">대표자</p>
-            <input type="text"  placeholder="대표자를 입력하세요"/>
+            <input type="text"  placeholder="대표자를 입력하세요" id="대표자성명" value={companyDetail.대표자성명 || ''} onChange={setValue} />
           </li>
           <li>
             <p>업태</p>
-            <input type="text"  placeholder="업태를 입력하세요"/>
+            <input type="text"  placeholder="업태를 입력하세요" id="업태" value={companyDetail.업태 || ''} onChange={setValue} />
           </li>
           <li>
             <p>종목</p>
-            <input type="text"  placeholder="종목를 입력하세요"/>
+            <input type="text"  placeholder="종목를 입력하세요" id="종목" value={companyDetail.종목 || ''} onChange={setValue} />
           </li>
           <li className="full">
             <p>사업자번호</p>
-            <input type="text"  placeholder="사업자번호를 입력하세요"/>
+            <input type="text"  placeholder="사업자번호를 입력하세요" id="사업자번호" value={companyDetail.사업자번호 || ''} onChange={setValue} />
           </li>
           <li className="full">
             <p>부서</p>
-            <input type="text"  placeholder="부서를 입력하세요"/>
+            <input type="text"  placeholder="부서를 입력하세요" id="부서" value={companyDetail.부서 || ''} onChange={setValue} />
           </li>
           <li>
             <p>담당자</p>
-            <input type="text"  placeholder="담당자를 입력하세요"/>
+            <input type="text"  placeholder="담당자를 입력하세요" id="담당자"  onChange={setValue} value={companyDetail.담당자 || ''}/>
           </li>
           <li>
             <p>직위</p>
-            <input type="text"  placeholder="직위를 입력하세요"/>
+            <input type="text"  placeholder="직위를 입력하세요" id="직위"  onChange={setValue} value={companyDetail.직위 || ''}/>
           </li>
           <li>
             <p>휴대폰</p>
-            <input type="text"  placeholder="휴대폰을 입력하세요"/>
+            <input type="text"  placeholder="휴대폰을 입력하세요" id="휴대폰"  onChange={setValue} value={companyDetail.휴대폰 || ''}/>
           </li>
           <li>
             <p>이메일</p>
-            <input type="text"  placeholder="이메일을 입력하세요"/>
+            <input type="text"  placeholder="이메일을 입력하세요" id="이메일"  onChange={setValue} value={companyDetail.이메일 || ''}/>
           </li>
           <li>
             <p>전화번호</p>
-            <input type="text"  placeholder="전화번호를 입력하세요"/>
+            <input type="text"  placeholder="전화번호를 입력하세요" id="전화번호1"  onChange={setValue} value={companyDetail.전화번호1 || ''}/>
           </li>
           <li>
             <p>팩스번호</p>
-            <input type="text"  placeholder="팩스번호를 입력하세요"/>
+            <input type="text"  placeholder="팩스번호를 입력하세요" id="팩스번호"  onChange={setValue} value={companyDetail.팩스번호 || ''}/>
           </li>
           <li className="full">
             <p>회사코드</p>
-            <input type="text"  placeholder="회사코드를 입력하세요"/>
+            <input type="text"  placeholder="회사코드를 입력하세요" id="회사코드"  onChange={setValue} value={companyDetail.회사코드 || ''}/>
           </li>
           <li>
             <p>고객분류</p>
-            <input type="text"  placeholder="고객분류를 입력하세요"/>
+            <input type="text"  placeholder="고객분류를 입력하세요" id="고객분류"  onChange={setValue} value={companyDetail.고객분류 || ''}/>
           </li>
           <li>
             <p>거래처분류</p>
-            <input type="text"  placeholder="거래처분류를 입력하세요"/>
+            <input type="text"  placeholder="거래처분류를 입력하세요" id="거래처분류"  onChange={setValue} value={companyDetail.거래처분류 || ''}/>
           </li>
         </InputList>
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
+        setCompany()
         closeModal()
-        // openModal({ ...modalData, content: <RPC01Step03Modal /> })
       }}>저장</button>
        <button className="del-btn" onClick={() => {
+        setCompanyDetail({})
         closeModal()
         // openModal({ ...modalData, content: <RPC01Step01Modal /> })
       }}>취소</button>

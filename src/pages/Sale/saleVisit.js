@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink , useLocation} from "react-router-dom";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
 import SaleVisitListModal from "../../base-components/modal-components/sale/SaleVisitListModal";
@@ -8,8 +8,11 @@ import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import SaleInfoList from "../../components/sale/SaleInfoList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
 import SaleVisitList from "../../components/sale/SaleVisitList";
-
 import { useModal } from "../../hooks/useModal";
+import { useRecoilState } from "recoil";
+import { companyAtom, siteAtom, visitListAtom, salesStateAtom } from "../../recoil/salesAtom"
+import axios from 'axios';
+import SaleSubmitModal from '../../base-components/modal-components/sale/SaleSubmitModal'
 
 const SaleWrap = styled.div``
 
@@ -86,44 +89,74 @@ const FloatingWrap = styled.div`
 `
 
 const SaleVisit = () => {
-
-  const { openModal } = useModal();
+  
+  const location = useLocation();
+  const 현장코드 = location.state?.현장코드 
+  const 현장명 = location.state?.현장명
+  
+  console.log('[saleVisit] 현장코드, 현장명 :', 현장코드, 현장명 )
+  
+  const [company, setCompany] = useRecoilState(companyAtom) 
+  const [site, setSite] = useRecoilState(siteAtom)
+  const [visitList, setVisitList] = useRecoilState(visitListAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateAtom);
+  
+  const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
     content: <SaleVisitListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
-  const dummyData = [
-    {
-      no: 1,
-      date: "2023-02-01",
-      salesManager: "정명길",
-      companyManager: "정명길",
-      position: "사원",
-      text:`세륜기 순회점검 방문, 세륜기 확인하였으나 오랫동안
-      방치된 상태 현장 사무실 없어서 담당자 통화하였으며,
-      현장 추가계약 못하여 지호건설은 철수 기존 설치된
-      세륜기는 후속업체 정해지면 임대 형식으로 3개월 임대
-      및 추후 철수예정`
-    },
-    {
-      no: 2,
-      date: "2023-02-01",
-      salesManager: "공나현",
-      companyManager: "팜윤태",
-      position: "주임",
-      text:`세륜기 순회점검 방문, 세륜기 확인하였으나 오랫동안
-      방치된 상태 현장 사무실 없어서 담당자 통화하였으며,
-      현장 추가계약 못하여 지호건설은 철수 기존 설치된
-      세륜기는 후속업체 정해지면 임대 형식으로 3개월 임대
-      및 추후 철수예정`
-    },
-  ]
+
+  const search = (keyword, currentPage) => {
+    console.log('여기여기 ')
+    return axios(
+      process.env.REACT_APP_API_URL + '/sales/visitHistoryList',
+      {
+        method: 'post',
+        data: {
+          searchword: keyword,
+          pageSize: 10, 
+          currentPage: currentPage, 
+          거래처코드 : company.거래처코드,
+          현장코드: 현장코드 || site.현장코드
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        //console.log(res)
+        const { data } = res.data
+        console.log('방문리스트', data)
+
+        setVisitList(oldData => [
+          ...data
+        ])
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+  
+  useEffect(() => {
+    if(현장코드) setSite({ 현장코드: 현장코드, 현장명: 현장명 })
+    search('', 0)
+    setSalesState(oldData =>{
+      return {
+        ...oldData,
+        visit: 0
+      }
+    })
+  }, [salesState.visit])
+
   return <SaleWrap>
     <SaleTapWrap title="방문이력" />
     <SaleTabSearch>
-      <RegisTabNavi dep1="주)대금지오웰" dep2="현장명" dep3="장비정보" />
+      <RegisTabNavi dep1={company.업체명} dep2={site.현장명} dep3="장비정보" />
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" />
         <button className="search-btn" />
@@ -133,14 +166,14 @@ const SaleVisit = () => {
     <CompanyInfoWrap>
       <SaleInfoListWrap>
         {
-          dummyData.map((item, idx) => {
+          visitList.map((item, idx) => {
             return (<SaleVisitList
-              key={item.no}
-              no={item.no}
-              date={item.date}
-              salesManager={item.salesManager}
-              companyManager={item.companyManager}
-              position={item.position}
+              key={idx}
+              no={item.방문번호}
+              date={item.방문일}
+              salesManager={item.영업담당자명}
+              companyManager={item.업체담당자}
+              position={item.직책}
               onClick={() => openModal({ ...modalData, content: <SaleVisitListModal item={item} /> })}
             />
             )
@@ -150,8 +183,11 @@ const SaleVisit = () => {
     </CompanyInfoWrap>
 
     <FloatingWrap>
-      <Floating onClick={console.log(1)}>
-        <i className="default-icon"></i>
+      <Floating onClick={() => {
+        closeModal()
+        openModal({ ...modalData, content: <SaleSubmitModal item={{거래처코드: company.거래처코드, 현장코드: 현장코드 }} /> })
+      }}>
+      <i className="default-icon"></i>
       </Floating>
     </FloatingWrap>
   </SaleWrap>

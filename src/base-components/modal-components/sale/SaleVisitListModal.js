@@ -192,7 +192,10 @@ const SaleVisitListModalWrap = styled.div`
 `
 
 const SaleVisitListModal = ({ item }) => {
-  console.log(item)
+  console.log('~~~ ',item)
+  const 일지번호 = item.일지번호 
+  const 방문번호 = item.방문번호 
+
   const { closeModal, openModal } = useModal();
   const modalData = {
     title: 'SaleSubmitModal Modal',
@@ -205,7 +208,7 @@ const SaleVisitListModal = ({ item }) => {
         <div className="dl-wrap">
           <dl>
             <dt>방문번호</dt>
-            <dd>{item.no}</dd>
+            <dd>{item.방문번호}</dd>
           </dl>
         </div>
       </div>
@@ -213,32 +216,35 @@ const SaleVisitListModal = ({ item }) => {
         <li>
           <dl>
             <dt>방 문 일</dt>
-            <dd>{item.date}</dd>
+            <dd>{item.방문일}</dd>
           </dl>
           <dl>
             <dt>영 업 담 당 자</dt>
-            <dd>{item.salesManager}</dd>
+            <dd>{item.영업담당자명}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>업 체 담 당 자</dt>
-            <dd>{item.companyManager}</dd>
+            <dd>{item.업체담당자}</dd>
           </dl>
           <dl>
             <dt>직 책</dt>
-            <dd>{item.position}</dd>
+            <dd>{item.직책}</dd>
           </dl>
         </li>
         <li>
           <div className="text-area">
-            {item.text}
+            {item.상담내역}
           </div>
         </li>
       </ul>
       <div className="modal-btm">
-        <button className="primary-btn" onClick={() => openModal({ ...modalData, content: <SaleSubmitModal />})}>영업등록</button>
-        <button className="del-btn" onClick={closeModal}>닫기</button>
+        <button className="primary-btn" onClick={() => 
+          openModal({ ...modalData, content: <SaleSubmitModal item={item} />})}>
+        영업등록
+        </button>
+        <button className="del-btn" onClick= {closeModal}>닫기</button>
       </div>
     </SaleVisitListModalWrap>
   )

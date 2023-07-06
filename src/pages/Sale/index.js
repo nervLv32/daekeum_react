@@ -9,8 +9,9 @@ import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
 import { useRecoilState } from "recoil";
-import {salesAtom} from "../../recoil/salesAtom"
+import { companyListAtom, keywordAtom, pagingAtom, salesStateAtom,companyDetailAtom } from "../../recoil/salesAtom"
 import axios from 'axios';
+import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
 
 const SaleWrap = styled.div``
 
@@ -88,25 +89,34 @@ const FloatingWrap = styled.div`
 
 const Sale = () => {
   
-  const [sales, setSales] = useRecoilState(salesAtom);
+  const [companyList, setCompanyList] = useRecoilState(companyListAtom);
+  const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom);
+  const [keyword, setKeyword] = useRecoilState(keywordAtom)
+  const [paging, setPaging] = useRecoilState(pagingAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
   
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
     content: <SaleListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
-  const search = (keyword, currentPage) => {
-    
+  const search = () => {
+    //console.log(  {
+    //   searchword: keyword.company,
+    //   pageSize: paging.size, 
+    //   currentPage: paging.company
+    // })
+
     return axios(
       process.env.REACT_APP_API_URL + '/sales/clientList',
       {
         method: 'post',
         data: {
-          searchword: keyword,
-          pageSize: 10, 
-          currentPage: currentPage
+          searchword: keyword.company,
+          pageSize: paging.size, 
+          currentPage: paging.company
         }
         // ,headers: {
         //   'authorization': `${auth.auth.token}`
@@ -114,13 +124,11 @@ const Sale = () => {
       }
     ).then(
       res => {
-        //console.log(res)
         const { data } = res.data
-        console.log(data)
+        //console.log(data)
 
-        setSales(oldData => [
-          ...oldData,
-          ...data
+        setCompanyList(oldData => [
+         ...data 
         ])
       },
       error => {
@@ -129,24 +137,46 @@ const Sale = () => {
     )
   }
   
+
+  const setValue = e =>{
+    let val = e.target.value 
+    
+    //console.log('key:',key ,'val:',val)
+    setKeyword(oldData =>{
+      return {
+        ...oldData,
+        company : val      
+      }
+    })
+  }
+  
   useEffect(() => {
-    search('', 0)
-  }, [])
+    
+    search()
+    
+    setSalesState(oldData =>{
+      return {
+        ...oldData,
+        company: 0
+      }
+    })
+
+  }, [salesState.company])
 
   return <SaleWrap>
     <SaleTapWrap title="업체정보" />
     <SaleTabSearch>
       <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" />
-        <button className="search-btn" />
+        <input type="text" placeholder="Search" value={keyword.company} onChange={setValue} />
+        <button className="search-btn" onClick={search} />
       </div>
     </SaleTabSearch>
 
     <CompanyInfoWrap>
       <SaleInfoListWrap>
         {
-          sales.map((item, idx) => {
+          companyList.map((item, idx) => {
             return (<SaleInfoList
               key={idx}
               company={item.업체명}
@@ -161,7 +191,11 @@ const Sale = () => {
     </CompanyInfoWrap>
 
     <FloatingWrap>
-      <Floating onClick={console.log(1)}>
+      <Floating onClick={() =>{
+        setCompanyDetail({}) 
+        closeModal()
+        openModal({ ...modalData, content: <SaleAddNewModal item={''} /> })
+      }}>
         <i className="default-icon"></i>
       </Floating>
     </FloatingWrap>

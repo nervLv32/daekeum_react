@@ -60,8 +60,7 @@ const SaleSiteListComponent = styled.li`
 
 const SaleSiteList = ({
   site,
-  regionFirst,
-  regionLast,
+  region,
   center,
   onClick
 }) => {
@@ -76,7 +75,7 @@ const SaleSiteList = ({
     <div className="list-body">
       <dl>
         <dt>지역분류</dt>
-        <dd>{regionFirst}-{regionLast}</dd>
+        <dd>{region}</dd>
       </dl>
       <dl>
         <dt>담당센터</dt>

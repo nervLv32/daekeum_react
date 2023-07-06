@@ -5,10 +5,6 @@ import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
 import SaleAddNewModal from "./SaleAddNewModal";
 
-import { useRecoilState, useSetRecoilState } from "recoil";
-import axios from 'axios';
-import salesAtom from "../../../recoil/salesAtom"
-
 const SaleListModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
@@ -186,9 +182,6 @@ const SaleListModalWrap = styled.div`
 
 const SaleListModal = ({ item }) => {
   const { openModal, closeModal } = useModal();
-  const [sales, setSales] = useRecoilState(salesAtom);
-  
-
   const navigate = useNavigate();
 
   const modalData = {
@@ -196,42 +189,13 @@ const SaleListModal = ({ item }) => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const getDetail = (key) =>{
-
-    return axios(
-      process.env.REACT_APP_API_URL + '/sales/clientDetail',
-      {
-        method: 'post',
-        data: {
-          거래처코드: key
-        }
-        // ,headers: {
-        //   'authorization': `${auth.auth.token}`
-        // }
-      }
-    ).then(
-      res => {
-        //console.log(res)
-        const { data } = res.data
-        console.log(data)
-
-        
-      },
-      error => {
-        console.log(error)
-      }
-    )
-  }
-  
-  
-
   return (
     <SaleListModalWrap>
       <div className="modal-top">
         <div className="dl-wrap">
           <dl>
             <dt>업 체 명 </dt>
-            <dd>{item.company}</dd>
+            <dd>{item.업체명}</dd>
           </dl>
         </div>
         <div className="state-wrap">
@@ -280,11 +244,16 @@ const SaleListModal = ({ item }) => {
       <div className="modal-btm">
       <button className="primary-btn" onClick={() => {
           closeModal();
-          navigate('/sale/site')
+          navigate('/sale/site', {
+              state: {
+                거래처코드 : item.거래처코드,
+                업체명: item.업체명
+              }
+            } )
           }}>현장조회</button>
         <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <SaleAddNewModal /> })
+        openModal({ ...modalData, content: <SaleAddNewModal item={item} /> })
       }}>업체수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>

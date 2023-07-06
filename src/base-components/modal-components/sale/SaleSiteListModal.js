@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
 import SaleAddPlaceModal from "./SaleAddPlaceModal";
+import { useRecoilState } from "recoil";
+import { siteDetailAtom  } from "../../../recoil/salesAtom"
+import axios from 'axios'
 
 const SaleSiteListModalWrap = styled.div`
   background-color: #fff;
@@ -181,6 +184,12 @@ const SaleSiteListModalWrap = styled.div`
 `
 
 const SaleSiteListModal = ({ item }) => {
+  
+  const 거래처코드 = item.거래처코드;
+  const 현장코드 = item.현장코드;
+  console.log(item)
+  const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
+  
   const { openModal, closeModal } = useModal();
 
   const navigate = useNavigate();
@@ -189,6 +198,38 @@ const SaleSiteListModal = ({ item }) => {
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
+  
+  const detail = (거래처코드, 현장코드) => {
+    
+    return axios(
+      process.env.REACT_APP_API_URL + '/sales/siteDetail',
+      {
+        method: 'post',
+        data: {
+          거래처코드: 거래처코드,
+          현장코드: 현장코드,
+        }
+        // ,headers: {
+        //   'authorization': `${auth.auth.token}`
+        // }
+      }
+    ).then(
+      res => {
+        //console.log(res)
+        const { data } = res.data
+        
+        setSiteDetail(oldData => data[0] )
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+  
+  useEffect(() => {
+    detail(거래처코드 , 현장코드)
+  }, [])
+
 
   return (
     <SaleSiteListModalWrap>
@@ -196,7 +237,7 @@ const SaleSiteListModal = ({ item }) => {
         <div className="dl-wrap">
           <dl>
             <dt>현 장 명</dt>
-            <dd>{item.site}</dd>
+            <dd>{siteDetail.현장명}</dd>
           </dl>
         </div>
       </div>
@@ -204,56 +245,61 @@ const SaleSiteListModal = ({ item }) => {
         <li>
           <dl>
             <dt>지 역 분 류</dt>
-            <dd>{item.regionFirst}-{item.regionLast}</dd>
+            <dd>{siteDetail.지역분류}</dd>
           </dl>
           <dl>
             <dt>담 당 센 터</dt>
-            <dd>{item.center}</dd>
+            <dd>{siteDetail.담당부서명}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>업 태</dt>
-            <dd>{item.sector}</dd>
+            <dd>{siteDetail.업태}</dd>
           </dl>
           <dl>
-            <dt>업 태</dt>
-            <dd>{item.sectorNum}</dd>
+            <dt>종 목</dt>
+            <dd>{siteDetail.종목}</dd>
           </dl>
         </li>
         
         <li>
           <dl>
             <dt>현 장 주 소</dt>
-            <dd className="oneLine">{item.siteAddress}</dd>
+            <dd className="oneLine">{siteDetail.주소}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>현 장 담 당 자</dt>
-            <dd>{item.manager}</dd>
+            <dd>{siteDetail.담당자}</dd>
           </dl>
           <dl>
             <dt>현 장 연 락 처</dt>
-            <dd>{item.managerPhone}</dd>
+            <dd>{siteDetail.휴대폰}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>이 메 일</dt>
-            <dd className="oneLine">{item.email}</dd>
+            <dd className="oneLine">{siteDetail.이메일}</dd>
           </dl>
         </li>
       </ul>
       <div className="modal-btm">
         <button className="primary-btn" onClick={() => {
           closeModal();
-          navigate('/sale/visit')
-          }}>장비조회</button>
+          navigate('/sale/visit',{
+            state: {
+              현장코드 : item.현장코드,
+              현장명: item.현장명
+            }
+          })
+          }}>방문이력조회</button>
         <button className="primary-btn" onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <SaleAddPlaceModal /> })
-      }}>현장수정</button>
+          closeModal()
+          openModal({ ...modalData, content: <SaleAddPlaceModal item={item} /> })
+        }}>현장수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
     </SaleSiteListModalWrap>
