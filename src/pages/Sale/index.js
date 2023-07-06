@@ -9,7 +9,7 @@ import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
 import { useRecoilState } from "recoil";
-import {salesAtom} from "../../recoil/salesAtom"
+import salesAtom from "../../recoil/salesAtom"
 import axios from 'axios';
 
 const SaleWrap = styled.div``
@@ -87,9 +87,9 @@ const FloatingWrap = styled.div`
 `
 
 const Sale = () => {
-  
+
   const [sales, setSales] = useRecoilState(salesAtom);
-  
+
   const { openModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
@@ -98,14 +98,14 @@ const Sale = () => {
   };
 
   const search = (keyword, currentPage) => {
-    
+
     return axios(
       process.env.REACT_APP_API_URL + '/sales/clientList',
       {
         method: 'post',
         data: {
           searchword: keyword,
-          pageSize: 10, 
+          pageSize: 10,
           currentPage: currentPage
         }
         // ,headers: {
@@ -128,7 +128,7 @@ const Sale = () => {
       }
     )
   }
-  
+
   useEffect(() => {
     search('', 0)
   }, [])
