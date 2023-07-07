@@ -3,12 +3,13 @@ import TopSearch from "../../components/molecules/TopSearch"
 import { useModal } from "../../hooks/useModal";
 import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo, useRef} from "react";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import Floating from "../../components/molecules/Floating";
 import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";
 import fetchService from "../../util/fetchService";
+import {throttle} from "lodash";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -76,12 +77,14 @@ const Receipt = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  const bodyRef = useRef(null);
+
   const { openModal, closeModal } = useModal();
 
-  const [topMenu, setTopMenu] = useState(false);
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
   const [isFDep2, setIsFDep2] = useState(false);
+  const [topMenu, setTopMenu] = useState(false);
 
   const [receiptList, setReceiptList] = useState([])
   const [receiptParam, setReceiptParam] = useState({
@@ -143,6 +146,24 @@ const Receipt = () => {
       })
   }, [receiptParam])
 
+
+  const throttledScroll = useMemo(
+    () =>
+      throttle(() => {
+        const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+
+        if(scrollTop >= scrollHeight - clientHeight) {
+          console.log("event")
+        }
+      }, 500), []
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", throttledScroll)
+    return () => window.removeEventListener("scroll", throttledScroll)
+  }, [throttledScroll])
+
+
   return (
     <>
       <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
@@ -186,7 +207,7 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
-      <ReceiptWrap>
+      <ReceiptWrap ref={bodyRef}>
         {
           receiptList.length > 0 && receiptList.map((item, key) => {
             return <ReceiptCard
