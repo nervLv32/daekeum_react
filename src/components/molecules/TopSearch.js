@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 
 const TopSearchWrap = styled.div`
@@ -63,12 +63,23 @@ const TopSearchWrap = styled.div`
   }
 `
 
-const TopSearch = ({ topMenu, setTopMenu }) => {
+const TopSearch = ({ topMenu, setTopMenu, changeParam }) => {
+
+  const [search, setSearch] = useState('');
+  let debounce = null;
+
+  useEffect(() => {
+    debounce = setTimeout(() => {
+      changeParam('searchword', search)
+    }, 500)
+
+    return () => clearTimeout(debounce)
+  }, [search])
 
   return <TopSearchWrap>
     <div className="search-wrap">
       <div className="input-wrap">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
       </div>
       <button className="submit-btn" onClick={() => setTopMenu(prev => !prev)}>
         {
