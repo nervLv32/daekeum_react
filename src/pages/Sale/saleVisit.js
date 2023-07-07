@@ -89,18 +89,18 @@ const FloatingWrap = styled.div`
 `
 
 const SaleVisit = () => {
-  
+
   const location = useLocation();
-  const 현장코드 = location.state?.현장코드 
+  const 현장코드 = location.state?.현장코드
   const 현장명 = location.state?.현장명
-  
+
   console.log('[saleVisit] 현장코드, 현장명 :', 현장코드, 현장명 )
-  
-  const [company, setCompany] = useRecoilState(companyAtom) 
+
+  const [company, setCompany] = useRecoilState(companyAtom)
   const [site, setSite] = useRecoilState(siteAtom)
   const [visitList, setVisitList] = useRecoilState(visitListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom);
-  
+
   const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
@@ -117,8 +117,8 @@ const SaleVisit = () => {
         method: 'post',
         data: {
           searchword: keyword,
-          pageSize: 10, 
-          currentPage: currentPage, 
+          pageSize: 10,
+          currentPage: currentPage,
           거래처코드 : company.거래처코드,
           현장코드: 현장코드 || site.현장코드
         }
@@ -141,7 +141,7 @@ const SaleVisit = () => {
       }
     )
   }
-  
+
   useEffect(() => {
     if(현장코드) setSite({ 현장코드: 현장코드, 현장명: 현장명 })
     search('', 0)

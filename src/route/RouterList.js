@@ -6,9 +6,9 @@ import Receipt from "../pages/Receipt";
 import {HomeIco, InvIco, ProdIco, ReceiptIco, RegisIco, SaleIco} from "../assets/icon/Svg";
 
 // Auth
-import AuthLayout from "../layouts/AuthLayout";
+// import AuthLayout from "../layouts/AuthLayout";
 import Login from "../pages/auth/Login";
-import Join from "../pages/auth/Join";
+// import Join from "../pages/auth/Join";
 import Regis from "../pages/Regis";
 import Inventory from "../pages/Inventory";
 import Report from "../pages/Report";

@@ -1,25 +1,26 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import GlobalStyle from "./components/global/GlobalStyle";
-import { RecoilRoot } from "recoil";
+import {RecoilRoot} from "recoil";
 import GlobalModal from './components/global/GlobalModal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
-  <React.StrictMode>
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-    {/* <BrowserRouter> */}
-      <GlobalStyle />
-      <RecoilRoot>
-        <GlobalModal />
-        <App />
-      </RecoilRoot>
-    </BrowserRouter>
-  </React.StrictMode>
+  <RecoilRoot>
+    <React.StrictMode>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        {/* <BrowserRouter> */}
+        <GlobalStyle/>
+        <GlobalModal/>
+        <App/>
+
+      </BrowserRouter>
+    </React.StrictMode>
+  </RecoilRoot>
 );
 
 // If you want to start measuring performance in your app, pass a function

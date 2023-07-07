@@ -5,7 +5,6 @@ import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 import {useEffect, useState} from "react";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
-import { NavLink } from "react-router-dom";
 import Floating from "../../components/molecules/Floating";
 import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";

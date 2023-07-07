@@ -165,7 +165,7 @@ const Navigation = () => {
       title: "영업등록"
     }
   ]
-  
+
   return (
     <NavigationWrapper className={menuState.isOpen ? "view" : "hidden"}>
       <div className="navigation-dim" onClick={() => setMenuState({ isOpen: false })}></div>
@@ -177,7 +177,7 @@ const Navigation = () => {
             </div>
             <div className="text-wrap">
               <p>
-                {user.auth.userName}
+                {user.auth.한글이름}
               </p>
               <span>경영지원실 전산팀</span>
             </div>

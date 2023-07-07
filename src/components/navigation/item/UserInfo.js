@@ -42,11 +42,7 @@ const UserInfo = () => {
   const [user, setUser] = useRecoilState(userAtom)
 
   useEffect(() => {
-    setUser({
-      auth: {
-        userName: '한소희'
-      }
-    })
+    console.log(user)
   }, [])
 
   return <InfoWrap>
@@ -54,7 +50,7 @@ const UserInfo = () => {
       <Image src={ProfileImage}/>
       <Typo text={'Welcome!'} fontSize={'11px'} fontWeight={'300'} fontFamily={'Montserrat'}
             color={'rgba(239, 242, 255, 0.7)'}/>
-      <Typo text={`${user.auth.userName} 님`} fontSize={'19px'} fontWeight={'700'} color={'#fff'}/>
+      <Typo text={`${user.auth.한글이름} 님`} fontSize={'19px'} fontWeight={'700'} color={'#fff'}/>
     </Welcome>
   </InfoWrap>
 }

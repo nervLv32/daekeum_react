@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import logo from '../../assets/icon/로고.svg'
+import {useEffect, useState} from "react";
+import fetchService from "../../util/fetchService";
+import {useRecoilState} from "recoil";
+import userAtom from "../../recoil/userAtom";
 
 const BackgroundCircle = styled.div`
   position: absolute;
@@ -102,18 +106,46 @@ const Footer = styled.p`
 `
 
 const Login = () => {
+
+  const [user, setUser] = useRecoilState(userAtom)
+  const [userData, setUserData] = useState({
+    userId: 'hana84',
+    password: '1111',
+  });
+
+  const updateData = (key, value) => {
+    setUserData({
+      ...userData,
+      [key] : value
+    })
+  }
+
+  const submitAuth = () => {
+    fetchService('/auth/login', 'post', userData)
+      .then((response) => {
+        console.log(response.data.recordset[0])
+        setUser({
+          isLogin: true,
+          auth: {...response.data.recordset[0]}
+        })
+        window.location.href = '/'
+      })
+  };
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
+
   return<>
     <BackgroundCircle />
     <LoginWrap>
       <Logo src={logo} alt={''} />
       <InfoText> Login Account </InfoText>
       <InputWrap>
-        <InputAuthInfo type={'text'} placeholder={'ID'} />
-        <InputAuthInfo type={'password'} placeholder={'Password'} />
+        <InputAuthInfo type={'text'} placeholder={'ID'} value={userData.userId} onChange={e => updateData('userId', e.target.value)}/>
+        <InputAuthInfo type={'password'} placeholder={'Password'} value={userData.password} onChange={e => updateData('password', e.target.value)} />
       </InputWrap>
-      <Button
-        onClick={() => alert(1)}
-      >
+      <Button onClick={submitAuth}>
         LOG IN
       </Button>
     </LoginWrap>
