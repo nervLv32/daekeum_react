@@ -77,12 +77,12 @@ const Receipt = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  let body = []
+  let observer
 
   const { openModal, closeModal } = useModal();
 
   const observeTargetRef = useRef(null)
-  const [itemLists, setItemLists] = useState([1]);
+  const [isLoading, setLoading] = useState(false);
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
   const [isFDep2, setIsFDep2] = useState(false);
@@ -127,14 +127,16 @@ const Receipt = () => {
     }) : []
   }
 
-  const onIntersect = async ([entry], observer) => {
-    console.log(receipts)
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
-      observer.unobserve(entry.target);
-      await fetchList(receipts);
-      observer.observe(entry.target);
+      setLoading(true)
+      setReceiptParam({
+        ...receiptParam,
+        currentPage: parseInt(receiptParam.currentPage) + 1
+      })
+      fetchList(receipts)
     }
-  };
+  });
 
   const fetchList = (list) => {
     fetchService('/receipt/list', 'post', receiptParam)
@@ -142,29 +144,19 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
+        setLoading(false)
       })
   }
 
   useEffect(() => {
-    let observer
-    if(observeTargetRef){
-      observer = new IntersectionObserver(onIntersect, {
-        threshold: 0.5,
-      })
-      observer.observe(observeTargetRef.current)
-    }
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
 
-    return () => observer && observer.disconnect()
-  }, [observeTargetRef])
-
-  const test = () => {
-    console.log(receipts)
-  }
 
   return (
     <>
       <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
-      <button onClick={test}>asdfasdf</button>
       {
         topMenu && (
           <TopSearchMenu>
