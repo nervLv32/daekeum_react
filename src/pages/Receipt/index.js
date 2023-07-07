@@ -90,7 +90,7 @@ const Receipt = () => {
   const [receiptParam, setReceiptParam] = useState({
     searchword: '',
     pageSize: '10',
-    currentPage: '2',
+    currentPage: '1',
     year: '',
     month: '',
     dtFrom: '',
@@ -106,46 +106,23 @@ const Receipt = () => {
       [key] : value,
     })
   }
-
-  /*const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      state: '접수대기',
-      company: '주식회사 대금지웰',
-      regionFirst: '인천',
-      regionSecond: '미추홀구',
-      site: '반도체 클러스터 일반산업단지 조성사업 2공구',
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
-    }
-  ]*/
-
-  useEffect( () => {
-    fetchService('/receipt/list', 'post', receiptParam)
-      .then((res) => {
-        const data = res.data ? res.data.map(it => {
-          return {
-            no: it.NO,
-            date: it.날짜,
-            state: it.처리상태,
-            company: it.업체명,
-            regionFirst: it.현장명,
-            regionSecond: it.지역,
-            site: it.현장주소,
-            manager: it.방문예정담당자,
-            managerPhone: it.현장연락처,
-            siteAddress: it.현장주소,
-            detail: it.접수내용,
-          }
-        }) : []
-        console.log(data)
-        setReceiptList( [...data] )
-      })
-  }, [receiptParam])
-
+  const mappingItem = (res) => {
+    return res.data ? res.data.map(it => {
+      return {
+        no: it.NO,
+        date: it.날짜,
+        state: it.처리상태,
+        company: it.업체명,
+        regionFirst: it.현장명,
+        regionSecond: it.지역,
+        site: it.현장주소,
+        manager: it.방문예정담당자,
+        managerPhone: it.현장연락처,
+        siteAddress: it.현장주소,
+        detail: it.접수내용,
+      }
+    }) : []
+  }
 
   const throttledScroll = useMemo(
     () =>
@@ -153,16 +130,29 @@ const Receipt = () => {
         const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
 
         if(scrollTop >= scrollHeight - clientHeight) {
-          console.log("event")
+          changeParam('currentPage', (parseInt(receiptParam.currentPage) + 1).toString())
+          fetchList(receiptList)
         }
-      }, 500), []
+      }, 500), [receiptList]
   );
+
+  const fetchList = (list) => {
+    fetchService('/receipt/list', 'post', receiptParam)
+      .then((res) => {
+        const temp = mappingItem(res)
+        const data = [...list, ...temp]
+        setReceiptList( [...data] )
+      })
+  }
+
+  useEffect( () => {
+    fetchList([])
+  }, [])
 
   useEffect(() => {
     window.addEventListener("scroll", throttledScroll)
     return () => window.removeEventListener("scroll", throttledScroll)
   }, [throttledScroll])
-
 
   return (
     <>
@@ -209,7 +199,7 @@ const Receipt = () => {
       }
       <ReceiptWrap ref={bodyRef}>
         {
-          receiptList.length > 0 && receiptList.map((item, key) => {
+          receiptList.map((item, key) => {
             return <ReceiptCard
               key={key}
               no={item.no}
@@ -291,5 +281,21 @@ const Receipt = () => {
     </>
   )
 }
+
+/*const dummyData = [
+  {
+    no: 41377,
+    date: "2023-02-01",
+    state: '접수대기',
+    company: '주식회사 대금지웰',
+    regionFirst: '인천',
+    regionSecond: '미추홀구',
+    site: '반도체 클러스터 일반산업단지 조성사업 2공구',
+    manager: '정명길',
+    managerPhone: '010-6476-1544',
+    siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
+    detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
+  }
+]*/
 
 export default Receipt
