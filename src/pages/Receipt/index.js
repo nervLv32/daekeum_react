@@ -3,12 +3,13 @@ import TopSearch from "../../components/molecules/TopSearch"
 import { useModal } from "../../hooks/useModal";
 import ReceiptCard from "../../components/receipt/ReceiptCard";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import { NavLink } from "react-router-dom";
 import Floating from "../../components/molecules/Floating";
 import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";
+import fetchService from "../../util/fetchService";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -164,7 +165,13 @@ const Receipt = () => {
   const [isFOpen, setIsFOpen] = useState(false);
 
   const [isFDep2, setIsFDep2] = useState(false);
-  
+
+  useEffect( () => {
+    fetchService('/receipt/list', 'post', null)
+      .then((res) => {
+        console.log(res)
+      })
+  }, [])
 
   return (
     <>
