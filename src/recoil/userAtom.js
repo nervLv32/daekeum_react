@@ -3,7 +3,6 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist(); // ✔
 
-
 const userAtom = atom({
   key: 'userAtom',
   default: {
@@ -12,4 +11,5 @@ const userAtom = atom({
   },
   effects_UNSTABLE: [persistAtom]
 })
+
 export default userAtom

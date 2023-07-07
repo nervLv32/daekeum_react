@@ -9,7 +9,8 @@ import Floating from "../../components/molecules/Floating";
 import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";
 import fetchService from "../../util/fetchService";
-import {throttle} from "lodash";
+import {useRecoilState} from "recoil";
+import {receiptAtom} from "../../recoil/receipt";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -70,23 +71,24 @@ const FloatingBody = styled.div``
 
 
 const Receipt = () => {
-
   const modalData = {
     title: 'Receipt Modal',
     content: <ReceiptListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
-  const bodyRef = useRef(null);
+  let body = []
 
   const { openModal, closeModal } = useModal();
 
+  const observeTargetRef = useRef(null)
+  const [itemLists, setItemLists] = useState([1]);
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
   const [isFDep2, setIsFDep2] = useState(false);
   const [topMenu, setTopMenu] = useState(false);
 
-  const [receiptList, setReceiptList] = useState([])
+  const [receipts, setReceipts] = useRecoilState(receiptAtom)
   const [receiptParam, setReceiptParam] = useState({
     searchword: '',
     pageSize: '10',
@@ -100,13 +102,14 @@ const Receipt = () => {
   })
 
   const changeParam = (key, value) => {
-    console.log(value)
     setReceiptParam({
-      ...receiptList,
+      ...receiptParam,
+      currentPage : '1',
       [key] : value,
     })
   }
   const mappingItem = (res) => {
+    console.log(receipts)
     return res.data ? res.data.map(it => {
       return {
         no: it.NO,
@@ -124,39 +127,44 @@ const Receipt = () => {
     }) : []
   }
 
-  const throttledScroll = useMemo(
-    () =>
-      throttle(() => {
-        const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
-
-        if(scrollTop >= scrollHeight - clientHeight) {
-          changeParam('currentPage', (parseInt(receiptParam.currentPage) + 1).toString())
-          fetchList(receiptList)
-        }
-      }, 500), [receiptList]
-  );
+  const onIntersect = async ([entry], observer) => {
+    console.log(receipts)
+    if (entry.isIntersecting) {
+      observer.unobserve(entry.target);
+      await fetchList(receipts);
+      observer.observe(entry.target);
+    }
+  };
 
   const fetchList = (list) => {
     fetchService('/receipt/list', 'post', receiptParam)
       .then((res) => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
-        setReceiptList( [...data] )
+        setReceipts( data )
       })
   }
 
-  useEffect( () => {
-    fetchList([])
-  }, [])
-
   useEffect(() => {
-    window.addEventListener("scroll", throttledScroll)
-    return () => window.removeEventListener("scroll", throttledScroll)
-  }, [throttledScroll])
+    let observer
+    if(observeTargetRef){
+      observer = new IntersectionObserver(onIntersect, {
+        threshold: 0.5,
+      })
+      observer.observe(observeTargetRef.current)
+    }
+
+    return () => observer && observer.disconnect()
+  }, [observeTargetRef])
+
+  const test = () => {
+    console.log(receipts)
+  }
 
   return (
     <>
       <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
+      <button onClick={test}>asdfasdf</button>
       {
         topMenu && (
           <TopSearchMenu>
@@ -197,10 +205,11 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
-      <ReceiptWrap ref={bodyRef}>
+      <ReceiptWrap>
         {
-          receiptList.map((item, key) => {
+          receipts.map((item, key) => {
             return <ReceiptCard
+              className={""}
               key={key}
               no={item.no}
               date={item.date}
@@ -269,7 +278,7 @@ const Receipt = () => {
                   <span>월별조회</span>
                 </li>
                 <li>
-                  <i><img src="../../icons/icon-f-viewday.png" alt="floating icon" /></i>
+                  <i><img src="../../icons/icon-f-viewday.png" alt="flo ting icon" /></i>
                   <span>일자별조회</span>
                 </li>
               </FMenuWrap>
@@ -278,6 +287,7 @@ const Receipt = () => {
         </FloatingBody>
 
       </FloatingWrap>
+      <div ref={observeTargetRef}/>
     </>
   )
 }

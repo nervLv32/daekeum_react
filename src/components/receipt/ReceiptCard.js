@@ -91,6 +91,7 @@ const ReceiptCard = ({
   regionSecond,
   site,
   manager,
+  className,
   onClick
 }) => {
 
@@ -100,7 +101,7 @@ const ReceiptCard = ({
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
-  return <ReceiptCardComponent>
+  return <ReceiptCardComponent className={className}>
     <div className="receipt-top">
       <div className="dl-wrap">
         <dl className="number">
@@ -112,13 +113,13 @@ const ReceiptCard = ({
           <dd>{date}</dd>
         </dl>
       </div>
-      <div className="state-wrap" 
+      <div className="state-wrap"
       onClick={() => {
         if(state == '접수완료') {
           openModal({ ...modalData, content: <ReceiptCheckModal /> })
         } else {
           openModal({ ...modalData, content: <DStep01Modal /> })
-        } 
+        }
       }}>
         <OrderStateBtn state={state} />
       </div>
