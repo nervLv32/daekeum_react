@@ -100,6 +100,21 @@ const Receipt = () => {
     처리상태: '',
   })
 
+  const [newReceipt, setNewReceipt] = useState({
+    날짜: '',
+    거래처명: '',
+    거래처코드:'',
+    현장명: '',
+    현장코드: '',
+    지역: '',
+    담당자: '',
+    연락처: '',
+    접수내용: '',
+    처리상태: '',
+    방문예정담당자: '',
+    현장주소: ''
+  })
+
   const changeParam = (key, value) => {
     setReceiptParam({
       ...receiptParam,

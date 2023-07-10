@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import { useModal } from "../../hooks/useModal";
 
@@ -137,9 +137,43 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = () => {
+const NewRegisModal = ({ setNewReceipt: setNewReceipt }) => {
   /* ****** 신규접수모달 ****** */
   const { closeModal } = useModal();
+  const bodyRef = useRef([])
+  const [body, setBody] = useState({
+    날짜: '',
+    거래처명: '',
+    거래처코드:'',
+    현장명: '',
+    현장코드: '',
+    지역: '',
+    담당자: '',
+    연락처: '',
+    접수내용: '',
+    처리상태: '',
+    방문예정담당자: '',
+    현장주소: ''
+  })
+
+  const updateReceipt = () => {
+   setNewReceipt({
+     날짜: '',
+     거래처명: bodyRef.current[2].value,
+     지역: bodyRef.current[3].value,
+     담당자: bodyRef.current[5].value,
+     연락처: bodyRef.current[6].value,
+     접수내용: '',
+     처리상태: '',
+     방문예정담당자: '',
+     현장주소: bodyRef.current[4].value
+   })
+  }
+
+  useEffect(() => {
+    bodyRef.current[1].value
+  }, [bodyRef])
+
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
@@ -149,42 +183,43 @@ const NewRegisModal = () => {
         <InputList>
           <li className="required">
             <p>접수번호</p>
-            <input type="text"  placeholder="접수번호를 입력하세요"/>
+            <input ref={e => bodyRef.current[0] = e} type="text"  placeholder="접수번호를 입력하세요"/>
           </li>
           <li className="required">
             <p>접수일</p>
-            <input type="text"  placeholder="접수일을 입력하세요"/>
+            <input ref={e => bodyRef.current[1] = e} type="text"  placeholder="접수일을 입력하세요"/>
           </li>
           <li>
             <p>업체명</p>
-            <input type="text"  placeholder="업체명을 입력하세요"/>
+            <input ref={e => bodyRef.current[2] = e} type="text"  placeholder="업체명을 입력하세요"/>
           </li>
           <li>
             <p>지역</p>
-            <input type="text"  placeholder="지역을 입력하세요"/>
+            <input ref={e => bodyRef.current[3] = e} type="text"  placeholder="지역을 입력하세요"/>
           </li>
           <li>
             <p>주소</p>
-            <input type="text"  placeholder="주소를 입력하세요"/>
+            <input ref={e => bodyRef.current[4] = e} type="text"  placeholder="주소를 입력하세요"/>
           </li>
           <li>
             <p>현장담당자</p>
-            <input type="text"  placeholder="현장담당자를 입력하세요"/>
+            <input ref={e => bodyRef.current[5] = e} type="text"  placeholder="현장담당자를 입력하세요"/>
           </li>
           <li>
             <p>현장연락처</p>
-            <input type="text"  placeholder="현장연락처를 입력하세요"/>
+            <input ref={e => bodyRef.current[6] = e} type="text"  placeholder="현장연락처를 입력하세요"/>
           </li>
           <li>
             <p>접수내용</p>
-            <textarea placeholder="접수내용을 입력하세요" />
+            <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요" />
           </li>
         </InputList>
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
-        closeModal()
+          updateReceipt()
+        // closeModal()
         // openModal({ ...modalData, content: <RPC01Step03Modal /> })
       }}>저장</button>
        <button className="del-btn" onClick={() => {
