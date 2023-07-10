@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
+import {receiptAtom} from "../../../recoil/receipt";
+import {useRecoilState} from "recoil";
+import fetchService from "../../../util/fetchService";
 
 const ReceiptListModalWrap = styled.div`
   background-color: #fff;
@@ -197,8 +200,24 @@ const ReceiptListModalWrap = styled.div`
 const ReceiptListModal = ({ item }) => {
 
   const [changeStateWrap, setChangeStateWrap] = useState(false);
+  const [receipt, setReceipt] = useRecoilState(receiptAtom);
+
   console.log(changeStateWrap)
   const changeState = () => setChangeStateWrap(prev => !prev);
+
+  const updateState = (value) => {
+    fetchService('/receipt/updateStatus', 'post', {일련번호: item.no, 처리상태: value})
+      .then(() => {
+        const tempReceipt = [...receipt]
+        const copy = {...receipt.filter(it => it.no === item.no)[0]}
+        const idx = receipt.indexOf(receipt.filter(it => it.no === item.no)[0])
+        copy.state = value
+        tempReceipt[idx] = copy
+        setReceipt(tempReceipt)
+        setChangeStateWrap(false)
+      })
+  }
+
   return (
     <ReceiptListModalWrap>
       <div className="modal-top">
@@ -213,7 +232,7 @@ const ReceiptListModal = ({ item }) => {
           </dl>
         </div>
         <div className="state-wrap">
-          <OrderStateBtn state={item.state} />
+          <OrderStateBtn state={receipt.filter(it => it.no === item.no)[0].state} />
         </div>
       </div>
       <ul className="modal-body">
@@ -266,19 +285,19 @@ const ReceiptListModal = ({ item }) => {
           {
             changeStateWrap && (<ul className="btn-state-wrap">
               <li>
-                <button className="ready">
+                <button className="add" onClick={() => updateState('접수완료')}>
                   <i></i>
                   <span>접수완료</span>
                 </button>
               </li>
               <li>
-                <button className="add">
+                <button className="ready"  onClick={() => updateState('접수대기')}>
                   <i></i>
                   <span>접수대기</span>
                 </button>
               </li>
               <li>
-                <button className="done">
+                <button className="done" onClick={() => updateState('처리완료')}>
                   <i></i>
                   <span>처리완료</span>
                 </button>
