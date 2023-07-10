@@ -11,6 +11,7 @@ import SearchRegionModal from "../../components/global/SearchRegionModal";
 import fetchService from "../../util/fetchService";
 import {useRecoilState} from "recoil";
 import {receiptAtom} from "../../recoil/receipt";
+import Year from "../../components/calander/Year";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -85,7 +86,13 @@ const Receipt = () => {
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
   const [isFDep2, setIsFDep2] = useState(false);
+  const [isFDep3, setIsFDep3] = useState({
+    year: false,
+    month: false,
+    daily: false,
+  });
   const [topMenu, setTopMenu] = useState(false);
+
 
   const [receipts, setReceipts] = useRecoilState(receiptAtom)
   const [receiptParam, setReceiptParam] = useState({
@@ -158,6 +165,7 @@ const Receipt = () => {
     fetchList([])
   }, [
     receiptParam.searchword,
+    receiptParam.year,
     receiptParam.처리상태
   ])
 
@@ -275,7 +283,11 @@ const Receipt = () => {
           {
             isFOpen && isFDep2? (
               <FMenuWrap className="dep2">
-                <li>
+                <li onClick={() => {
+                  setIsFDep2(false)
+                  setIsFOpen(false)
+                  setIsFDep3({ ... setIsFDep3, year: true})
+                }}>
                   <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>년도별조회</span>
                 </li>
@@ -293,6 +305,11 @@ const Receipt = () => {
         </FloatingBody>
 
       </FloatingWrap>
+      {
+        isFDep3.year ? <Year modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
+          isFDep3.month ? null :
+            isFDep3.daily ? null : null
+      }
       <div ref={observeTargetRef}/>
     </>
   )
