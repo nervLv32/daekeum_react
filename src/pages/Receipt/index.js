@@ -77,12 +77,11 @@ const Receipt = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  let observer
-
   const { openModal, closeModal } = useModal();
 
   const observeTargetRef = useRef(null)
   const [isLoading, setLoading] = useState(false);
+  const [fetchFlag, setFetchFlag] = useState(false);
   // floating open
   const [isFOpen, setIsFOpen] = useState(false);
   const [isFDep2, setIsFDep2] = useState(false);
@@ -109,7 +108,8 @@ const Receipt = () => {
     })
   }
   const mappingItem = (res) => {
-    console.log(receipts)
+    // console.log(receipts)
+    console.log(receiptParam)
     return res.data ? res.data.map(it => {
       return {
         no: it.NO,
@@ -134,7 +134,7 @@ const Receipt = () => {
         ...receiptParam,
         currentPage: parseInt(receiptParam.currentPage) + 1
       })
-      fetchList(receipts)
+      fetchList(fetchFlag ? [] : receipts)
     }
   });
 
@@ -144,14 +144,24 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
-        setLoading(false)
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
       })
   }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [
+    receiptParam.searchword
+  ])
 
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
     return () => onIntersect.disconnect()
   }, [isLoading])
+
 
 
   return (
