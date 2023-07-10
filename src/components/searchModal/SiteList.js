@@ -32,12 +32,13 @@ const SiteList = ({searchList, searchModal, setSearchModal}) => {
   // const setNewReceipt = useSetRecoilState(newReceiptAtom)
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
 
-  const updateValue = (name, code, address, manager, phone) => {
+  const updateValue = (name, code,address1, address2, manager, phone) => {
     setNewReceipt({
       ...newReceipt,
       현장명: name,
       현장코드: code,
-      현장주소: address,
+      지역: address1,
+      현장주소: address2,
       현장담당자: manager,
       현장연락처: phone,
     })
@@ -52,7 +53,7 @@ const SiteList = ({searchList, searchModal, setSearchModal}) => {
       searchList.map((it, key)=>{
         return (
           <Li key={key}
-              onClick={() => updateValue(it.현장명, it.현장코드, it.현장주소, it.담당자, it.휴대폰)}
+              onClick={() => updateValue(it.현장명, it.현장코드, it.지역분류, it.주소, it.담당자, it.휴대폰)}
           >
             <div>
               <p>{it.현장명}</p>

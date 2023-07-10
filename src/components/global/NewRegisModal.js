@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
-import { useModal } from "../../hooks/useModal";
+import {useModal} from "../../hooks/useModal";
 import fetchService from "../../util/fetchService";
 import {DateFormat} from "../../util/dateFormat";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
@@ -12,6 +12,7 @@ const NewRegisModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
   width: 100%;
+
   .modal-top {
     border-radius: 20px 20px 0 0;
     background-color: #fff;
@@ -19,13 +20,15 @@ const NewRegisModalWrap = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom :1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
+
     .title {
       font-weight: 700;
       font-size: 16px;
       color: #1c1b1f;
     }
   }
+
   .modal-body {
     padding: 25px 30px;
     padding-bottom: 70px;
@@ -37,24 +40,30 @@ const InputList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
   li {
     &:not(:last-child) {
       margin-bottom: 10px;
     }
+
     &.required {
       input {
         background-color: #EFF2FF;
       }
     }
+
     width: 100%;
+
     p {
       font-weight: 500;
       font-size: 11px;
       color: #1c1b1f;
       margin-bottom: 4px;
-      display : inline-block;
+      display: inline-block;
+
       &.red-point {
         position: relative;
+
         &:after {
           content: '';
           display: block;
@@ -68,7 +77,8 @@ const InputList = styled.ul`
         }
       }
     }
-    input {
+
+    input, div.input {
       width: 100%;
       box-sizing: border-box;
       border: 1px solid #8885CB;
@@ -78,10 +88,12 @@ const InputList = styled.ul`
       border-radius: 10px;
       font-family: var(--font-mont);
       color: #1c1b1f;
+
       &::placeholder {
         color: #9DA2AE;
       }
     }
+
     textarea {
       width: 100%;
       box-sizing: border-box;
@@ -93,6 +105,7 @@ const InputList = styled.ul`
       border-radius: 10px;
       font-family: var(--font-mont);
       color: #1c1b1f;
+
       &::placeholder {
         color: #9DA2AE;
       }
@@ -112,22 +125,26 @@ const ModalBtm = styled.div`
   left: 0;
   width: 100%;
   z-index: 10;
+
   & > *:not(:last-child) {
-      margin-right: 10px;
-    }
+    margin-right: 10px;
+  }
+
   > button {
     cursor: pointer;
     width: calc(50% - 5px);
   }
+
   .primary-btn {
     height: 34px;
     padding: 0 30px;
     font-size: 14px;
     font-weight: 700;
-    background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
     border-radius: 10px;
     color: #fff;
   }
+
   .del-btn {
     padding: 0 15px;
     height: 34px;
@@ -145,11 +162,12 @@ const ModalBtm = styled.div`
 
 const NewRegisModal = () => {
   /* ****** 신규접수모달 ****** */
-  const { closeModal, openModal } = useModal();
+  const {closeModal, openModal} = useModal();
+  const now = new Date();
   const bodyRef = useRef([])
   const modalData = {
     title: 'Receipt Modal',
-    content: <ReceiptListModal />,
+    content: <ReceiptListModal/>,
     callback: () => alert('Modal Callback()'),
   };
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
@@ -159,20 +177,8 @@ const NewRegisModal = () => {
   })
 
   const updateReceipt = () => {
-    const data = {
-      날짜: new Date(),
-      거래처명: bodyRef.current[2].value,
-      지역: bodyRef.current[3].value,
-      담당자: bodyRef.current[5].value,
-      연락처: bodyRef.current[6].value,
-      접수내용: bodyRef.current[7].value,
-      현장코드:1000,
-      처리상태: '',
-      방문예정담당자: '',
-      현장주소: bodyRef.current[4].value}
-    console.log(data)
     // setNewReceipt(data)
-    fetchService('/receipt/add', 'post', data)
+    fetchService('/receipt/add', 'post', newReceipt)
       .then((res) => {
         console.log(res)
       })
@@ -192,7 +198,7 @@ const NewRegisModal = () => {
     return await fetchService(searchModal.url, 'post', searchParam)
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     console.log(newReceipt)
   }, [newReceipt])
 
@@ -209,51 +215,64 @@ const NewRegisModal = () => {
           </li>
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(new Date())}  placeholder="접수일을 입력하세요" disabled={true} readOnly={true}/>
+            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(now)} placeholder="접수일을 입력하세요"
+                   disabled={true} readOnly={true}/>
           </li>
           <li>
             <p>업체명</p>
-            <input
-              ref={e => bodyRef.current[2] = e}
-              type="text"
-              placeholder="업체명을 입력하세요"
-              value={newReceipt.거래처명 ? newReceipt.거래처명 : ''}
-              disabled={true}
-            />
-            <button onClick={(e) => openSearchModal(e, '/approval/clientlist')}> search </button>
+            <div className={'input'} onClick={(e) => openSearchModal(e, '/approval/clientlist')}>
+              {newReceipt.거래처명 ? newReceipt.거래처명 : '거래처검색'}
+            </div>
           </li>
           <li>
             <p>현장명</p>
-            <input type="text"  placeholder="현장을 입력하세요"/>
-            <button onClick={(e) => openSearchModal(e, '/approval/sitelist')}> search </button>
+            <div className={'input'} onClick={(e) => openSearchModal(e, '/approval/sitelist')}>
+              {newReceipt.현장명 ? newReceipt.현장명 : '현장검색'}
+            </div>
           </li>
           <li>
             <p>지역</p>
-            <input ref={e => bodyRef.current[3] = e}
-                   type="text"
-                   placeholder="업체명을 입력하세요"
-                   value={newReceipt.현장명 ? newReceipt.현장명 : ''}
-                   disabled={true}
+            <input
+              type="text"
+              placeholder="업체명을 입력하세요"
+              value={newReceipt.지역 ? newReceipt.지역 : ''}
+              readOnly={true}
+              disabled={true}
             />
           </li>
           <li>
             <p>현장주소</p>
-            <input type="text"  placeholder="주소를 입력하세요"/>
+            <input
+              type="text"
+              placeholder="주소를 입력하세요"
+              value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
+              readOnly={true}
+              disabled={true}/>
           </li>
           <li>
             <p>현장담당자</p>
-            <input type="text"  placeholder="현장담당자를 입력하세요"/>
+            <input
+              type="text"
+              placeholder="현장담당자를 입력하세요"
+              value={newReceipt.현장담당자 ? newReceipt.현장담당자 : ''}
+              disabled={true}
+            readOnly={true}/>
           </li>
           <li>
             <p>현장연락처</p>
-            <input type="text"  placeholder="현장연락처를 입력하세요"/>
+            <input type="text" placeholder="현장연락처를 입력하세요"
+                   value={newReceipt.현장연락처 ? newReceipt.현장연락처 : ''}
+                   disabled={true}
+                   readOnly={true}
+            />
           </li>
           <li>
             <p>접수내용</p>
-            <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요" />
+            <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요"/>
           </li>
         </InputList>
-        {searchModal.flag && <SearchModal data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
+        {searchModal.flag &&
+          <SearchModal data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
       </div>
       {
         !searchModal.flag && <ModalBtm>
@@ -261,17 +280,18 @@ const NewRegisModal = () => {
             updateReceipt()
             // closeModal()
             // openModal({ ...modalData, content: <RPC01Step03Modal /> })
-          }}>저장</button>
+          }}>저장
+          </button>
           <button className="del-btn" onClick={() => {
             closeModal()
             // openModal({ ...modalData, content: <RPC01Step01Modal /> })
-          }}>취소</button>
+          }}>취소
+          </button>
         </ModalBtm>
       }
     </NewRegisModalWrap>
   )
 }
-
 
 
 export default NewRegisModal;
