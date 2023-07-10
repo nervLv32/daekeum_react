@@ -145,9 +145,11 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
-        setTimeout(() => {
-          setLoading(false)
-        }, 1000)
+        if(data.length >= 10) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
       })
   }
 
@@ -155,7 +157,8 @@ const Receipt = () => {
     setLoading(true)
     fetchList([])
   }, [
-    receiptParam.searchword
+    receiptParam.searchword,
+    receiptParam.처리상태
   ])
 
   useEffect(() => {
