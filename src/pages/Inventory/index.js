@@ -1,11 +1,13 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import InventoryTable from "../../components/inventory/InventoryTable";
 import InventoryTableTop from "../../components/inventory/InventoryTableTop";
 import TopSearch from "../../components/molecules/TopSearch";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
+import fetchService from "../../util/fetchService";
+import {useRecoilState} from "recoil";
+import {inventoryAtom} from "../../recoil/inventoryList";
 
 const InventoryWrap = styled.div`
   padding: 28px 30px 0;
@@ -20,60 +22,78 @@ const TopSearchcMenuWrap = styled.ul`
 
 const Inventory = () => {
 
-  const dummyData = [
-    {
-      no: 1,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    },
-    {
-      no: 2,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    },
-    {
-      no: 3,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    },
-    {
-      no: 4,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    },
-    {
-      no: 5,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    },
-    {
-      no: 6,
-      part: "감속기",
-      code: "TNUGM03002",
-      name: "G/M(대금감속기)",
-      count: "1.0",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-    }
-  ]
+  const observeTargetRef = useRef(null)
   const [topMenu, setTopMenu] = useState(false);
+  const [inventoryList,setInventoryList] = useRecoilState(inventoryAtom)
+
+  const [isLoading, setLoading] = useState(false);
+  const [fetchFlag, setFetchFlag] = useState(false);
 
   const changeParam = (key, value) => {
+    setInventoryParam({
+      ...inventoryParam,
+      currentPage : '1',
+      [key] : value,
+    })
   }
+
+  const [inventoryParam, setInventoryParam] = useState({
+    searchword: '',
+    pageSize: '',
+    currentPage: '1',
+    EmpNo: '',
+  })
+
+  const mappingItem = (res) => {
+    return res.data ? res.data.map(it => {
+      return {
+        no : it.rownum,
+        part : it.파트,
+        code : it.품목코드,
+        name : it.품명,
+        count : it.재고,
+        standard : it.규격,
+      }
+    }) : []
+  }
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setInventoryParam({
+        ...inventoryParam,
+        currentPage: parseInt(inventoryParam.currentPage) + 1
+      })
+      fetchList(fetchFlag ? [] : inventoryList)
+    }
+  });
+
+  const fetchList = (list) => {
+    fetchService('/inventory/inventoryList', 'post', inventoryParam)
+      .then((res) => {
+        setInventoryList(res.data)
+        console.log(res)
+        const temp = mappingItem(res)
+        const data = [...list, ...temp]
+        console.log("data", data)
+        setInventoryList( data )
+        setTimeout(() => {
+          setLoading(false)
+        }, 1000)
+      })
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [
+    inventoryParam.searchword
+  ])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
 
   return <>
     <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam} />
@@ -111,13 +131,15 @@ const Inventory = () => {
     }
     <InventoryWrap>
       <InventoryTableTop />
+      {console.log(inventoryList)}
       {
-        dummyData.map((list, idx) => {
+        inventoryList.map((list, idx) => {
           return (
-            <InventoryTable list={list} />
+            <InventoryTable list={list} idx={idx}/>
           )
         })
       }
+      <div ref={observeTargetRef}/>
     </InventoryWrap>
   </>
 }

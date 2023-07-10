@@ -32,13 +32,13 @@ const InventoryTableTopWrap = styled.div`
     }
   }
   .table-top-part {
-    width: 60px;
+    width: 70px;
   }
   .table-top-code {
-    width: calc(50% - 55px);
+    width: calc(45% - 60px);
   }
   .table-top-name {
-    width: calc(50% - 55px);
+    width: calc(55% - 60px);
   }
   .table-top-count {
     width: 50px;

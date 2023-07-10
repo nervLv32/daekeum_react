@@ -35,13 +35,13 @@ const InventoryTableWrap = styled.li`
       }
     }
     .table-part {
-      width: 60px;
+      width: 70px;
     }
     .table-code {
-      width: calc(50% - 55px);
+      width: calc(45% - 60px);
     }
     .table-name {
-      width: calc(50% - 55px);
+      width: calc(55% - 60px);
     }
     .table-count {
       width: 50px;
