@@ -74,8 +74,13 @@ const InventoryWait = () => {
     }
   ]
 
+
+  const changeParam = (key, value) => {
+  }
+
+
   return <>
-    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
+    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
       {
         topMenu && (
           <TopSearchMenu>
@@ -113,7 +118,7 @@ const InventoryWait = () => {
       {
         dummyData.map((list, idx) => {
           return (
-            <InventoryWaitList key={idx} list={list} 
+            <InventoryWaitList key={idx} list={list}
               onClick={() => openModal({ ...modalData, content: <InventoryWaitModal item={list} /> })}
             />
           )

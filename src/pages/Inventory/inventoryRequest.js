@@ -69,9 +69,12 @@ const InventoryRequest = () => {
     }
   ]
 
+  const changeParam = (key, value) => {
+  }
+
   return (
     <>
-      <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} />
+      <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
       {
         topMenu && (
           <TopSearchMenu>

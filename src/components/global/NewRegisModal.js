@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import { useModal } from "../../hooks/useModal";
 import fetchService from "../../util/fetchService";
+import {DateFormat} from "../../util/dateFormat";
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -138,7 +139,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = ({ setNewReceipt }) => {
+const NewRegisModal = () => {
   /* ****** 신규접수모달 ****** */
   const { closeModal } = useModal();
   const bodyRef = useRef([])
@@ -165,11 +166,12 @@ const NewRegisModal = ({ setNewReceipt }) => {
       담당자: bodyRef.current[5].value,
       연락처: bodyRef.current[6].value,
       접수내용: bodyRef.current[7].value,
+      현장코드:1000,
       처리상태: '',
       방문예정담당자: '',
       현장주소: bodyRef.current[4].value}
     console.log(data)
-    setNewReceipt(data)
+    // setNewReceipt(data)
     fetchService('/receipt/add', 'post', data)
       .then((res) => {
         console.log(res)
@@ -189,7 +191,7 @@ const NewRegisModal = ({ setNewReceipt }) => {
           </li>
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={new Date()}  placeholder="접수일을 입력하세요" disabled={true} readOnly={true}/>
+            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(new Date())}  placeholder="접수일을 입력하세요" disabled={true} readOnly={true}/>
           </li>
           <li>
             <p>업체명</p>
