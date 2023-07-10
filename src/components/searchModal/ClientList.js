@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {newReceiptAtom} from "../../recoil/receipt";
 
 const Li = styled.li`
   margin-top: 1rem;
@@ -23,15 +25,29 @@ const Li = styled.li`
   }
 `
 
-const ClientList = ({searchList}) => {
+const ClientList = ({searchList, searchModal, setSearchModal}) => {
 
-  console.log(searchList)
+  // const setNewReceipt = useSetRecoilState(newReceiptAtom)
+  const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
+
+  const updateValue = (name, code) => {
+    setNewReceipt({
+      ...newReceipt,
+      거래처명: name,
+      거래처코드: code
+    })
+
+    setSearchModal({
+      ...searchModal,
+      flag: false,
+    })
+  }
 
   return <>
     {
       searchList.map((it, key)=>{
         return (
-          <Li key={key}>
+          <Li key={key} onClick={() => updateValue(it.업체명, it.거래처코드)}>
             <div>
               <p>{it.업체명}</p>
               <p>{it.거래처코드}</p>

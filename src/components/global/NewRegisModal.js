@@ -5,6 +5,8 @@ import fetchService from "../../util/fetchService";
 import {DateFormat} from "../../util/dateFormat";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 import SearchModal from '../searchModal/index'
+import {useRecoilState} from "recoil";
+import {newReceiptAtom} from "../../recoil/receipt";
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -150,20 +152,7 @@ const NewRegisModal = () => {
     content: <ReceiptListModal />,
     callback: () => alert('Modal Callback()'),
   };
-  const [body, setBody] = useState({
-    날짜: '',
-    거래처명: '',
-    거래처코드:'',
-    현장명: '',
-    현장코드: '',
-    지역: '',
-    담당자: '',
-    연락처: '',
-    접수내용: '',
-    처리상태: '',
-    방문예정담당자: '',
-    현장주소: ''
-  })
+  const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
   const [searchModal, setSearchModal] = useState({
     flag: false,
     url: '',
@@ -203,6 +192,10 @@ const NewRegisModal = () => {
     return await fetchService(searchModal.url, 'post', searchParam)
   }
 
+  useEffect(() =>{
+    console.log(newReceipt)
+  }, [newReceipt])
+
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
@@ -224,32 +217,43 @@ const NewRegisModal = () => {
               ref={e => bodyRef.current[2] = e}
               type="text"
               placeholder="업체명을 입력하세요"
+              value={newReceipt.거래처명 ? newReceipt.거래처명 : ''}
               disabled={true}
             />
             <button onClick={(e) => openSearchModal(e, '/approval/clientlist')}> search </button>
           </li>
           <li>
-            <p>지역</p>
-            <input ref={e => bodyRef.current[3] = e} type="text"  placeholder="지역을 입력하세요"/>
+            <p>현장명</p>
+            <input type="text"  placeholder="현장을 입력하세요"/>
+            <button onClick={(e) => openSearchModal(e, '/approval/sitelist')}> search </button>
           </li>
           <li>
-            <p>주소</p>
-            <input ref={e => bodyRef.current[4] = e} type="text"  placeholder="주소를 입력하세요"/>
+            <p>지역</p>
+            <input ref={e => bodyRef.current[3] = e}
+                   type="text"
+                   placeholder="업체명을 입력하세요"
+                   value={newReceipt.현장명 ? newReceipt.현장명 : ''}
+                   disabled={true}
+            />
+          </li>
+          <li>
+            <p>현장주소</p>
+            <input type="text"  placeholder="주소를 입력하세요"/>
           </li>
           <li>
             <p>현장담당자</p>
-            <input ref={e => bodyRef.current[5] = e} type="text"  placeholder="현장담당자를 입력하세요"/>
+            <input type="text"  placeholder="현장담당자를 입력하세요"/>
           </li>
           <li>
             <p>현장연락처</p>
-            <input ref={e => bodyRef.current[6] = e} type="text"  placeholder="현장연락처를 입력하세요"/>
+            <input type="text"  placeholder="현장연락처를 입력하세요"/>
           </li>
           <li>
             <p>접수내용</p>
             <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요" />
           </li>
         </InputList>
-        {searchModal.flag && <SearchModal data={searchModal} searchFetch={searchFetch}/>}
+        {searchModal.flag && <SearchModal data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
       </div>
       {
         !searchModal.flag && <ModalBtm>
