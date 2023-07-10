@@ -137,7 +137,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = ({ setNewReceipt: setNewReceipt }) => {
+const NewRegisModal = ({ setNewReceipt }) => {
   /* ****** 신규접수모달 ****** */
   const { closeModal } = useModal();
   const bodyRef = useRef([])
@@ -157,22 +157,19 @@ const NewRegisModal = ({ setNewReceipt: setNewReceipt }) => {
   })
 
   const updateReceipt = () => {
-   setNewReceipt({
-     날짜: '',
-     거래처명: bodyRef.current[2].value,
-     지역: bodyRef.current[3].value,
-     담당자: bodyRef.current[5].value,
-     연락처: bodyRef.current[6].value,
-     접수내용: '',
-     처리상태: '',
-     방문예정담당자: '',
-     현장주소: bodyRef.current[4].value
-   })
+    const data = {
+      날짜: new Date(),
+      거래처명: bodyRef.current[2].value,
+      지역: bodyRef.current[3].value,
+      담당자: bodyRef.current[5].value,
+      연락처: bodyRef.current[6].value,
+      접수내용: bodyRef.current[7].value,
+      처리상태: '',
+      방문예정담당자: '',
+      현장주소: bodyRef.current[4].value}
+    console.log(data)
+    setNewReceipt(data)
   }
-
-  useEffect(() => {
-    bodyRef.current[1].value
-  }, [bodyRef])
 
   return (
     <NewRegisModalWrap>
@@ -183,11 +180,11 @@ const NewRegisModal = ({ setNewReceipt: setNewReceipt }) => {
         <InputList>
           <li className="required">
             <p>접수번호</p>
-            <input ref={e => bodyRef.current[0] = e} type="text"  placeholder="접수번호를 입력하세요"/>
+            <input ref={e => bodyRef.current[0] = e} type="text" placeholder="접수번호를 입력하세요" disabled={true}/>
           </li>
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text"  placeholder="접수일을 입력하세요"/>
+            <input ref={e => bodyRef.current[1] = e} type="text" value={new Date()}  placeholder="접수일을 입력하세요" disabled={true} readOnly={true}/>
           </li>
           <li>
             <p>업체명</p>

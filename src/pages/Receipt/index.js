@@ -275,7 +275,7 @@ const Receipt = () => {
                 </li>
                 <li onClick={() => {
                     closeModal()
-                    openModal({ ...modalData, content: <NewRegisModal /> })
+                    openModal({ ...modalData, content: <NewRegisModal setNewReceipt={setNewReceipt} /> })
                   }}>
                   <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
                   <span>신규접수</span>
