@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import { useModal } from "../../hooks/useModal";
+import fetchService from "../../util/fetchService";
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -169,6 +170,10 @@ const NewRegisModal = ({ setNewReceipt }) => {
       현장주소: bodyRef.current[4].value}
     console.log(data)
     setNewReceipt(data)
+    fetchService('/receipt/add', 'post', data)
+      .then((res) => {
+        console.log(res)
+      })
   }
 
   return (

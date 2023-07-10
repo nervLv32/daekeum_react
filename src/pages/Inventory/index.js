@@ -72,9 +72,11 @@ const Inventory = () => {
   ]
   const [topMenu, setTopMenu] = useState(false);
 
+  const changeParam = (key, value) => {
+  }
 
   return <>
-    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={null} />
+    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam} />
     {
       topMenu && (
         <TopSearchMenu>
