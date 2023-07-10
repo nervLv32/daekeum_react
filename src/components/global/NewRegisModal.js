@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useModal } from "../../hooks/useModal";
 import fetchService from "../../util/fetchService";
 import {DateFormat} from "../../util/dateFormat";
+import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
+import SearchModal from '../searchModal/index'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -141,8 +143,13 @@ const ModalBtm = styled.div`
 
 const NewRegisModal = () => {
   /* ****** 신규접수모달 ****** */
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
   const bodyRef = useRef([])
+  const modalData = {
+    title: 'Receipt Modal',
+    content: <ReceiptListModal />,
+    callback: () => alert('Modal Callback()'),
+  };
   const [body, setBody] = useState({
     날짜: '',
     거래처명: '',
@@ -156,6 +163,10 @@ const NewRegisModal = () => {
     처리상태: '',
     방문예정담당자: '',
     현장주소: ''
+  })
+  const [searchModal, setSearchModal] = useState({
+    flag: false,
+    url: '',
   })
 
   const updateReceipt = () => {
@@ -178,6 +189,20 @@ const NewRegisModal = () => {
       })
   }
 
+  const openSearchModal = (e, url) => {
+    console.log("teest")
+    setSearchModal({
+      flag: true,
+      content: url.replace('/approval/', ''),
+      url: url,
+      elem: e
+    })
+  }
+
+  const searchFetch = async (searchParam) => {
+    return await fetchService(searchModal.url, 'post', searchParam)
+  }
+
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
@@ -195,7 +220,13 @@ const NewRegisModal = () => {
           </li>
           <li>
             <p>업체명</p>
-            <input ref={e => bodyRef.current[2] = e} type="text"  placeholder="업체명을 입력하세요"/>
+            <input
+              ref={e => bodyRef.current[2] = e}
+              type="text"
+              placeholder="업체명을 입력하세요"
+              disabled={true}
+            />
+            <button onClick={(e) => openSearchModal(e, '/approval/clientlist')}> search </button>
           </li>
           <li>
             <p>지역</p>
@@ -218,21 +249,25 @@ const NewRegisModal = () => {
             <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요" />
           </li>
         </InputList>
+        {searchModal.flag && <SearchModal data={searchModal} searchFetch={searchFetch}/>}
       </div>
-
-      <ModalBtm>
-        <button className="primary-btn" onClick={() => {
-          updateReceipt()
-        // closeModal()
-        // openModal({ ...modalData, content: <RPC01Step03Modal /> })
-      }}>저장</button>
-       <button className="del-btn" onClick={() => {
-        closeModal()
-        // openModal({ ...modalData, content: <RPC01Step01Modal /> })
-      }}>취소</button>
-      </ModalBtm>
+      {
+        !searchModal.flag && <ModalBtm>
+          <button className="primary-btn" onClick={() => {
+            updateReceipt()
+            // closeModal()
+            // openModal({ ...modalData, content: <RPC01Step03Modal /> })
+          }}>저장</button>
+          <button className="del-btn" onClick={() => {
+            closeModal()
+            // openModal({ ...modalData, content: <RPC01Step01Modal /> })
+          }}>취소</button>
+        </ModalBtm>
+      }
     </NewRegisModalWrap>
   )
 }
+
+
 
 export default NewRegisModal;
