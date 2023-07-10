@@ -122,6 +122,7 @@ const Receipt = () => {
       [key] : value,
     })
   }
+
   const mappingItem = (res) => {
     // console.log(receipts)
     console.log(receiptParam)
