@@ -54,7 +54,7 @@ const Report = () => {
 
   const { openModal } = useModal();
   const modalData = {
-    title: 'RPCase Modal',
+    title: 'RPCase Modal',  
     callback: () => alert('Modal Callback()'),
   };
 

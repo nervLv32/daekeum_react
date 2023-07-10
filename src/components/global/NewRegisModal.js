@@ -177,15 +177,14 @@ const NewRegisModal = () => {
   })
 
   const updateReceipt = () => {
-    // setNewReceipt(data)
     fetchService('/receipt/add', 'post', newReceipt)
       .then((res) => {
         console.log(res)
+        window.location.reload()
       })
   }
 
   const openSearchModal = (e, url) => {
-    console.log("teest")
     setSearchModal({
       flag: true,
       content: url.replace('/approval/', ''),
@@ -215,7 +214,7 @@ const NewRegisModal = () => {
           </li>
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(now)} placeholder="접수일을 입력하세요"
+            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(newReceipt.날짜)} placeholder="접수일을 입력하세요"
                    disabled={true} readOnly={true}/>
           </li>
           <li>
@@ -254,21 +253,24 @@ const NewRegisModal = () => {
             <input
               type="text"
               placeholder="현장담당자를 입력하세요"
-              value={newReceipt.현장담당자 ? newReceipt.현장담당자 : ''}
+              value={newReceipt.담당자 ? newReceipt.담당자 : ''}
               disabled={true}
             readOnly={true}/>
           </li>
           <li>
             <p>현장연락처</p>
             <input type="text" placeholder="현장연락처를 입력하세요"
-                   value={newReceipt.현장연락처 ? newReceipt.현장연락처 : ''}
+                   value={newReceipt.연락처 ? newReceipt.연락처 : ''}
                    disabled={true}
                    readOnly={true}
             />
           </li>
           <li>
             <p>접수내용</p>
-            <textarea ref={e => bodyRef.current[7] = e} placeholder="접수내용을 입력하세요"/>
+            <textarea placeholder="접수내용을 입력하세요" value={newReceipt.접수내용} onChange={e => setNewReceipt({
+              ...newReceipt,
+              접수내용: e.target.value
+            })}/>
           </li>
         </InputList>
         {searchModal.flag &&

@@ -39,8 +39,8 @@ const SiteList = ({searchList, searchModal, setSearchModal}) => {
       현장코드: code,
       지역: address1,
       현장주소: address2,
-      현장담당자: manager,
-      현장연락처: phone,
+      담당자: manager,
+      연락처: phone,
     })
 
     setSearchModal({

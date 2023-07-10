@@ -8,5 +8,9 @@ export const receiptAtom = atom({
 
 export const newReceiptAtom = atom({
   key: 'newReceiptAtom',
-  default: []
+  default: {
+    날짜: new Date(),
+    회사코드: 1000,
+    접수내용: ''
+  }
 })
