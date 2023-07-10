@@ -1,7 +1,8 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep02Modal from './DStep02Modal'
+import fetchService from "../../../util/fetchService";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -216,7 +217,7 @@ const BtnWrap = styled.div`
   }
 `
 
-const DStep01Modal = () => {
+const DStep01Modal = ({accountCode}) => {
 
   const { openModal, closeModal } = useModal();
 
@@ -224,6 +225,20 @@ const DStep01Modal = () => {
     title: 'DStep01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  console.log(accountCode)
+
+  // 업체 상세 조회
+  const detail = () => {
+    fetchService('/receipt/detail', 'post', {
+      일련번호: accountCode
+    }).then((res) => {
+      console.log(res);
+    })
+  };
+  useEffect(() => {
+    detail();
+  }, []);
 
   return (
     <ModalWrap>
