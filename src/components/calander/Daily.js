@@ -91,6 +91,7 @@ const Daily = ({modal, setModal, param, setParam}) => {
   const submitData = () => {
     setParam({
       ...param,
+      currentPage : '1',
       dtTo: range[0],
       dtFrom: range[1],
     })

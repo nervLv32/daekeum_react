@@ -111,6 +111,7 @@ const Year = ({modal, setModal, param, setParam}) => {
   const closeModal = () => {
     setModal({
       ...modal,
+      currentPage : '1',
       year: false,
     })
   }

@@ -124,6 +124,7 @@ const Month = ({modal, setModal, param, setParam}) => {
   const submitData = () => {
     setParam({
       ...param,
+      currentPage : '1',
       year: range.title,
       month: range.firstName
     })
