@@ -92,6 +92,8 @@ const Daily = ({modal, setModal, param, setParam}) => {
     setParam({
       ...param,
       currentPage : '1',
+      year:'',
+      month: '',
       dtTo: range[0],
       dtFrom: range[1],
     })

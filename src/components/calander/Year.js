@@ -111,7 +111,6 @@ const Year = ({modal, setModal, param, setParam}) => {
   const closeModal = () => {
     setModal({
       ...modal,
-      currentPage : '1',
       year: false,
     })
   }
@@ -119,7 +118,11 @@ const Year = ({modal, setModal, param, setParam}) => {
   const submitData = () => {
     setParam({
       ...param,
-      year: range.title
+      year: range.title,
+      currentPage : '1',
+      month: '',
+      dtTo: '',
+      dtFrom: '',
     })
     closeModal()
   }

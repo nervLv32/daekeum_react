@@ -126,7 +126,9 @@ const Month = ({modal, setModal, param, setParam}) => {
       ...param,
       currentPage : '1',
       year: range.title,
-      month: range.firstName
+      month: range.firstName,
+      dtTo: '',
+      dtFrom: '',
     })
     closeModal()
   }
