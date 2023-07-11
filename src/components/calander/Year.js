@@ -80,7 +80,7 @@ const ModalBtm = styled.div`
 const Year = ({modal, setModal, param, setParam}) => {
 
   const data = Array.from({length: new Date().getFullYear() - 1999}, (_, i) => i + 2000);
-  const [range, setRange] = useState({ title: 2023 });
+  const [range, setRange] = useState({ title: new Date().getFullYear() });
   const optionGroups = {
     title: data.map((i) => ({ value: i, label: i }))
   };
