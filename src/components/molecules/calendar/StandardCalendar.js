@@ -11,7 +11,7 @@ const StandardCalenderContainer = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: transparent;
     color: #222;
     border-radius: 8px;
     line-height: 1.125em;
@@ -88,21 +88,42 @@ const StandardCalenderContainer = styled.div`
 `
 
 const SelectDateRange = styled.div`
+  position: relative;
+  left: 50%;
+  display: inline-block;
+  transform: translateX(-50%);
   padding: 10px;
-  background-color: #fff;
+  background-color: transparent;
+  input {
+    min-width: 130px;
+    width: 45%;
+    height: 35px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #F1F1F1;
+    background: var(--gray-l, #F6F6F6);
+    color: var(--gray-d, #555);
+    font-family: Montserrat;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%;
+    letter-spacing: 0.8px;
+  }
 `
-const StandardCalendar = () => {
+const StandardCalendar = ({setRange}) => {
   const [date, setDate] = useState(new Date())
 
   useEffect(() =>{
-    console.log(date)
-    console.log(moment(date[0]).format('Y-M-D'))
+    setRange(date)
   },[date])
 
   return <StandardCalenderContainer>
     <SelectDateRange>
-      <input id={'rangeStart'} type={'date'} defaultValue={moment(date[0]).format('Y-M-D')}/>
-      <input id={'rangeEnd'} type={'date'} defaultValue={moment(date[1]).format('Y-M-D')}/>
+      <input id={'rangeStart'} type={'date'} value={moment(date[0]).format('YYYY-MM-DD').toString()}/>
+      &nbsp;-&nbsp;
+      <input id={'rangeEnd'} type={'date'} value={moment(date[1]).format('YYYY-MM-DD').toString()}/>
     </SelectDateRange>
     <Calendar
       onChange={setDate}
