@@ -12,6 +12,7 @@ import fetchService from "../../util/fetchService";
 import {useRecoilState} from "recoil";
 import {receiptAtom} from "../../recoil/receipt";
 import Year from "../../components/calander/Year";
+import Month from "../../components/calander/Month";
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -152,7 +153,7 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
-        if(data.length >= 10) {
+        if(temp.length >= 0) {
           setTimeout(() => {
             setLoading(false)
           }, 1000)
@@ -166,6 +167,7 @@ const Receipt = () => {
   }, [
     receiptParam.searchword,
     receiptParam.year,
+    receiptParam.month,
     receiptParam.처리상태
   ])
 
@@ -291,7 +293,11 @@ const Receipt = () => {
                   <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>년도별조회</span>
                 </li>
-                <li>
+                <li onClick={() => {
+                  setIsFDep2(false)
+                  setIsFOpen(false)
+                  setIsFDep3({ ... setIsFDep3, month: true})
+                }}>
                   <i><img src="../../icons/icon-f-table.png" alt="floating icon" /></i>
                   <span>월별조회</span>
                 </li>
@@ -307,7 +313,7 @@ const Receipt = () => {
       </FloatingWrap>
       {
         isFDep3.year ? <Year modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
-          isFDep3.month ? null :
+          isFDep3.month ? <Month modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
             isFDep3.daily ? null : null
       }
       <div ref={observeTargetRef}/>
