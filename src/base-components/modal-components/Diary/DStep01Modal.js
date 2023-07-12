@@ -119,6 +119,7 @@ const ModalWrap = styled.div`
       dd {
         width: 100%;
         height: auto;
+        position: relative;
         input {
           width: 100%;
           height: 3.3rem;
@@ -163,6 +164,48 @@ const ModalWrap = styled.div`
               display: block;
               width: 1.6rem;
               margin-right: 0.4rem;
+            }
+          }
+        }
+        .search-list {
+          position: absolute;
+          left: 0;
+          top: 100%;
+          width: 100%;
+          height: auto;
+          ul {
+            width: 100%;
+            height: auto;
+            max-height: 18rem;
+            background-color: #fff;
+            border: 0.1rem solid #9da2ae;
+            border-radius: 1rem;
+            overflow-y: auto;
+            li {
+              width: 100%;
+              height: auto;
+              display: flex;
+              align-items: center;
+              padding: 1rem;
+              &.on {
+                background-color: #EFF2FF;
+              }
+              > div {
+                width: calc(100% / 3);
+                height: auto;
+                text-align: center;
+                font: 500 1.2rem 'Montserrat',sans-serif;
+                color: #555;
+                &:not(:last-child) {
+                  border-right: 0.1rem solid #9DA2AE;
+                }
+              }
+              &.hd {
+                background-color: #f6f6f6;
+                > div {
+                  color: #1C1B1F;
+                }
+              }
             }
           }
         }
@@ -267,15 +310,24 @@ const DStep01Modal = ({accountCode}) => {
     })
   };
 
-  console.log(equipList)
+  // 장비정보 검색 클릭 이벤트
+  const [equipActive, setEquipActive] = useState();
+  const handleSubmit = () => {
+    getEquipList();
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      getEquipList();
+    }
+  };
+  const handleClick = (i) => {
+    setEquipActive(i);
+  };
 
   // 진입시 불러오기
   useEffect(() => {
     receiptDetail();
   }, []);
-  useEffect(() => {
-    getEquipList();
-  }, [searchKeyword]);
 
   return (
     <ModalWrap>
@@ -309,42 +361,52 @@ const DStep01Modal = ({accountCode}) => {
           <dt className="essential">장비정보</dt>
           <dd>
             <label>
-              <input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
-              <button type="button">
+              <input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} onKeyDown={handleKeyDown} />
+              <button type="button" onClick={handleSubmit}>
                 <img src="../icons/search-icon.png" alt="검색 아이콘" />
                 <span>장비검색</span>
               </button>
             </label>
-            <div className="search-list">
-              <ul>
-                <li className="list-hd">
-                  <div className="model-no">
-                    MODEL-NO
-                  </div>
-                  <div className="dkno">
-                    DKNO
-                  </div>
-                  <div className="mcno">
-                    MCNO
-                  </div>
-                </li>
-                {
-                  equipList?.length > 0 && equipList.map((item, index) => {
-                    <li className="list-bd" key={index}>
+            {
+              equipList?.length > 0 && (
+                <div className="search-list">
+                  <ul>
+                    <li className="hd">
                       <div className="model-no">
-
+                        MODEL-NO
                       </div>
                       <div className="dkno">
-                        
+                        DKNO
                       </div>
                       <div className="mcno">
-                        
+                        MCNO
                       </div>
                     </li>
-                  })
-                }
-              </ul>
-            </div>
+                    {
+                      equipList.map((item, index) => {
+                        return (
+                          <li 
+                            className={index === equipActive ? "list-bd on" :" list-bd"}
+                            key={index}
+                            onClick={() => handleClick(index)}
+                          >
+                            <div className="model-no">
+                              {item.모델}
+                            </div>
+                            <div className="dkno">
+                              {item.DKNO}
+                            </div>
+                            <div className="mcno">
+                              {item.MCNO}
+                            </div>
+                          </li>
+                        )
+                      })
+                    }
+                  </ul>
+                </div>
+              )
+            }
           </dd>
         </dl>
         <div className="product-info">
