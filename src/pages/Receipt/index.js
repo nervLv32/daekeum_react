@@ -139,12 +139,12 @@ const Receipt = () => {
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
+      console.log('add')
       setLoading(true)
       setReceiptParam({
         ...receiptParam,
         currentPage: parseInt(receiptParam.currentPage) + 1
       })
-      fetchList(fetchFlag ? [] : receipts)
     }
   });
 
@@ -162,6 +162,10 @@ const Receipt = () => {
         }
       })
   }
+
+  useEffect(() => {
+    fetchList(fetchFlag ? [] : receipts)
+  }, [receiptParam.currentPage])
 
   useEffect(() => {
     setLoading(true)
