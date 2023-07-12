@@ -14,3 +14,5 @@ export const newReceiptAtom = atom({
     접수내용: ''
   }
 })
+
+
