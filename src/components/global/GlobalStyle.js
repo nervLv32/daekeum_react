@@ -2,6 +2,49 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
 
+  /* S: font */
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 200;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-Thin.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 300;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-Light.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 400;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-Regular.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 500;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-Medium.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 600;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-SemiBold.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-style: normal;
+    src: url('../fonts/Montserrat/Montserrat-Bold.ttf') format("ttf");
+  }
+
   :root {
     --font-mont : 'Montserrat'  
   }
@@ -163,50 +206,6 @@ input[type="number"]::-webkit-inner-spin-button{
 * {box-sizing: border-box;}
 
 button {cursor: pointer; background: none;}
-
-
-/* S: font */
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 200;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-Thin.ttf') format("truetype");
-}
-
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 300;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-Light.ttf') format("truetype");
-}
-
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 400;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-Regular.ttf') format("truetype");
-}
-
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 500;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-Medium.ttf') format("truetype");
-}
-
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 600;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-SemiBold.ttf') format("truetype");
-}
-
-@font-face {
-  font-family: "Montserrat";
-  font-weight: 700;
-  font-style: normal;
-  src: url('../fonts/Montserrat/Montserrat-Bold.ttf') format("truetype");
-}
 
 
 /* E: font */

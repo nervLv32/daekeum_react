@@ -226,19 +226,56 @@ const DStep01Modal = ({accountCode}) => {
     callback: () => alert('Modal Callback()'),
   };
 
-  console.log(accountCode)
-
   // 업체 상세 조회
-  const detail = () => {
+  const [companyInfo, setCompanyInfo] = useState({});
+  const receiptDetail = () => {
     fetchService('/receipt/detail', 'post', {
       일련번호: accountCode
     }).then((res) => {
-      console.log(res);
+      res?.data && setCompanyInfo({
+        businessName: res.data[0].거래처명,
+        businessCode: res.data[0].거래처코드,
+        date: res.data[0].날짜,
+        manager: res.data[0].담당자,
+        visitManager: res.data[0].방문예정담당자,
+        tell: res.data[0].연락처,
+        no: res.data[0].일련번호,
+        submissionDetails: res.data[0].접수내용,
+        region: res.data[0].지역,
+        status: res.data[0].처리상태,
+        siteName: res.data[0].현장명,
+        siteAddress: res.data[0].현장주소,
+        siteCode: res.data[0].현장코드
+      });
     })
   };
+
+  // 장비검색
+  const [equipList, setEquipList] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const getEquipList = () => {
+    fetchService('/enroll/equipList', 'post', {
+      searchword: searchKeyword,
+      pageSize: 500,
+      currentPage: 1,
+      // 거래처코드: companyInfo.businessCode,
+      거래처코드: "10957",
+      // 현장코드: companyInfo.siteCode
+      현장코드: "2"
+    }).then((res) => {
+      setEquipList(res?.data)
+    })
+  };
+
+  console.log(equipList)
+
+  // 진입시 불러오기
   useEffect(() => {
-    detail();
+    receiptDetail();
   }, []);
+  useEffect(() => {
+    getEquipList();
+  }, [searchKeyword]);
 
   return (
     <ModalWrap>
@@ -272,12 +309,42 @@ const DStep01Modal = ({accountCode}) => {
           <dt className="essential">장비정보</dt>
           <dd>
             <label>
-              <input type="text" placeholder="해당업체 장비를 검색하세요." />
+              <input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
               <button type="button">
                 <img src="../icons/search-icon.png" alt="검색 아이콘" />
                 <span>장비검색</span>
               </button>
             </label>
+            <div className="search-list">
+              <ul>
+                <li className="list-hd">
+                  <div className="model-no">
+                    MODEL-NO
+                  </div>
+                  <div className="dkno">
+                    DKNO
+                  </div>
+                  <div className="mcno">
+                    MCNO
+                  </div>
+                </li>
+                {
+                  equipList?.length > 0 && equipList.map((item, index) => {
+                    <li className="list-bd" key={index}>
+                      <div className="model-no">
+
+                      </div>
+                      <div className="dkno">
+                        
+                      </div>
+                      <div className="mcno">
+                        
+                      </div>
+                    </li>
+                  })
+                }
+              </ul>
+            </div>
           </dd>
         </dl>
         <div className="product-info">
