@@ -10,7 +10,7 @@ import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";
 import fetchService from "../../util/fetchService";
 import {useRecoilState} from "recoil";
-import {receiptAtom} from "../../recoil/receipt";
+import {newReceiptParamAtom, receiptAtom} from "../../recoil/receipt";
 import Year from "../../components/calander/Year";
 import Month from "../../components/calander/Month";
 import Daily from "../../components/calander/Daily";
@@ -97,17 +97,7 @@ const Receipt = () => {
 
 
   const [receipts, setReceipts] = useRecoilState(receiptAtom)
-  const [receiptParam, setReceiptParam] = useState({
-    searchword: '',
-    pageSize: '10',
-    currentPage: '1',
-    year: '',
-    month: '',
-    dtFrom: '',
-    dtTo:'',
-    지역: '',
-    처리상태: '',
-  })
+  const [receiptParam, setReceiptParam] = useRecoilState(newReceiptParamAtom)
 
   const changeParam = (key, value) => {
     setReceiptParam({
@@ -176,7 +166,8 @@ const Receipt = () => {
     receiptParam.month,
     receiptParam.dtTo,
     receiptParam.dtFrom,
-    receiptParam.처리상태
+    receiptParam.처리상태,
+    receiptParam.지역
   ])
 
   useEffect(() => {

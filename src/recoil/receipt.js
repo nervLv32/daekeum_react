@@ -15,4 +15,18 @@ export const newReceiptAtom = atom({
   }
 })
 
+export const newReceiptParamAtom = atom({
+  key: 'newReceiptParamAtom',
+  default: {
+    searchword: '',
+    pageSize: '10',
+    currentPage: '1',
+    year: '',
+    month: '',
+    dtFrom: '',
+    dtTo:'',
+    지역: '',
+    처리상태: '',
+  }
+})
 
