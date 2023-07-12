@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -9,6 +9,10 @@ import Floating from "../../components/molecules/Floating";
 import TopSearch from "../../components/molecules/TopSearch";
 import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import { useModal } from "../../hooks/useModal";
+import { useRecoilState } from "recoil";
+import { materialRequestAtom } from "../../recoil/inventoryList";
+import fetchService from "../../util/fetchService";
+import userAtom from "../../recoil/userAtom";
 
 const InventoryRequestWrap = styled.div`
   padding: 28px 30px 0;
@@ -31,46 +35,91 @@ const FloatingWrap = styled.div`
 
 
 const InventoryRequest = () => {
-  const [topMenu, setTopMenu] = useState(false);
-
   const { openModal } = useModal();
   const modalData = {
     title: 'Inventory Request Modal',
     callback: () => alert('Modal Callback()'),
   };
 
-  const dummyData = [
-    {
-      no: 14799,
-      date: "2023-02-08",
-      state: '접수대기',
-      materialManager: '팜윤태',
-      writer: "정명길",
-      site: "01.음성공장",
-      stateManager: "공나현"
-    },
-    {
-      no: 14800,
-      date: "2023-02-08",
-      state: '접수완료',
-      materialManager: '팜윤태',
-      writer: "정명길",
-      site: "01.음성공장",
-      stateManager: "공나현"
-    },
-    {
-      no: 14801,
-      date: "2023-02-08",
-      state: '처리완료',
-      materialManager: '팜윤태',
-      writer: "정명길",
-      site: "01.음성공장",
-      stateManager: "공나현"
-    }
-  ]
+  
+  const observeTargetRef = useRef(null)
+  const [topMenu, setTopMenu] = useState(false);
+  const [materialRequestList,setMaterialRequestList] = useRecoilState(materialRequestAtom)
+  const [user, setUser] = useRecoilState(userAtom)
+  
+
+  const [isLoading, setLoading] = useState(false);
+  const [fetchFlag, setFetchFlag] = useState(false);
 
   const changeParam = (key, value) => {
+    setMaterialRequestParam({
+      ...materialRequestParam,
+      currentPage : '1',
+      [key] : value,
+    })
   }
+
+  const [materialRequestParam, setMaterialRequestParam] = useState({
+    searchword: '',
+    pageSize: '',
+    currentPage: '1',
+    EmpNo: user.auth.사원코드,
+  })
+
+  const mappingItem = (res) => {
+    return res.data ? res.data.map(it => {
+      return {
+        state: it.문서상태,
+        no : it.요청일련번호,
+        requestDate: it.요청일,
+        writeDate: it.작성일,
+        requester : it.요청자,
+        requesterCode: it.작성자,
+        writer: it.작성자,
+        writerCode: it.작성자코드,
+      }
+    }) : []
+  }
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setMaterialRequestParam({
+        ...materialRequestParam,
+        currentPage: parseInt(materialRequestParam.currentPage) + 1
+      })
+      fetchList(fetchFlag ? [] : materialRequestList)
+    }
+  });
+
+  const fetchList = (list) => {
+    fetchService('/inventory/materialRequestList', 'post', materialRequestParam)
+      .then((res) => {
+        const temp = mappingItem(res)
+        const data = [...list, ...temp]
+        setMaterialRequestList(data)
+        console.log(res)
+        if(temp.length > 0) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [
+    materialRequestParam.searchword
+  ])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
+
+  
 
   return (
     <>
@@ -110,21 +159,23 @@ const InventoryRequest = () => {
       <InventoryRequestWrap>
         <InventoryRequestListWrap>
           {
-            dummyData.map((item, key) => {
+            materialRequestList.map((item, key) => {
               return <InventoryRequestList
                 key={key}
-                no={item.no}
-                date={item.date}
                 state={item.state}
-                materialManager={item.materialManager}
+                no={item.no}
+                requestDate={item.requestDate}
+                writeDate={item.writeDate}
+                requester ={item.requester}
+                requesterCode={item.requesterCode}
                 writer={item.writer}
-                site={item.site}
-                stateManager={item.stateManager}
+                writerCode={item.writerCode}
                 onClick={() => openModal({ ...modalData, content: <InventoryRequestListModal item={item} />})}
               />
             })
           }
         </InventoryRequestListWrap>
+        <div ref={observeTargetRef}/>
 
         {/* 클릭시 재고 간편입력 */}
         <FloatingWrap>

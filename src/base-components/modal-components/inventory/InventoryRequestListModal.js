@@ -164,11 +164,32 @@ const InventoryRequestListModalWrap = styled.div`
 const InventoryRequestListModal = ({ item }) => {
   const { openModal, closeModal } = useModal();
 
+  console.log(item.no)
+
   const modalData = {
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
 
+  const fetchList = (list) => {
+    fetchService('/inventory/materialRequestDetail', 'post', inventoryParam)
+      .then((res) => {
+        console.log("res::::", res)
+        // const temp = mappingItem(res)
+        // const data = [...list, ...temp]
+        
+        // setInventoryList( data )
+        // if(temp.length > 0) {
+        //   setTimeout(() => {
+        //     setLoading(false)
+        //   }, 1000)
+        // }
+      })
+  }
+
+  useEffect(() => {
+    fetchList([])
+  }, [])
 
   return <InventoryRequestListModalWrap>
     <div className="list-top">

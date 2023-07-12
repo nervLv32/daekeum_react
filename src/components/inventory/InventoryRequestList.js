@@ -66,15 +66,24 @@ const InventoryRequestListComponent = styled.li`
 `
 
 const InventoryRequestList = ({
-  no,
-  date,
   state,
-  materialManager,
+  no,
+  requestDate,
+  writeDate,
+  requester ,
+  requesterCode,
   writer,
-  site,
-  stateManager,
+  writerCode,
   onClick
 }) => {
+
+  const dateObj = new Date(requestDate);
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+
+  const date = `${year}-${month}-${day}`;
+
   return <InventoryRequestListComponent>
     <div className="list-top">
       <div className="dl-wrap">
@@ -94,7 +103,7 @@ const InventoryRequestList = ({
     <div className="list-body">
       <dl>
         <dt>자제요청자</dt>
-        <dd>{materialManager}</dd>
+        <dd>{requester}</dd>
       </dl>
       <dl>
         <dt>작성자</dt>

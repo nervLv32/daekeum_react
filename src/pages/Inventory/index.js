@@ -8,6 +8,7 @@ import TopSearchMenu from "../../components/molecules/TopSearchMenu";
 import fetchService from "../../util/fetchService";
 import {useRecoilState} from "recoil";
 import {inventoryAtom} from "../../recoil/inventoryList";
+import userAtom from "../../recoil/userAtom";
 
 const InventoryWrap = styled.div`
   padding: 28px 30px 0;
@@ -25,6 +26,7 @@ const Inventory = () => {
   const observeTargetRef = useRef(null)
   const [topMenu, setTopMenu] = useState(false);
   const [inventoryList,setInventoryList] = useRecoilState(inventoryAtom)
+  const [user, setUser] = useRecoilState(userAtom)
 
   const [isLoading, setLoading] = useState(false);
   const [fetchFlag, setFetchFlag] = useState(false);
@@ -41,7 +43,7 @@ const Inventory = () => {
     searchword: '',
     pageSize: '',
     currentPage: '1',
-    EmpNo: '',
+    EmpNo: user.auth.사원코드,
   })
 
   const mappingItem = (res) => {
@@ -71,15 +73,15 @@ const Inventory = () => {
   const fetchList = (list) => {
     fetchService('/inventory/inventoryList', 'post', inventoryParam)
       .then((res) => {
-        setInventoryList(res.data)
-        console.log(res)
         const temp = mappingItem(res)
         const data = [...list, ...temp]
-        console.log("data", data)
+        
         setInventoryList( data )
-        setTimeout(() => {
-          setLoading(false)
-        }, 1000)
+        if(temp.length > 0) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
       })
   }
 
@@ -131,11 +133,10 @@ const Inventory = () => {
     }
     <InventoryWrap>
       <InventoryTableTop />
-      {console.log(inventoryList)}
       {
         inventoryList.map((list, idx) => {
           return (
-            <InventoryTable list={list} idx={idx}/>
+            <InventoryTable list={list} key={idx}/>
           )
         })
       }

@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components";
-import { getOrderState } from "../../util/utils";
+import { getOrderState, getOrderStyle } from "../../util/utils";
 
 const OrderStateBtnComponent = styled.button`
   padding: 4px 8px;
@@ -42,7 +42,7 @@ const OrderStateBtnComponent = styled.button`
 const OrderStateBtn = ({ state }) => {
   return <OrderStateBtnComponent className={getOrderState(state)}>
     <i></i>
-    <span>{state}</span>
+    <span>{getOrderStyle(state)}</span>
   </OrderStateBtnComponent>
 }
 

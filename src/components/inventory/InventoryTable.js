@@ -42,6 +42,10 @@ const InventoryTableWrap = styled.li`
     }
     .table-name {
       width: calc(55% - 60px);
+      padding: 0 10px;
+      text-align: center;
+      line-height: 1.2;
+      word-break: keep-all;
     }
     .table-count {
       width: 50px;
