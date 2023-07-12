@@ -116,7 +116,7 @@ const SearchRegionModal = () => {
   /* ****** 지역별조회 모달 ****** */
   const { closeModal } = useModal();
 
-  const [sector1, setSector1] = useState("수도권B");
+  const [sector1, setSector1] = useState("수도권A");
   const [sector2, setSector2] = useState("");
 
   return (
