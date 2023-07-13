@@ -185,7 +185,7 @@ const RegisListModal = ({ item }) => {
           }}>현장조회</button>
         <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RegisAddNewModal /> })
+        openModal({ ...modalData, content: <RegisAddNewModal no={item.rownum} /> })
       }}>업체수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>
