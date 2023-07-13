@@ -56,7 +56,6 @@ const RegisTapWrapComponent = styled.div`
 `
 
 const RegisTapWrap = ({ title }) => {
-  console.log(title)
   return (
     <RegisTapWrapComponent>
       <ul className="top-tab-wrap">

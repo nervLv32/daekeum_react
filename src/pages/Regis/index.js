@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import RegisListModal from "../../base-components/modal-components/regis/RegisListModal";
@@ -7,6 +7,10 @@ import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
 
 import { useModal } from "../../hooks/useModal";
+import fetchService from "../../util/fetchService";
+import {useRecoilState} from "recoil";
+import {regisAtom, regisParamAtom} from "../../recoil/regisAtom";
+
 
 const RegisWrap = styled.div``
 
@@ -78,11 +82,47 @@ const RegisInfoListWrap = styled.ul``
 const Regis = () => {
 
   const { openModal } = useModal();
+
   const modalData = {
     title: 'RegisInfoList Modal',
     content: <RegisListModal />,
     callback: () => alert('Modal Callback()'),
   };
+
+
+  const observeTargetRef = useRef(null)
+  const [isLoading, setLoading] = useState(false);
+  const [regis, setRegis] = useRecoilState(regisAtom)
+  const [regisParam, setRegisParam] = useRecoilState(regisParamAtom)
+
+  const fetchList = (list) => {
+    fetchService('/enroll/clientList', 'post', regisParam)
+      .then((res) => {
+        console.log(res)
+        const data = [...list, ...res.data]
+        setRegis( data )
+        if(res.data.length > 0) {
+          console.log(res.data.length)
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
+  }
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setRegisParam({
+        ...regisParam,
+        currentPage: parseInt(regisParam.currentPage) + 1
+      })
+    }
+  });
+
+  useEffect(() => {
+    fetchList(regis)
+  }, [regisParam.currentPage])
 
   const dummyData = [
     {
@@ -112,6 +152,14 @@ const Regis = () => {
       detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
     },
   ]
+
+
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
+
   return <RegisWrap>
     <RegisTapWrap title="업체정보" />
     <RegisTabSearch>
@@ -125,12 +173,12 @@ const Regis = () => {
     <CompanyInfoWrap>
       <RegisInfoListWrap>
         {
-          dummyData.map((item, idx) => {
+          regis.map((item, idx) => {
             return (<RegisInfoList
-              key={item.no}
-              company={item.company}
-              ceo={item.ceo}
-              companyNum={item.companyNum}
+              key={idx}
+              company={item.업체명}
+              ceo={item.대표자성명}
+              companyNum={item.사업자번호}
               onClick={() => openModal({ ...modalData, content: <RegisListModal item={item} /> })}
             />
             )
@@ -138,7 +186,7 @@ const Regis = () => {
         }
       </RegisInfoListWrap>
     </CompanyInfoWrap>
-
+    <div ref={observeTargetRef}/>
   </RegisWrap>
 }
 

@@ -135,7 +135,7 @@ const RegisListModal = ({ item }) => {
         <div className="dl-wrap">
           <dl>
             <dt>현 장 명</dt>
-            <dd>{item.company}</dd>
+            <dd>{item.업체명}</dd>
           </dl>
         </div>
       </div>
@@ -143,38 +143,38 @@ const RegisListModal = ({ item }) => {
         <li>
           <dl>
             <dt>대 표 자</dt>
-            <dd>{item.ceo}</dd>
+            <dd>{item.대표자성명}</dd>
           </dl>
           <dl>
             <dt>사 업 자 번 호</dt>
-            <dd>{item.companyNum}</dd>
+            <dd>{item.사업자번호}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>업 태</dt>
-            <dd>{item.sector}</dd>
+            <dd>{item.업태}</dd>
           </dl>
           <dl>
-            <dt>업 태</dt>
-            <dd>{item.sectorNum}</dd>
+            <dt>종 목</dt>
+            <dd>{item.종목}</dd>
           </dl>
         </li>
-        
+
         <li>
           <dl>
             <dt>현 장 주 소</dt>
-            <dd className="oneLine">{item.siteAddress}</dd>
+            <dd className="oneLine">{item.주소}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>현 장 담 당 자</dt>
-            <dd>{item.manager}</dd>
+            <dd>{item.담당자}</dd>
           </dl>
           <dl>
             <dt>현 장 연 락 처</dt>
-            <dd>{item.managerPhone}</dd>
+            <dd>{item.휴대폰}</dd>
           </dl>
         </li>
       </ul>
