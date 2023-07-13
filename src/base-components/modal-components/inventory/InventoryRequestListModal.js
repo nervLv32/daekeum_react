@@ -171,13 +171,13 @@ const InventoryRequestListModal = ({ item }) => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const fetchList = (list) => {
+  /*const fetchList = (list) => {
     fetchService('/inventory/materialRequestDetail', 'post', inventoryParam)
       .then((res) => {
         console.log("res::::", res)
         // const temp = mappingItem(res)
         // const data = [...list, ...temp]
-        
+
         // setInventoryList( data )
         // if(temp.length > 0) {
         //   setTimeout(() => {
@@ -189,7 +189,7 @@ const InventoryRequestListModal = ({ item }) => {
 
   useEffect(() => {
     fetchList([])
-  }, [])
+  }, [])*/
 
   return <InventoryRequestListModalWrap>
     <div className="list-top">
