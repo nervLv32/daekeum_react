@@ -141,7 +141,6 @@ const RegisSite = () => {
   useEffect(() => {
     fetchService('/enroll/siteList', 'post', siteParam)
       .then((res) => {
-        console.log(res.data)
         setSite(mappingData(res.data))
       })
   }, [])

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import RegisEquipListModal from "../../base-components/modal-components/regis/RegisEquipListModal";
 import RegisEquipList from "../../components/regis/RegisEquipList";
@@ -8,6 +8,8 @@ import { useModal } from "../../hooks/useModal";
 import {useRecoilState} from "recoil";
 import {selectCompanyAtom} from "../../recoil/regisAtom";
 import {useNavigate} from "react-router-dom";
+import fetchService from "../../util/fetchService";
+import {DateFormat} from "../../util/dateFormat";
 
 const RegisEquipmentWrap = styled.div``
 
@@ -65,6 +67,15 @@ const EquipmentInfoWrap = styled(paddingWrap)`
 
 const RegisEquipment = () => {
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
+  const [equips, setEquips] = useState([])
+  const [equipParam, seEquipParam] = useState({
+    거래처코드: selectRegis.client.code,
+    현장코드: selectRegis.site.code,
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1,
+  })
+  const navigate = useNavigate()
 
   const dummyData = [
     {
@@ -94,19 +105,46 @@ const RegisEquipment = () => {
       manager: '팜윤태',
     },
   ]
-
-
   const { openModal } = useModal();
-  const navigate = useNavigate()
   const modalData = {
     title: 'RegisEquipList Modal',
     content: <RegisEquipListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
+  const fetchData = () => {
+    console.log(equipParam)
+    fetchService('/enroll/equipList', 'post', equipParam)
+      .then(res => {
+        console.log(res)
+        setEquips(mappingData(res.data))
+      })
+
+    const mappingData = (data) => {
+      return data.map(it => {
+        return {
+          ...it,
+          no: 41377,
+          date: DateFormat(new Date(it.설치일)),
+          dkno: it.DKNO,
+          mcno: it.MCNO,
+          model: it.모델,
+          installCate:it.매출타입,
+          warehousingCate: it.입출고,
+          bolt:it.전압,
+          direction:it.방향,
+          center: it.지역구분,
+          manager: it.담당자,
+        }
+      })
+    }
+  }
+
   useEffect(() => {
     if(selectRegis.client.code === '' || selectRegis.site.code === '') {
       navigate('/regis')
+    }else{
+      fetchData()
     }
   }, [])
 
@@ -122,9 +160,9 @@ const RegisEquipment = () => {
 
     <EquipmentInfoWrap>
       {
-        dummyData.map((item, idx) => {
+        equips.map((item, idx) => {
           return (<RegisEquipList
-            key={item.no}
+            key={idx}
             dkno={item.dkno}
             date={item.date}
             mcno={item.mcno}
