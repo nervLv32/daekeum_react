@@ -65,36 +65,6 @@ const DKNOInfoWrap = styled(paddingWrap)`
 const RegisDKNO = () => {
   const dummyData = [
     {
-      no: 41377,
-      date: "2023-02-01",
-      installCate: "회수",
-      model: "R10DN",
-      type: "13644",
-      mcno: "C652",
-      bolt:"380",
-      direction:"정방향",
-      company: "대금지오웰",
-      center: "380",
-      manager: '팜윤태',
-      site: "여수 소호동 테라스하우스",
-      siteAddress: "전남 여수시 소호동 741번지"
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      installCate: "회수",
-      model: "R10DN",
-      type: "13644",
-      mcno: "C652",
-      bolt:"380",
-      direction:"정방향",
-      company: "대금지오웰",
-      center: "380",
-      manager: '팜윤태',
-      site: "여수 소호동 테라스하우스",
-      siteAddress: "전남 여수시 소호동 741번지"
-    },
-    {
       no: 41379,
       date: "2023-02-01",
       installCate: "회수",
@@ -110,6 +80,7 @@ const RegisDKNO = () => {
       siteAddress: "전남 여수시 소호동 741번지"
     },
   ]
+
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
   const navigate = useNavigate();
 

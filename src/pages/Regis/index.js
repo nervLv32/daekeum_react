@@ -122,36 +122,6 @@ const Regis = () => {
     fetchList(regis)
   }, [regisParam.currentPage])
 
-  const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      company: '주식회사 대금지웰',
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      siteAddress: '인천광역시 미추홀구 장고개로 92번길 38',
-      detail: '12개월 임대 문의 - 8롤 바이백 월대, 일시불 두건 견적서 요청 - 하자명시 요청',
-    },
-  ]
-
-
 
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()

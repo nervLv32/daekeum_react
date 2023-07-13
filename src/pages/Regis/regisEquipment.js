@@ -77,34 +77,6 @@ const RegisEquipment = () => {
   })
   const navigate = useNavigate()
 
-  const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      dkno: "13666",
-      mcno: "C652",
-      model: "R10DN",
-      installCate:"회수",
-      warehousingCate:"출고",
-      bolt:"380",
-      direction:"정방향",
-      center: "수도권4",
-      manager: '정명길',
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      dkno: "13666",
-      mcno: "C652",
-      model: "R10DN",
-      installCate:"회수",
-      warehousingCate:"출고",
-      bolt:"380",
-      direction:"정방향",
-      center: "수도권1",
-      manager: '팜윤태',
-    },
-  ]
   const { openModal } = useModal();
   const modalData = {
     title: 'RegisEquipList Modal',

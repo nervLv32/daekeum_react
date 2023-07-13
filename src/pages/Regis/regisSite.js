@@ -68,36 +68,6 @@ const SiteInfoWrap = styled(paddingWrap)`
 
 
 const RegisSite = () => {
-  const dummyData = [
-    {
-      no: 41377,
-      date: "2023-02-01",
-      site: "DMC리버시티(A6블록)",
-      regionFirst: "경기도",
-      regionLast: "고양시",
-      center: "수도권4",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      siteAddress: '경기도 고양시 덕양구 덕은동 427-1번지',
-      manager: '정명길',
-      managerPhone: '010-6476-1544',
-      email: "jjsh2544@daekeum.co.kr"
-    },
-    {
-      no: 41378,
-      date: "2023-02-01",
-      site: "대금지오웰",
-      regionFirst: "서울시",
-      regionLast: "관악구",
-      center: "수도권1",
-      sector: "제조업",
-      sectorNum: "131-81-19404",
-      siteAddress: '서울시 관악구 사당로17길',
-      manager: '팜윤태',
-      managerPhone: '010-1112-2342',
-      email: "farmyt@gmail.com"
-    },
-  ]
 
   const {openModal} = useModal();
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
