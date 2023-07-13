@@ -82,6 +82,7 @@ const RegisInfoListWrap = styled.ul``
 const Regis = () => {
 
   const { openModal } = useModal();
+  let debounce = null
 
   const modalData = {
     title: 'RegisInfoList Modal',
@@ -94,6 +95,7 @@ const Regis = () => {
   const [isLoading, setLoading] = useState(false);
   const [regis, setRegis] = useRecoilState(regisAtom)
   const [regisParam, setRegisParam] = useRecoilState(regisParamAtom)
+  const [search, setSearch] = useState('')
 
   const fetchList = (list) => {
     fetchService('/enroll/clientList', 'post', regisParam)
@@ -120,20 +122,37 @@ const Regis = () => {
 
   useEffect(() => {
     fetchList(regis)
-  }, [regisParam.currentPage])
+  }, [ regisParam.currentPage ])
 
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [regisParam.searchword])
 
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
     return () => onIntersect.disconnect()
   }, [isLoading])
 
+  useEffect(() => {
+    debounce = setTimeout(() => {
+      setRegisParam({
+        ...regisParam,
+        searchword: search,
+        currentPage: '1`',
+      })
+      console.log(search)
+    }, 500)
+    return () => clearTimeout(debounce)
+  }, [search])
+
+
   return <RegisWrap>
     <RegisTapWrap title="업체정보" />
     <RegisTabSearch>
       <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
         <button className="search-btn" />
       </div>
     </RegisTabSearch>
