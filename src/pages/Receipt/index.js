@@ -108,8 +108,6 @@ const Receipt = () => {
   }
 
   const mappingItem = (res) => {
-    // console.log(receipts)
-    console.log(receiptParam)
     return res.data ? res.data.map(it => {
       return {
         no: it.NO,
@@ -129,7 +127,6 @@ const Receipt = () => {
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
-      console.log('add')
       setLoading(true)
       setReceiptParam({
         ...receiptParam,
@@ -145,7 +142,6 @@ const Receipt = () => {
         const data = [...list, ...temp]
         setReceipts( data )
         if(temp.length > 0) {
-          console.log(temp.length)
           setTimeout(() => {
             setLoading(false)
           }, 1000)

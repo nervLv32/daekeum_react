@@ -1,8 +1,10 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep02Modal from './DStep02Modal'
 import fetchService from "../../../util/fetchService";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -235,7 +237,7 @@ const ModalWrap = styled.div`
         }
         dd {
           width: calc(100% - 9rem);
-          height: 1.2rem;
+          min-height: 1.2rem;
           border-bottom: 0.1rem solid #9DA2AE;
         }
       }
@@ -264,6 +266,9 @@ const DStep01Modal = ({accountCode}) => {
 
   const { openModal, closeModal } = useModal();
 
+  // 업체정보 Recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+
   const modalData = {
     title: 'DStep01Modal Modal',
     callback: () => alert('Modal Callback()'),
@@ -275,27 +280,17 @@ const DStep01Modal = ({accountCode}) => {
     fetchService('/receipt/detail', 'post', {
       일련번호: accountCode
     }).then((res) => {
-      res?.data && setCompanyInfo({
-        businessName: res.data[0].거래처명,
-        businessCode: res.data[0].거래처코드,
-        date: res.data[0].날짜,
-        manager: res.data[0].담당자,
-        visitManager: res.data[0].방문예정담당자,
-        tell: res.data[0].연락처,
-        no: res.data[0].일련번호,
-        submissionDetails: res.data[0].접수내용,
-        region: res.data[0].지역,
-        status: res.data[0].처리상태,
-        siteName: res.data[0].현장명,
-        siteAddress: res.data[0].현장주소,
-        siteCode: res.data[0].현장코드
-      });
+      res?.data && setCompanyInfo(res.data[0]);
+      res.data && setJournal({
+        companyInfo: res.data[0]
+      })
     })
   };
 
   // 장비검색
   const [equipList, setEquipList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchStatus, setSearchStatus] = useState(false);
   const getEquipList = () => {
     fetchService('/enroll/equipList', 'post', {
       searchword: searchKeyword,
@@ -312,17 +307,37 @@ const DStep01Modal = ({accountCode}) => {
 
   // 장비정보 검색 클릭 이벤트
   const [equipActive, setEquipActive] = useState();
+  const [searchData, setSearchData] = useState();
   const handleSubmit = () => {
     getEquipList();
+    searchKeyword.length > 0 ? setSearchStatus(true) : setSearchStatus(false);
   };
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      searchKeyword.length > 0 ? setSearchStatus(true) : setSearchStatus(false);
       getEquipList();
     }
   };
-  const handleClick = (i) => {
+  const handleClick = (i, data) => {
     setEquipActive(i);
+    setSearchData(data);
+    setSearchKeyword("");
+    setSearchStatus(false);
   };
+
+  // 검색리스트 타겟
+  const searchListRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchListRef.current && !searchListRef.current.contains(event.target)) {
+        setSearchStatus(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   // 진입시 불러오기
   useEffect(() => {
@@ -359,7 +374,7 @@ const DStep01Modal = ({accountCode}) => {
         </dl>
         <dl className="input-info">
           <dt className="essential">장비정보</dt>
-          <dd>
+          <dd ref={searchListRef}>
             <label>
               <input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} onKeyDown={handleKeyDown} />
               <button type="button" onClick={handleSubmit}>
@@ -368,7 +383,7 @@ const DStep01Modal = ({accountCode}) => {
               </button>
             </label>
             {
-              equipList?.length > 0 && (
+              equipList?.length > 0 && searchStatus && (
                 <div className="search-list">
                   <ul>
                     <li className="hd">
@@ -388,7 +403,7 @@ const DStep01Modal = ({accountCode}) => {
                           <li 
                             className={index === equipActive ? "list-bd on" :" list-bd"}
                             key={index}
-                            onClick={() => handleClick(index)}
+                            onClick={() => handleClick(index, item)}
                           >
                             <div className="model-no">
                               {item.모델}
@@ -412,7 +427,7 @@ const DStep01Modal = ({accountCode}) => {
         <div className="product-info">
           <dl>
             <dt>MODEL-NO</dt>
-            <dd></dd>
+            <dd>{searchData?.모델}</dd>
           </dl>
           <dl>
             <dt>수조</dt>
@@ -428,15 +443,15 @@ const DStep01Modal = ({accountCode}) => {
           </dl>
           <dl>
             <dt>사용전압</dt>
-            <dd></dd>
+            <dd>{searchData?.전압}</dd>
           </dl>
           <dl>
             <dt>설치방향</dt>
-            <dd></dd>
+            <dd>{searchData?.방향}</dd>
           </dl>
           <dl>
             <dt>침전제</dt>
-            <dd></dd>
+            <dd>{searchData?.장비구분}</dd>
           </dl>
         </div>
       </div>

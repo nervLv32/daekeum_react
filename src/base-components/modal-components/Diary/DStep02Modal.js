@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep01Modal from './DStep01Modal'
 import DStep03Modal from './DStep03Modal'
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -178,6 +180,9 @@ const BtnWrap = styled.div`
 const DStep02Modal = () => {
 
   const { openModal, closeModal } = useModal();
+
+  // 업체정보 Recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
 
   const modalData = {
     title: 'DStep02Modal Modal',
