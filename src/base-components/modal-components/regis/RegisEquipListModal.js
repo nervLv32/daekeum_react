@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
+import {useRecoilState} from "recoil";
+import {selectCompanyAtom} from "../../../recoil/regisAtom";
 
 const RegisEquipListModalWrap = styled.div`
   background-color: #fff;
@@ -114,6 +116,7 @@ const RegisEquipListModal = ({ item }) => {
   const { closeModal } = useModal();
 
   const navigate = useNavigate();
+  const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
 
   return (
     <RegisEquipListModalWrap>
@@ -170,6 +173,13 @@ const RegisEquipListModal = ({ item }) => {
       <div className="modal-btm">
         <button className="primary-btn" onClick={() => {
           closeModal();
+          setSelectRegis({
+            ...selectRegis,
+            equipment: {
+              code: item.dkno,
+              name: item.dkno,
+            }
+          })
           navigate('/regis/DKNO')
         }}>장비조회</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>

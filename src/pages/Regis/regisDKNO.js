@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import RegisDKNOListModal from "../../base-components/modal-components/regis/RegisDKNOListModal";
 import RegisDKNOList from "../../components/regis/RegisDKNOList";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
 import { useModal } from "../../hooks/useModal";
+import {useRecoilState} from "recoil";
+import {selectCompanyAtom} from "../../recoil/regisAtom";
+import {useNavigate} from "react-router-dom";
 
 const RegisDKNOWrap = styled.div``
 
@@ -107,6 +110,8 @@ const RegisDKNO = () => {
       siteAddress: "전남 여수시 소호동 741번지"
     },
   ]
+  const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
+  const navigate = useNavigate();
 
 
   const { openModal } = useModal();
@@ -116,10 +121,16 @@ const RegisDKNO = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  useEffect(() => {
+    if(selectRegis.client.code === '' || selectRegis.site.code === '' || selectRegis.equipment.code === '') {
+      navigate('/regis')
+    }
+  }, [])
+
   return <RegisDKNOWrap>
     <RegisTapWrap title="DKNO" />
     <RegisTabSearch>
-      <RegisTabNavi dep1="주)대금지오웰" dep2="DMC리버시티(A6블록)" dep3="장비정보" />
+      <RegisTabNavi dep1={selectRegis.client.name} dep2={selectRegis.site.name} dep3={selectRegis.equipment.name} />
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" />
         <button className="search-btn" />

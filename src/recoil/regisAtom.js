@@ -23,6 +23,10 @@ export const selectCompanyAtom = atom({
     site: {
       name: '',
       code: ''
+    },
+    equipment: {
+      name: '',
+      code: ''
     }
   }
 })

@@ -148,7 +148,7 @@ const RegisSite = () => {
 
   useEffect(() => {
     if(selectRegis.client.code === '') {
-      navigate(-1, {replace : true})
+      navigate('/regis')
     }
   }, [])
 

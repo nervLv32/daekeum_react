@@ -106,7 +106,7 @@ const RegisEquipment = () => {
 
   useEffect(() => {
     if(selectRegis.client.code === '' || selectRegis.site.code === '') {
-      navigate(-1)
+      navigate('/regis')
     }
   }, [])
 
