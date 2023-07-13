@@ -12,3 +12,17 @@ export const regisParamAtom = atom({
     currentPage: 1
   }
 })
+
+export const selectCompanyAtom = atom({
+  key: 'selectCompanyAtom',
+  default: {
+    client: {
+      name: '',
+      code : ''
+    },
+    site: {
+      name: '',
+      code: ''
+    }
+  }
+})

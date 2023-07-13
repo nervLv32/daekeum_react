@@ -4,6 +4,8 @@ import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
 import RegisAddNewModal from "./RegisAddNewModal";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {selectCompanyAtom} from "../../../recoil/regisAtom";
 
 const RegisListModalWrap = styled.div`
   background-color: #fff;
@@ -123,6 +125,7 @@ const RegisListModal = ({ item }) => {
   const { openModal, closeModal } = useModal();
 
   const navigate = useNavigate();
+  const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
 
   const modalData = {
     title: 'Modal',
@@ -181,7 +184,14 @@ const RegisListModal = ({ item }) => {
       <div className="modal-btm">
         <button className="primary-btn" onClick={() => {
           closeModal();
-          navigate('/regis/site')
+          setSelectRegis({
+            ...selectRegis,
+            client: {
+              name: item.업체명,
+              code: item.거래처코드,
+            }
+          })
+          navigate('/regis/site', {replace : true})
           }}>현장조회</button>
         <button className="primary-btn" onClick={() => {
         closeModal()

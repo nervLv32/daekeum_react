@@ -98,11 +98,9 @@ const Regis = () => {
   const fetchList = (list) => {
     fetchService('/enroll/clientList', 'post', regisParam)
       .then((res) => {
-        console.log(res)
         const data = [...list, ...res.data]
         setRegis( data )
         if(res.data.length > 0) {
-          console.log(res.data.length)
           setTimeout(() => {
             setLoading(false)
           }, 1000)

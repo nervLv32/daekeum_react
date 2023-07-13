@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import RegisEquipListModal from "../../base-components/modal-components/regis/RegisEquipListModal";
 import RegisEquipList from "../../components/regis/RegisEquipList";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
 import { useModal } from "../../hooks/useModal";
+import {useRecoilState} from "recoil";
+import {selectCompanyAtom} from "../../recoil/regisAtom";
+import {useNavigate} from "react-router-dom";
 
 const RegisEquipmentWrap = styled.div``
 
@@ -61,6 +64,7 @@ const EquipmentInfoWrap = styled(paddingWrap)`
 
 
 const RegisEquipment = () => {
+  const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
 
   const dummyData = [
     {
@@ -93,17 +97,23 @@ const RegisEquipment = () => {
 
 
   const { openModal } = useModal();
+  const navigate = useNavigate()
   const modalData = {
     title: 'RegisEquipList Modal',
     content: <RegisEquipListModal />,
     callback: () => alert('Modal Callback()'),
   };
 
+  useEffect(() => {
+    if(selectRegis.client.code === '' || selectRegis.site.code === '') {
+      navigate(-1)
+    }
+  }, [])
 
   return <RegisEquipmentWrap>
     <RegisTapWrap title="장비정보" />
     <RegisTabSearch>
-      <RegisTabNavi dep1="주)대금지오웰" dep2="DMC리버시티(A6블록)" dep3="장비정보" />
+      <RegisTabNavi dep1={selectRegis.client.name} dep2={selectRegis.site.name} dep3="장비정보" />
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" />
         <button className="search-btn" />

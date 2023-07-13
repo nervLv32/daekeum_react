@@ -1,24 +1,29 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import RegisSiteListModal from "../../base-components/modal-components/regis/RegisSiteListModal";
 import RegisSiteList from "../../components/regis/RegisSiteList";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
-import { useModal } from "../../hooks/useModal";
+import {useModal} from "../../hooks/useModal";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {selectCompanyAtom} from "../../recoil/regisAtom";
+import fetchService from "../../util/fetchService";
 
 const RegisSiteWrap = styled.div``
 
 const RegisTabSearch = styled.div`
-  padding: 45px 30px 15px; 
+  padding: 45px 30px 15px;
   position: relative;
   top: -20px;
   z-index: 1;
   background: #F7F7F7;
   border-radius: 0 0 10px 10px;
+
   .tab-searchwrap {
     display: flex;
     align-items: center;
+
     input {
       height: 28px;
       width: calc(100% - 32px);
@@ -29,13 +34,16 @@ const RegisTabSearch = styled.div`
       font-family: var(--font-mont);
       font-weight: 400;
       font-size: 9px;
+
       &::placeholder {
         color: #9da2ae;
       }
+
       &:focus {
         outline: none;
       }
     }
+
     .search-btn {
       width: 28px;
       height: 28px;
@@ -91,35 +99,80 @@ const RegisSite = () => {
     },
   ]
 
-  const { openModal } = useModal();
+  const {openModal} = useModal();
+  const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
+  const [sites, setSite] = useState([]);
+  const [siteParam, setSiteParam] = useState({
+    거래처코드: selectRegis.client.code,
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1,
+  })
+
+  const navigate = useNavigate()
+
   const modalData = {
     title: 'RegisSiteList Modal',
-    content: <RegisSiteListModal />,
+    content: <RegisSiteListModal/>,
     callback: () => alert('Modal Callback()'),
   };
 
+  const mappingData = (data) => {
+    return data.map(it => {
+      return {
+        ...it,
+        no: it.현장코드,
+        date: it.등록일,
+        site: it.현장명,
+        regionFirst: (it.지역분류).split('-')[0],
+        regionLast: (it.지역분류).split('-')[1],
+        center: it.담당부서명,
+        sector: "",//업태? 담당센터?
+        sectorNum: "" ,//사업자번호
+        siteAddress: it.주소,
+        manager: it.담당자,
+        managerPhone: it.휴대폰,
+        email: it.이메일
+      }
+    })
+  }
+
+
+  useEffect(() => {
+    fetchService('/enroll/siteList', 'post', siteParam)
+      .then((res) => {
+        console.log(res.data)
+        setSite(mappingData(res.data))
+      })
+  }, [])
+
+  useEffect(() => {
+    if(selectRegis.client.code === '') {
+      navigate(-1, {replace : true})
+    }
+  }, [])
+
   return (
     <RegisSiteWrap>
-      <RegisTapWrap title="현장정보" />
+      <RegisTapWrap title="현장정보"/>
       <RegisTabSearch>
-        <RegisTabNavi dep1="주)대금지오웰" dep2="현장명" dep3="장비정보" />
+        <RegisTabNavi dep1={selectRegis.client.name} dep2="현장명" dep3="장비정보"/>
         <div className="tab-searchwrap">
-          <input type="text" placeholder="Search" />
-          <button className="search-btn" />
+          <input type="text" placeholder="Search"/>
+          <button className="search-btn"/>
         </div>
       </RegisTabSearch>
-
       <SiteInfoWrap>
         {
-          dummyData.map((item, idx) => {
+          sites.map((item, idx) => {
             return (<RegisSiteList
-              key={item.no}
-              site={item.site}
-              regionFirst={item.regionFirst}
-              regionLast={item.regionLast}
-              sector={item.sector}
-              onClick={() => openModal({ ...modalData, content: <RegisSiteListModal item={item} /> })}
-            />
+                key={item.no}
+                site={item.site}
+                regionFirst={item.regionFirst}
+                regionLast={item.regionLast}
+                sector={item.sector}
+                onClick={() => openModal({...modalData, content: <RegisSiteListModal item={item}/>})}
+              />
             )
           })
         }
