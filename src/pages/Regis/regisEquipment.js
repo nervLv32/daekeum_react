@@ -125,7 +125,7 @@ const RegisEquipment = () => {
         return {
           ...it,
           no: 41377,
-          date: DateFormat(new Date(it.설치일)),
+          date: DateFormat(new Date(it.설치일)).substr(0,10),
           dkno: it.DKNO,
           mcno: it.MCNO,
           model: it.모델,
