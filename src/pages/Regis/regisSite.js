@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import RegisSiteListModal from "../../base-components/modal-components/regis/RegisSiteListModal";
@@ -8,7 +8,7 @@ import RegisTapWrap from "../../components/regis/RegisTapWrap";
 import {useModal} from "../../hooks/useModal";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {selectCompanyAtom} from "../../recoil/regisAtom";
-import fetchService from "../../util/fetchService";
+import fetchService from "../../util/fetchService"
 
 const RegisSiteWrap = styled.div``
 
@@ -70,8 +70,13 @@ const SiteInfoWrap = styled(paddingWrap)`
 const RegisSite = () => {
 
   const {openModal} = useModal();
+
+  let debounce = null
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
+  const [isLoading, setLoading] = useState(false);
   const [sites, setSite] = useState([]);
+  const observeTargetRef = useRef(null)
+  const [search, setSearch] = useState('')
   const [siteParam, setSiteParam] = useState({
     거래처코드: selectRegis.client.code,
     searchword: '',
@@ -86,6 +91,17 @@ const RegisSite = () => {
     content: <RegisSiteListModal/>,
     callback: () => alert('Modal Callback()'),
   };
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setSiteParam({
+        ...siteParam,
+        currentPage: parseInt(siteParam.currentPage) + 1
+      })
+      fetchList(sites)
+    }
+  });
 
   const mappingData = (data) => {
     return data.map(it => {
@@ -107,13 +123,20 @@ const RegisSite = () => {
     })
   }
 
-
-  useEffect(() => {
+  const fetchList = (list) => {
     fetchService('/enroll/siteList', 'post', siteParam)
       .then((res) => {
-        setSite(mappingData(res.data))
+        const data = [...list, ...mappingData(res.data)]
+        setSite( data )
+        console.log(res.data.length)
+        if(res.data.length > 9) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
       })
-  }, [])
+  }
+
 
   useEffect(() => {
     if(selectRegis.client.code === '') {
@@ -121,13 +144,35 @@ const RegisSite = () => {
     }
   }, [])
 
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [siteParam.searchword])
+
+
+  useEffect(() => {
+    debounce = setTimeout(() => {
+      setSiteParam({
+        ...siteParam,
+        searchword: search,
+        currentPage: '1`',
+      })
+    }, 500)
+    return () => clearTimeout(debounce)
+  }, [search])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
+
   return (
     <RegisSiteWrap>
       <RegisTapWrap title="현장정보"/>
       <RegisTabSearch>
         <RegisTabNavi dep1={selectRegis.client.name} dep2="현장명" dep3="장비정보"/>
         <div className="tab-searchwrap">
-          <input type="text" placeholder="Search"/>
+          <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
           <button className="search-btn"/>
         </div>
       </RegisTabSearch>
@@ -135,7 +180,7 @@ const RegisSite = () => {
         {
           sites.map((item, idx) => {
             return (<RegisSiteList
-                key={item.no}
+                key={idx}
                 site={item.site}
                 regionFirst={item.regionFirst}
                 regionLast={item.regionLast}
@@ -146,6 +191,8 @@ const RegisSite = () => {
           })
         }
       </SiteInfoWrap>
+      <div ref={observeTargetRef}/>
+
     </RegisSiteWrap>
   )
 }

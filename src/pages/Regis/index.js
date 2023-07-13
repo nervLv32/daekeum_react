@@ -102,6 +102,8 @@ const Regis = () => {
       .then((res) => {
         const data = [...list, ...res.data]
         setRegis( data )
+        console.log(res.data.length)
+
         if(res.data.length > 0) {
           setTimeout(() => {
             setLoading(false)
@@ -117,12 +119,13 @@ const Regis = () => {
         ...regisParam,
         currentPage: parseInt(regisParam.currentPage) + 1
       })
+      fetchList(regis)
     }
   });
 
   useEffect(() => {
-    fetchList(regis)
-  }, [ regisParam.currentPage ])
+    setRegis([])
+  }, [])
 
   useEffect(() => {
     setLoading(true)
@@ -141,7 +144,6 @@ const Regis = () => {
         searchword: search,
         currentPage: '1`',
       })
-      console.log(search)
     }, 500)
     return () => clearTimeout(debounce)
   }, [search])
