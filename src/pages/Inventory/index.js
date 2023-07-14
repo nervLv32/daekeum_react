@@ -75,7 +75,7 @@ const Inventory = () => {
       .then((res) => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
-        
+
         setInventoryList( data )
         if(temp.length > 0) {
           setTimeout(() => {
@@ -98,7 +98,7 @@ const Inventory = () => {
   }, [isLoading])
 
   return <>
-    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam} />
+    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam()} />
     {
       topMenu && (
         <TopSearchMenu>
