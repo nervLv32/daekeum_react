@@ -124,7 +124,6 @@ const RegisSite = () => {
   }
 
   const fetchList = (list) => {
-    console.log(list)
     fetchService('/enroll/siteList', 'post', siteParam)
       .then((res) => {
         const data = [...list, ...mappingData(res.data)]
