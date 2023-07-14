@@ -177,7 +177,7 @@ const RegisEquipment = () => {
     <RegisTabSearch>
       <RegisTabNavi dep1={selectRegis.client.name} dep2={selectRegis.site.name} dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
         <button className="search-btn" />
       </div>
     </RegisTabSearch>
