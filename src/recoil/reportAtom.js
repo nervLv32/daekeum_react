@@ -16,5 +16,17 @@ export const reportParamAtom = atom({
 
 export const firstExportDocument = atom({
   key: 'firstExportDocument',
-  default: []
+  default: {
+    client: {
+      업체명: '업체명',
+      거래처코드: ''
+    },
+    site: {
+      현장명: '현장명',
+      현장코드: ''
+    },
+    equip : {
+      장비정보 : '장비정보',
+    },
+  }
 })

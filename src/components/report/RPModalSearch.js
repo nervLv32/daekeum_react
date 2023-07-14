@@ -64,7 +64,9 @@ const RPModalSearch = ({ dep1, dep2, dep3, changeParam }) => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     debounce = setTimeout(() => {
-      changeParam('searchword', search)
+      if(changeParam){
+        changeParam('searchword', search)
+      }
     }, 500)
     return () => clearTimeout(debounce)
   }, [search])

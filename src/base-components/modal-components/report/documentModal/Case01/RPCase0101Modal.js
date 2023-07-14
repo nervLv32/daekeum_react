@@ -9,9 +9,10 @@ import RPModalTop from "../../../../../components/report/RPModalTop";
 import { useModal } from "../../../../../hooks/useModal";
 
 import RPCase0102Modal from "./RPCase0102Modal";
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {firstExportDocument, reportAtom, reportParamAtom} from '../../../../../recoil/reportAtom';
 import fetchService from '../../../../../util/fetchService';
+import {aliasToReal} from 'lodash/fp/_mapping';
 
 const RPCase0101ModalWrap = styled.div`
   background-color: #fff;
@@ -20,6 +21,7 @@ const RPCase0101ModalWrap = styled.div`
 
 const RPCase0101Modal = () => {
   const { openModal, closeModal } = useModal();
+  const firstExport = useRecoilValue(firstExportDocument)
 
   const dummyData = [
     {
@@ -100,7 +102,7 @@ const RPCase0101Modal = () => {
   /******* 입출고 서류상신 - 출고요청서(세륜,축중) case 01의 첫 번째 스텝 *******/
   return <RPCase0101ModalWrap>
     <RPModalTop title="출고서류상신" />
-    <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" changeParam={changeParam}/>
+    <RPModalSearch dep1={firstExport.client.업체명} dep2={firstExport.site.현장명} dep3={firstExport.equip.장비정보} changeParam={changeParam}/>
     <RPModalBody>
       <RPModalListTop type="type01" dep1="업체명" dep2="대표자" dep3="사업자번호" />
       {
@@ -112,8 +114,12 @@ const RPCase0101Modal = () => {
     </RPModalBody>
     <RPModalBottom>
       <button className="primary-btn" onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <RPCase0102Modal />})
+        if(firstExport.client.거래처코드 !== '') {
+          closeModal()
+          openModal({ ...modalData, content: <RPCase0102Modal />})
+        }else{
+          alert('업체를 선택하여 주세요.')
+        }
       }}>현장검색</button>
       <button className="del-btn" onClick={closeModal}>취소</button>
     </RPModalBottom>

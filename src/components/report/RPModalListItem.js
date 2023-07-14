@@ -134,21 +134,18 @@ const RPModalListItem = ({ item, type }) => {
   const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
 
   const updateFirstExport = () => {
-    let copy = [...firstExport]
-    if(!isSelected){
-      copy.push({...item})
-    } else {
-      copy = copy.filter(it => it.거래처코드 !== item.거래처코드)
-    }
-    setFirstExport(copy)
-    setIsSelected(prev => !prev)
+    setFirstExport({
+      ...firstExport,
+      client: item
+    })
+    console.log(item)
   }
 
   useEffect(() => {
     if(type === "type01"){
-      setIsSelected(firstExport.filter(it => it.거래처코드 === item.거래처코드).length > 0)
+      setIsSelected(firstExport.client.거래처코드 === item.거래처코드)
     }
-  }, [item])
+  }, [firstExport, item])
 
 
   return <RPModalListItemWrap >
