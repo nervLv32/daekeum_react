@@ -105,11 +105,12 @@ const RegisDKNO = () => {
   const [search, setSearch] = useState(selectRegis.equipment.code)
 
   const fetchList = (list) => {
+    console.log(list)
     fetchService('/enroll/dknoList', 'post', params)
       .then((res) => {
         const data = [...list, ...res.data]
         setDknoList( data )
-        if(res.data.length > 0) {
+        if(res.data.length > 9) {
           setTimeout(() => {
             setLoading(false)
           }, 1000)
@@ -168,7 +169,6 @@ const RegisDKNO = () => {
     <DKNOInfoWrap>
       {
         dknoList.map((item, idx) => {
-          console.log(item)
           return (<RegisDKNOList
             key={idx}
             installCate={item.구분}
