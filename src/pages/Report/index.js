@@ -66,7 +66,11 @@ const Report = () => {
   };
 
   const changeParam = (key, value) => {
-
+    setParams({
+      ...params,
+      currentPage: '1',
+      [key] : value
+    })
   };
 
   const fetchList = (list) => {
