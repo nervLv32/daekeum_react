@@ -133,17 +133,18 @@ const RPModalListItem = ({ item, type }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
 
-  const updateFirstExport = () => {
+  const updateFirstExport = (key) => {
     setFirstExport({
       ...firstExport,
-      client: item
+      [key]: item
     })
-    console.log(item)
   }
 
   useEffect(() => {
     if(type === "type01"){
       setIsSelected(firstExport.client.거래처코드 === item.거래처코드)
+    }else if(type === 'type02'){
+      setIsSelected(firstExport.site.현장코드 === item.현장코드)
     }
   }, [firstExport, item])
 
@@ -152,7 +153,7 @@ const RPModalListItem = ({ item, type }) => {
     {
       // 출고서류상신 1번케이스
       type === "type01" && (
-        <ListItemTop className={`${isSelected ? 'active type01' : 'type01'}`} onClick={() => updateFirstExport()}>
+        <ListItemTop className={`${isSelected ? 'active type01' : 'type01'}`} onClick={() => updateFirstExport('client')}>
           <div className="dep1">{item.업체명}</div>
           <div className="dep2">{item.대표자성명}</div>
           <div className="dep3">{item.사업자번호}</div>
@@ -166,10 +167,10 @@ const RPModalListItem = ({ item, type }) => {
     {
       // 출고서류상신 2번케이스
       type === "type02" && (
-        <ListItemTop className={`${isSelected ? 'active type02' : 'type02'}`} onClick={() => setIsSelected(prev => !prev)}>
-          <div className="dep1">{item.site}</div>
-          <div className="dep2">{item.regionFirst}-{item.regionLast}</div>
-          <div className="dep3">{item.center}</div>
+        <ListItemTop className={`${isSelected ? 'active type02' : 'type02'}`}  onClick={() => updateFirstExport('site')}>
+          <div className="dep1">{item.현장명}</div>
+          <div className="dep2">{item.지역분류}</div>
+          <div className="dep3">{item.담당부서명}</div>
           <div className="icon" onClick={(e) => {
             e.stopPropagation();
             setIsOpen(prev => !prev);
@@ -255,23 +256,23 @@ const RPModalListItem = ({ item, type }) => {
                 <div>
                   <dl>
                     <dt>주소</dt>
-                    <dd>{item.siteAddress}</dd>
+                    <dd>{item.주소}</dd>
                   </dl>
                 </div>
                 <div>
                   <dl>
                     <dt>담당자</dt>
-                    <dd>{item.manager}</dd>
+                    <dd>{item.담당자}</dd>
                   </dl>
                   <dl>
                     <dt>연락처</dt>
-                    <dd>{item.managerPhone}</dd>
+                    <dd>{item.휴대폰}</dd>
                   </dl>
                 </div>
                 <div>
                   <dl>
                     <dt>이메일</dt>
-                    <dd>{item.managerEmail}</dd>
+                    <dd>{item.이메일}</dd>
                   </dl>
                 </div>
               </>
