@@ -102,8 +102,6 @@ const Regis = () => {
       .then((res) => {
         const data = [...list, ...res.data]
         setRegis( data )
-        console.log(res.data.length)
-
         if(res.data.length > 0) {
           setTimeout(() => {
             setLoading(false)

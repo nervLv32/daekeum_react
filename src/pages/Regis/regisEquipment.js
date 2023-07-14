@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 import RegisEquipListModal from "../../base-components/modal-components/regis/RegisEquipListModal";
 import RegisEquipList from "../../components/regis/RegisEquipList";
@@ -66,6 +66,11 @@ const EquipmentInfoWrap = styled(paddingWrap)`
 
 
 const RegisEquipment = () => {
+
+  let debounce = null
+  const [isLoading, setLoading] = useState(false);
+  const observeTargetRef = useRef(null)
+  const [search, setSearch] = useState('')
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
   const [equips, setEquips] = useState([])
   const [equipParam, seEquipParam] = useState({
@@ -83,7 +88,7 @@ const RegisEquipment = () => {
     content: <RegisEquipListModal />,
     callback: () => alert('Modal Callback()'),
   };
-
+/*
   const fetchData = () => {
     console.log(equipParam)
     fetchService('/enroll/equipList', 'post', equipParam)
@@ -92,6 +97,31 @@ const RegisEquipment = () => {
         setEquips(mappingData(res.data))
       })
 
+
+  }*/
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      seEquipParam({
+        ...equipParam,
+        currentPage: parseInt(equipParam.currentPage) + 1
+      })
+      fetchList(equips)
+    }
+  });
+
+  const fetchList = (list) => {
+    fetchService('/enroll/equipList', 'post', equipParam)
+      .then((res) => {
+        const data = [...list, ...mappingData(res.data)]
+        setEquips( data )
+        if(res.data.length > 9) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
     const mappingData = (data) => {
       return data.map(it => {
         return {
@@ -113,10 +143,32 @@ const RegisEquipment = () => {
   }
 
   useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [equipParam.searchword])
+
+  useEffect(() => {
+    debounce = setTimeout(() => {
+      seEquipParam({
+        ...equipParam,
+        searchword: search,
+        currentPage: '1`',
+      })
+    }, 500)
+    return () => clearTimeout(debounce)
+  }, [search])
+
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
+
+  useEffect(() => {
     if(selectRegis.client.code === '' || selectRegis.site.code === '') {
       navigate('/regis')
     }else{
-      fetchData()
+      fetchList([])
     }
   }, [])
 
@@ -147,6 +199,8 @@ const RegisEquipment = () => {
         })
       }
     </EquipmentInfoWrap>
+    <div ref={observeTargetRef}/>
+
   </RegisEquipmentWrap>
 }
 

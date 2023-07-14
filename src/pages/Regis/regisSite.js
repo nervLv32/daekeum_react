@@ -71,12 +71,12 @@ const RegisSite = () => {
 
   const {openModal} = useModal();
 
-  let debounce = null
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
+  let debounce = null
   const [isLoading, setLoading] = useState(false);
-  const [sites, setSite] = useState([]);
   const observeTargetRef = useRef(null)
   const [search, setSearch] = useState('')
+  const [sites, setSite] = useState([]);
   const [siteParam, setSiteParam] = useState({
     거래처코드: selectRegis.client.code,
     searchword: '',
@@ -128,7 +128,6 @@ const RegisSite = () => {
       .then((res) => {
         const data = [...list, ...mappingData(res.data)]
         setSite( data )
-        console.log(res.data.length)
         if(res.data.length > 9) {
           setTimeout(() => {
             setLoading(false)
@@ -137,18 +136,10 @@ const RegisSite = () => {
       })
   }
 
-
-  useEffect(() => {
-    if(selectRegis.client.code === '') {
-      navigate('/regis')
-    }
-  }, [])
-
   useEffect(() => {
     setLoading(true)
     fetchList([])
   }, [siteParam.searchword])
-
 
   useEffect(() => {
     debounce = setTimeout(() => {
@@ -161,10 +152,18 @@ const RegisSite = () => {
     return () => clearTimeout(debounce)
   }, [search])
 
+
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
     return () => onIntersect.disconnect()
   }, [isLoading])
+
+
+  useEffect(() => {
+    if(selectRegis.client.code === '') {
+      navigate('/regis')
+    }
+  }, [])
 
   return (
     <RegisSiteWrap>
