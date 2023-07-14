@@ -68,8 +68,6 @@ const RPCase0101Modal = () => {
   });
 
   const fetchList = (list) => {
-    console.log(params)
-    console.log(list)
     fetchService('/approval/clientList', 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
