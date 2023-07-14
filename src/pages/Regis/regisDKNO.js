@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import RegisDKNOListModal from "../../base-components/modal-components/regis/RegisDKNOListModal";
 import RegisDKNOList from "../../components/regis/RegisDKNOList";
@@ -6,8 +6,9 @@ import RegisTabNavi from "../../components/regis/RegisTabNavi";
 import RegisTapWrap from "../../components/regis/RegisTapWrap";
 import { useModal } from "../../hooks/useModal";
 import {useRecoilState} from "recoil";
-import {selectCompanyAtom} from "../../recoil/regisAtom";
 import {useNavigate} from "react-router-dom";
+import fetchService from "../../util/fetchService";
+import {selectCompanyAtom} from "../../recoil/regisAtom";
 
 const RegisDKNOWrap = styled.div``
 
@@ -92,6 +93,62 @@ const RegisDKNO = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  let debounce = null
+  const observeTargetRef = useRef(null)
+  const [isLoading, setLoading] = useState(false);
+  const [dknoList, setDknoList] = useState([])
+  const [params, setParams] = useState({
+    searchword: selectRegis.equipment.code,
+    pageSize: '10',
+    currentPage: '1',
+  })
+  const [search, setSearch] = useState(selectRegis.equipment.code)
+
+  const fetchList = (list) => {
+    fetchService('/enroll/dknoList', 'post', params)
+      .then((res) => {
+        const data = [...list, ...res.data]
+        setDknoList( data )
+        if(res.data.length > 0) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
+  }
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setParams({
+        ...params,
+        currentPage: parseInt(params.currentPage) + 1
+      })
+      fetchList(dknoList)
+    }
+  });
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [params.searchword])
+
+  useEffect(() => {
+    debounce = setTimeout(() => {
+      setParams({
+        ...params,
+        searchword: search,
+        currentPage: '1`',
+      })
+    }, 500)
+    return () => clearTimeout(debounce)
+  }, [search])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
+
   useEffect(() => {
     if(selectRegis.client.code === '' || selectRegis.site.code === '' || selectRegis.equipment.code === '') {
       navigate('/regis')
@@ -103,29 +160,31 @@ const RegisDKNO = () => {
     <RegisTabSearch>
       <RegisTabNavi dep1={selectRegis.client.name} dep2={selectRegis.site.name} dep3={selectRegis.equipment.name} />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
         <button className="search-btn" />
       </div>
     </RegisTabSearch>
 
     <DKNOInfoWrap>
       {
-        dummyData.map((item, idx) => {
+        dknoList.map((item, idx) => {
+          console.log(item)
           return (<RegisDKNOList
-            key={item.no}
-            installCate={item.installCate}
-            date={item.date}
-            model={item.model}
-            type={item.type}
-            mcno={item.mcno}
-            bolt={item.bolt}
-            direction={item.direction}
+            key={idx}
+            installCate={item.구분}
+            date={item.날짜}
+            model={item.모델명}
+            type={item.매출타입}
+            mcno={item.MCNO}
+            bolt={item.전압}
+            direction={item.방향}
             onClick={() => openModal({ ...modalData, content: <RegisDKNOListModal item={item} /> })}
           />
           )
         })
       }
     </DKNOInfoWrap>
+    <div ref={observeTargetRef}/>
 
   </RegisDKNOWrap>
 }
