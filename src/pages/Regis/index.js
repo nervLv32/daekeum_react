@@ -1,48 +1,50 @@
-import React, {useEffect, useState, useRef} from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
-import RegisListModal from "../../base-components/modal-components/regis/RegisListModal";
-import RegisInfoList from "../../components/regis/RegisInfoList";
-import RegisTabNavi from "../../components/regis/RegisTabNavi";
-import RegisTapWrap from "../../components/regis/RegisTapWrap";
+import React, {useEffect, useRef, useState} from 'react';
+import styled from 'styled-components';
+import RegisListModal from '../../base-components/modal-components/regis/RegisListModal';
+import RegisInfoList from '../../components/regis/RegisInfoList';
+import RegisTabNavi from '../../components/regis/RegisTabNavi';
+import RegisTapWrap from '../../components/regis/RegisTapWrap';
 
-import { useModal } from "../../hooks/useModal";
-import fetchService from "../../util/fetchService";
-import {useRecoilState} from "recoil";
-import {regisAtom, regisParamAtom} from "../../recoil/regisAtom";
-import Floating from "../../components/molecules/Floating";
-import SearchRegionModal from "../../components/global/SearchRegionModal";
-import NewRegisModal from "../../components/global/NewRegisModal";
-import RegisAddNewModal from "../../base-components/modal-components/regis/RegisAddNewModal";
+import {useModal} from '../../hooks/useModal';
+import fetchService from '../../util/fetchService';
+import {useRecoilState} from 'recoil';
+import {regisAtom, regisParamAtom} from '../../recoil/regisAtom';
+import Floating from '../../components/molecules/Floating';
+import RegisAddNewModal from '../../base-components/modal-components/regis/RegisAddNewModal';
 
 
-const RegisWrap = styled.div``
+const RegisWrap = styled.div``;
 
 const RegisTabSearch = styled.div`
-  padding: 45px 30px 15px; 
+  padding: 45px 30px 15px;
   position: relative;
   top: -20px;
   z-index: 1;
   background: #F7F7F7;
   border-radius: 0 0 10px 10px;
+
   .tab-navigation {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+
     li {
       font-family: var(--font-mont);
       font-weight: 400;
       font-size: 10px;
       color: #1c1b1f;
     }
+
     img {
       display: inline-block;
       margin: 0 4px;
     }
   }
+
   .tab-searchwrap {
     display: flex;
     align-items: center;
+
     input {
       height: 28px;
       width: calc(100% - 32px);
@@ -53,13 +55,16 @@ const RegisTabSearch = styled.div`
       font-family: var(--font-mont);
       font-weight: 400;
       font-size: 9px;
+
       &::placeholder {
         color: #9da2ae;
       }
+
       &:focus {
         outline: none;
       }
     }
+
     .search-btn {
       width: 28px;
       height: 28px;
@@ -72,79 +77,79 @@ const RegisTabSearch = styled.div`
       margin-left: 4px;
     }
   }
-`
+`;
 
 const paddingWrap = styled.div`
   padding: 20px 30px 0;
-`
+`;
 
 const CompanyInfoWrap = styled(paddingWrap)`
 
-`
-const RegisInfoListWrap = styled.ul``
+`;
+const RegisInfoListWrap = styled.ul``;
 
 const FloatingWrap = styled.div`
   position: fixed;
   right: 20px;
-  bottom : 100px;
+  bottom: 100px;
   z-index: 100;
-`
+`;
 
 const Regis = () => {
 
-  const { openModal } = useModal();
-  let debounce = null
+  const {openModal} = useModal();
+  let debounce = null;
 
   const modalData = {
     title: 'RegisInfoList Modal',
-    content: <RegisListModal />,
+    content: <RegisListModal/>,
     callback: () => alert('Modal Callback()'),
   };
 
 
-  const observeTargetRef = useRef(null)
+  const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
-  const [regis, setRegis] = useRecoilState(regisAtom)
-  const [regisParam, setRegisParam] = useRecoilState(regisParamAtom)
-  const [search, setSearch] = useState('')
+  const [regis, setRegis] = useRecoilState(regisAtom);
+  const [regisParam, setRegisParam] = useRecoilState(regisParamAtom);
+  const [search, setSearch] = useState('');
 
   const fetchList = (list) => {
     fetchService('/enroll/clientList', 'post', regisParam)
       .then((res) => {
-        const data = [...list, ...res.data]
-        setRegis( data )
-        if(res.data.length > 9) {
+        const data = [...list, ...res.data];
+        setRegis(data);
+        if (res.data.length > 9) {
           setTimeout(() => {
-            setLoading(false)
-          }, 1000)
+            setLoading(false);
+          }, 1000);
         }
-      })
-  }
+      });
+  };
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
-      setLoading(true)
+      setLoading(true);
       setRegisParam({
         ...regisParam,
-        currentPage: parseInt(regisParam.currentPage) + 1
-      })
-      fetchList(regis)
+        currentPage: parseInt(regisParam.currentPage) + 1,
+      });
+      fetchList(regis);
     }
   });
 
   useEffect(() => {
-    setRegis([])
-  }, [])
+    setRegis([]);
+  }, []);
 
   useEffect(() => {
-    setLoading(true)
-    fetchList([])
-  }, [regisParam.searchword])
+    setLoading(true);
+    fetchList([]);
+  }, [regisParam.searchword]);
 
   useEffect(() => {
-    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
-    return () => onIntersect.disconnect()
-  }, [isLoading])
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
+  }, [isLoading]);
 
   useEffect(() => {
     debounce = setTimeout(() => {
@@ -152,19 +157,19 @@ const Regis = () => {
         ...regisParam,
         searchword: search,
         currentPage: '1`',
-      })
-    }, 500)
-    return () => clearTimeout(debounce)
-  }, [search])
+      });
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [search]);
 
 
   return <RegisWrap>
-    <RegisTapWrap title="업체정보" />
+    <RegisTapWrap title="업체정보"/>
     <RegisTabSearch>
-      <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
+      <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보"/>
       <div className="tab-searchwrap">
         <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
-        <button className="search-btn" />
+        <button className="search-btn"/>
       </div>
     </RegisTabSearch>
 
@@ -173,13 +178,13 @@ const Regis = () => {
         {
           regis.map((item, idx) => {
             return (<RegisInfoList
-              key={idx}
-              company={item.업체명}
-              ceo={item.대표자성명}
-              companyNum={item.사업자번호}
-              onClick={() => openModal({ ...modalData, content: <RegisListModal item={item} /> })}
-            />
-            )
+                key={idx}
+                company={item.업체명}
+                ceo={item.대표자성명}
+                companyNum={item.사업자번호}
+                onClick={() => openModal({...modalData, content: <RegisListModal item={item}/>})}
+              />
+            );
           })
         }
       </RegisInfoListWrap>
@@ -187,12 +192,12 @@ const Regis = () => {
     <div ref={observeTargetRef}/>
 
     <FloatingWrap>
-      <Floating onClick={() => openModal({ ...modalData, content: <RegisAddNewModal no={-1} /> })}>
-        <i className="default-icon" />
+      <Floating onClick={() => openModal({...modalData, content: <RegisAddNewModal no={-1}/>})}>
+        <i className="default-icon"/>
       </Floating>
     </FloatingWrap>
 
-  </RegisWrap>
-}
+  </RegisWrap>;
+};
 
-export default Regis
+export default Regis;

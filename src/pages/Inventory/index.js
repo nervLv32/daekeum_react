@@ -29,35 +29,13 @@ const Inventory = () => {
   const [user, setUser] = useRecoilState(userAtom)
 
   const [isLoading, setLoading] = useState(false);
-  const [fetchFlag, setFetchFlag] = useState(false);
-
-  const changeParam = (key, value) => {
-    setInventoryParam({
-      ...inventoryParam,
-      currentPage : '1',
-      [key] : value,
-    })
-  }
 
   const [inventoryParam, setInventoryParam] = useState({
     searchword: '',
-    pageSize: '',
+    pageSize: '10',
     currentPage: '1',
     EmpNo: user.auth.사원코드,
   })
-
-  const mappingItem = (res) => {
-    return res.data ? res.data.map(it => {
-      return {
-        no : it.rownum,
-        part : it.파트,
-        code : it.품목코드,
-        name : it.품명,
-        count : it.재고,
-        standard : it.규격,
-      }
-    }) : []
-  }
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
@@ -66,23 +44,30 @@ const Inventory = () => {
         ...inventoryParam,
         currentPage: parseInt(inventoryParam.currentPage) + 1
       })
-      fetchList(fetchFlag ? [] : inventoryList)
+      fetchList(inventoryList)
     }
   });
 
   const fetchList = (list) => {
     fetchService('/inventory/inventoryList', 'post', inventoryParam)
       .then((res) => {
-        const temp = mappingItem(res)
-        const data = [...list, ...temp]
+        const data = [...list, ...res.data]
 
         setInventoryList( data )
-        if(temp.length > 0) {
+        if(res.data.length > 9) {
           setTimeout(() => {
             setLoading(false)
           }, 1000)
         }
       })
+  }
+
+  const changeParam = (key, value) => {
+    setInventoryParam({
+      ...inventoryParam,
+      currentPage : '1',
+      [key] : value,
+    })
   }
 
   useEffect(() => {
@@ -98,7 +83,7 @@ const Inventory = () => {
   }, [isLoading])
 
   return <>
-    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam()} />
+    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam} />
     {
       topMenu && (
         <TopSearchMenu>

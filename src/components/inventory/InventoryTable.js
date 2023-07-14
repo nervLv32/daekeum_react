@@ -1,10 +1,11 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const InventoryTableWrap = styled.li`
   &:not(:last-child) {
     margin-bottom: 10px;
   }
+
   .table-body-top {
     display: flex;
     align-items: center;
@@ -12,6 +13,7 @@ const InventoryTableWrap = styled.li`
     background-color: #F6F6F6;
     border-radius: 10px 10px 0 0;
     padding: 10px 0;
+
     > div {
       display: flex;
       align-items: center;
@@ -19,8 +21,10 @@ const InventoryTableWrap = styled.li`
       color: #1c1b1f;
       font-weight: 400;
       font-size: 12px;
+
       &:not(:last-child) {
         position: relative;
+
         &::after {
           content: '';
           display: block;
@@ -30,16 +34,19 @@ const InventoryTableWrap = styled.li`
           position: absolute;
           top: 50%;
           right: 0;
-          transform : translateY(-50%);
+          transform: translateY(-50%);
         }
       }
     }
+
     .table-part {
       width: 70px;
     }
+
     .table-code {
       width: calc(45% - 60px);
     }
+
     .table-name {
       width: calc(55% - 60px);
       padding: 0 10px;
@@ -47,10 +54,12 @@ const InventoryTableWrap = styled.li`
       line-height: 1.2;
       word-break: keep-all;
     }
+
     .table-count {
       width: 50px;
     }
   }
+
   .table-body-btm {
     padding: 10px;
     border-radius: 0 0 10px 10px;
@@ -61,21 +70,21 @@ const InventoryTableWrap = styled.li`
     font-family: var(--font-mont);
     color: #1c1b1f;
   }
-`
+`;
 
-const InventoryTable = ({ list }) => {
+const InventoryTable = ({list}) => {
   return (
     <InventoryTableWrap>
-      <div className="table-body-top">
-        <div className="table-part">{list.part}</div>
-        <div className="table-code">{list.code}</div>
-        <div className="table-name">{list.name}</div>
-        <div className="table-count">{list.count}</div>
+      <div className='table-body-top'>
+        <div className='table-part'>{list.파트}</div>
+        <div className='table-code'>{list.품목코드}</div>
+        <div className='table-name'>{list.품명}</div>
+        <div className='table-count'>{list.재고}</div>
       </div>
-      <div className="table-body-btm">
-        <div>규격 {list.standard}</div>
+      <div className='table-body-btm'>
+        <div>규격 {list.규격}</div>
       </div>
     </InventoryTableWrap>
-  )
-}
+  );
+};
 export default InventoryTable;

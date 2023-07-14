@@ -165,14 +165,14 @@ const RegisSite = () => {
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
     return () => onIntersect.disconnect()
-  }, [isLoading])
+  }, [isLoading, onIntersect])
 
 
   useEffect(() => {
     if(selectRegis.client.code === '') {
       navigate('/regis')
     }
-  }, [])
+  }, [selectRegis.client.code, navigate])
 
   return (
     <RegisSiteWrap>
