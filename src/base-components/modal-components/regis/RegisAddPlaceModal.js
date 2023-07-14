@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
+import {useRecoilValue} from "recoil";
+import userAtom from "../../../recoil/userAtom";
+import fetchService from "../../../util/fetchService";
 
 const RegisAddPlaceModalWrap = styled.div`
   max-height: 70vh;
@@ -141,8 +144,54 @@ const ModalBtm = styled.div`
   }
 `
 
-const RegisAddPlaceModal = () => {
+const RegisAddPlaceModal = ({item}) => {
   const { closeModal } = useModal();
+  const user = useRecoilValue(userAtom)
+  const [isEdit, setEdit] = useState(false);
+  const [body, setBody] = useState(item ? item : {
+    거래처코드 : '',
+    현장코드: '',
+    현장명:'',
+    담당자:'',
+    직위:'',
+    휴대폰:'',
+    이메일 :'',
+    전화번호 :'',
+    팩스번호 :'',
+    주소 :'',
+    종료예정일 :'',
+    설치예정일 :'',
+    알림 :'',
+    고객분류 :'',
+    지역분류 :'',
+    현장분류 :'',
+    고객접점:'',
+    담당센터 :'',
+  });
+
+  const updateBody = (key, value) => {
+    setBody({
+      ...body,
+      [key]: value,
+    })
+  }
+
+  const submitBody = () => {
+    const url = `/enroll/${isEdit ? 'siteAdd' : 'siteUpdate'}`
+    console.log(body)
+    fetchService(url, 'post', body).then(res => {
+      console.log(res.data)
+    })
+  }
+
+  useEffect(() => {
+    setBody({
+      ...body,
+      UserInfo : user.auth
+    })
+  }, [])
+
+
   return (
     <RegisAddPlaceModalWrap>
       <div className="modal-top">
@@ -152,77 +201,110 @@ const RegisAddPlaceModal = () => {
         <InputList>
           <li className="full required">
             <p>현장코드</p>
-            <input type="text"  placeholder="현장코드를 입력하세요"/>
+            <input type="text"  placeholder="현장코드를 입력하세요" value={body.현장코드} readOnly={true}/>
           </li>
           <li className="full">
             <p className="red-point">지역분류</p>
-            <input type="text"  placeholder="현장명을 입력하세요"/>
+            <input type="text"  placeholder="현장명을 입력하세요"
+                   value={body.지역분류} onChange={(e) => updateBody('지역분류', e.target.value)}
+            />
           </li>
           <li>
             <p>담당자</p>
-            <input type="text"  placeholder="담당자를 입력하세요"/>
+            <input type="text"  placeholder="담당자를 입력하세요"
+                   value={body.담당자} onChange={(e) => updateBody('담당자', e.target.value)}
+            />
           </li>
           <li>
             <p>직위</p>
-            <input type="text"  placeholder="직위를 입력하세요"/>
+            <input type="text"  placeholder="직위를 입력하세요"
+                   value={body.직위} onChange={(e) => updateBody('직위', e.target.value)}
+            />
           </li>
           <li>
             <p>휴대폰</p>
-            <input type="text"  placeholder="휴대폰을 입력하세요"/>
+            <input type="text"  placeholder="휴대폰을 입력하세요"
+                   value={body.휴대폰} onChange={(e) => updateBody('휴대폰', e.target.value)}
+            />
           </li>
           <li>
             <p>이메일</p>
-            <input type="text"  placeholder="이메일을 입력하세요"/>
+            <input type="text"  placeholder="이메일을 입력하세요"
+                   value={body.이메일} onChange={(e) => updateBody('이메일', e.target.value)}
+            />
           </li>
           <li>
             <p>전화번호</p>
-            <input type="text"  placeholder="전화번호를 입력하세요"/>
+            <input type="text"  placeholder="전화번호를 입력하세요"
+                   value={body.전화번호} onChange={(e) => updateBody('전화번호', e.target.value)}
+            />
           </li>
           <li>
             <p>팩스번호</p>
-            <input type="text"  placeholder="팩스번호를 입력하세요"/>
+            <input type="text"  placeholder="팩스번호를 입력하세요"
+                   value={body.팩스번호} onChange={(e) => updateBody('팩스번호', e.target.value)}
+            />
           </li>
           <li className="full">
             <p>주소</p>
-            <input type="text"  placeholder="주소를 입력하세요"/>
+            <input type="text"  placeholder="주소를 입력하세요"
+                   value={body.주소} onChange={(e) => updateBody('주소', e.target.value)}
+            />
           </li>
           <li>
             <p>종료예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요"/>
+            <input type="text"  placeholder="날짜를 입력하세요"
+                   value={body.종료예정일} onChange={(e) => updateBody('종료예정일', e.target.value)}
+            />
           </li>
           <li>
             <p>설치예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요"/>
+            <input type="text"  placeholder="날짜를 입력하세요"
+                   value={body.설치예정일} onChange={(e) => updateBody('설치예정일', e.target.value)}
+            />
           </li>
           <li>
             <p>알림</p>
-            <input type="text"  placeholder="알림을 입력하세요"/>
+            <input type="text"  placeholder="알림을 입력하세요"
+                   value={body.접속시알림 ? '승인' : '거부'} onChange={(e) => updateBody('접속시알림', e.target.value)}
+            />
           </li>
           <li>
             <p>고객분류</p>
-            <input type="text"  placeholder="고객분류를 입력하세요"/>
+            <input type="text"  placeholder="고객분류를 입력하세요"
+                   value={body.고객분류} onChange={(e) => updateBody('고객분류', e.target.value)}
+            />
           </li>
           <li>
             <p className="red-point">지역분류</p>
-            <input type="text"  placeholder="지역분류를 입력하세요"/>
+            <input type="text"  placeholder="지역분류를 입력하세요"
+                   value={body.지역분류} onChange={(e) => updateBody('지역분류', e.target.value)}
+            />
           </li>
           <li>
             <p className="red-point">현장분류</p>
-            <input type="text"  placeholder="현장분류를 입력하세요"/>
+            <input type="text"  placeholder="현장분류를 입력하세요"
+                   value={body.현장분류} onChange={(e) => updateBody('현장분류', e.target.value)}
+            />
           </li>
           <li>
             <p>고객접점</p>
-            <input type="text"  placeholder="고객접점을 입력하세요"/>
+            <input type="text"  placeholder="고객접점을 입력하세요"
+                   value={body.고객접점} onChange={(e) => updateBody('고객접점', e.target.value)}
+            />
           </li>
           <li>
             <p>담당센터</p>
-            <input type="text"  placeholder="담당센터를 입력하세요"/>
+            <input type="text"  placeholder="담당센터를 입력하세요"
+                   value={body.담당센터} onChange={(e) => updateBody('담당센터', e.target.value)}
+            />
           </li>
         </InputList>
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
+          submitBody()
         closeModal()
         // openModal({ ...modalData, content: <RPC01Step03Modal /> })
       }}>저장</button>

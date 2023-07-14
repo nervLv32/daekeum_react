@@ -220,7 +220,7 @@ const RegisSiteListModal = ({item}) => {
         </button>
         <button className="primary-btn" onClick={() => {
           closeModal()
-          openModal({...modalData, content: <RegisAddPlaceModal/>})
+          openModal({...modalData, content: <RegisAddPlaceModal item={item}/>})
         }}>현장수정
         </button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
