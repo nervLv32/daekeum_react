@@ -141,7 +141,7 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
-        if(temp.length > 0) {
+        if(temp.length > 9) {
           setTimeout(() => {
             setLoading(false)
           }, 1000)

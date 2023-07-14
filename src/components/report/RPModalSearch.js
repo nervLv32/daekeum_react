@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 
 const RPModalSearchWrap = styled.div`
@@ -56,7 +56,19 @@ const RPModalSearchComponent = styled.div`
   }
 `
 
-const RPModalSearch = ({ dep1, dep2, dep3 }) => {
+const RPModalSearch = ({ dep1, dep2, dep3, changeParam }) => {
+
+  const [search, setSearch] = useState('')
+  let debounce = null
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    debounce = setTimeout(() => {
+      changeParam('searchword', search)
+    }, 500)
+    return () => clearTimeout(debounce)
+  }, [search])
+
   return <RPModalSearchWrap>
     <RPModalSearchNavigation>
       <li>{dep1}</li>
@@ -66,7 +78,7 @@ const RPModalSearch = ({ dep1, dep2, dep3 }) => {
       <li>{dep3}</li>
     </RPModalSearchNavigation>
     <RPModalSearchComponent>
-      <input type="text" placeholder="Search" />
+      <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
       <button className="search-btn" />
     </RPModalSearchComponent>
   </RPModalSearchWrap>

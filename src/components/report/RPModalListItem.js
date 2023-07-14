@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
+import {useRecoilState} from 'recoil';
+import {firstExportDocument} from '../../recoil/reportAtom';
 
 const RPModalListItemWrap = styled.div`  `
 
@@ -129,14 +131,34 @@ const ListItemBody = styled.div`
 const RPModalListItem = ({ item, type }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
+
+  const updateFirstExport = () => {
+    let copy = [...firstExport]
+    if(!isSelected){
+      copy.push({...item})
+    } else {
+      copy = copy.filter(it => it.거래처코드 !== item.거래처코드)
+    }
+    setFirstExport(copy)
+    setIsSelected(prev => !prev)
+  }
+
+  useEffect(() => {
+    if(type === "type01"){
+      setIsSelected(firstExport.filter(it => it.거래처코드 === item.거래처코드).length > 0)
+    }
+  }, [item])
+
+
   return <RPModalListItemWrap >
     {
       // 출고서류상신 1번케이스
       type === "type01" && (
-        <ListItemTop className={`${isSelected ? 'active type01' : 'type01'}`} onClick={() => setIsSelected(prev => !prev)}>
-          <div className="dep1">{item.company}</div>
-          <div className="dep2">{item.ceo}</div>
-          <div className="dep3">{item.companyNum}</div>
+        <ListItemTop className={`${isSelected ? 'active type01' : 'type01'}`} onClick={() => updateFirstExport()}>
+          <div className="dep1">{item.업체명}</div>
+          <div className="dep2">{item.대표자성명}</div>
+          <div className="dep3">{item.사업자번호}</div>
           <div className="icon" onClick={(e) => {
             e.stopPropagation();
             setIsOpen(prev => !prev);
@@ -203,27 +225,27 @@ const RPModalListItem = ({ item, type }) => {
                 <div>
                   <dl>
                     <dt>업태</dt>
-                    <dd>{item.sector}</dd>
+                    <dd>{item.업태}</dd>
                   </dl>
                   <dl>
                     <dt>종목</dt>
-                    <dd>{item.category}</dd>
+                    <dd>{item.종목}</dd>
                   </dl>
                 </div>
                 <div>
                   <dl>
                     <dt>주소</dt>
-                    <dd>{item.address}</dd>
+                    <dd>{item.주소}</dd>
                   </dl>
                 </div>
                 <div>
                   <dl>
                     <dt>담당자</dt>
-                    <dd>{item.manager}</dd>
+                    <dd>{item.담당자}</dd>
                   </dl>
                   <dl>
                     <dt>휴대폰번호</dt>
-                    <dd>{item.managerPhone}</dd>
+                    <dd>{item.휴대폰}</dd>
                   </dl>
                 </div>
               </>

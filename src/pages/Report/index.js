@@ -28,17 +28,16 @@ const TopSearchcMenuWrap = styled.ul`
 
 const Report = () => {
   const [topMenu, setTopMenu] = useState(false);
-
   const {openModal} = useModal();
-  const observeTargetRef = useRef(null);
-  const [isLoading, setLoading] = useState(false);
-  const [reports, setReports] = useRecoilState(reportAtom);
-  const [params, setParams] = useRecoilState(reportParamAtom);
-
   const modalData = {
     title: 'RPCase Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
+  const [reports, setReports] = useRecoilState(reportAtom);
+  const [params, setParams] = useRecoilState(reportParamAtom);
 
   const changeParam = (key, value) => {
     setParams({
@@ -86,6 +85,7 @@ const Report = () => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
     return () => onIntersect.disconnect();
   }, [isLoading]);
+
   return <>
     <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
     {
