@@ -32,16 +32,16 @@ const ReportMainTableTopWrap = styled.div`
     }
   }
   .table-top-date {
-    width: 85px;
+    width: 30%;
   }
   .table-top-company {
-    width: calc(100% - 85px - 55px - 70px);
+    width: 30%;
   }
   .table-top-manager {
-    width: 55px;
+    width: 20%;
   }
   .table-top-state {
-    width: 70px;
+    width: 20%;
   }
 `
 

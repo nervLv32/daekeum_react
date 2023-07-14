@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {DateFormat} from '../../util/dateFormat';
 
 const ReportMainTableWrap = styled.li`
   &:not(:last-child) {
@@ -36,16 +37,16 @@ const ReportMainTableWrap = styled.li`
       }
     }
     .table-date {
-      width: 85px;
+      width: 30%;
     }
     .table-company {
-      width: calc(100% - 85px - 55px - 70px);
+      width: 30%;
     }
     .table-manager {
-      width: 55px;
+      width: 20%;
     }
     .table-state {
-      width: 70px;
+      width: 20%;
     }
   }
   .table-body-btm {
@@ -84,24 +85,24 @@ const ReportMainTable = ({ list }) => {
   return (
     <ReportMainTableWrap>
       <div className="table-body-top">
-        <div className="table-date">{list.date}</div>
-        <div className="table-company">{list.company}</div>
-        <div className="table-manager">{list.manager}</div>
-        <div className="table-state">{list.payState}</div>
+        <div className="table-date">{DateFormat(new Date(list.문서생성일)).substr(0,10)}</div>
+        <div className="table-company">{list.거래처명}</div>
+        <div className="table-manager">{list.작성자}</div>
+        <div className="table-state">{list.결재상태}</div>
       </div>
       <div className="table-body-btm">
         <dl className="top-dl">
           <dt>현장명</dt>
-          <dd>{list.site}</dd>
+          <dd>{list.현장명}</dd>
         </dl>
         <dl className="second-dl">
           <dt>부서명</dt>
-          <dd>{list.department}</dd>
+          <dd>{list.부서명}</dd>
         </dl>
         <dl>
           <dt>지역분류</dt>
           <dd>
-            {list.regionFirst}-{list.regionSecond}
+            {list.지역분류}
           </dd>
         </dl>
       </div>
