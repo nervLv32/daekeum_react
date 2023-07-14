@@ -9,6 +9,8 @@ import {useModal} from "../../hooks/useModal";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {selectCompanyAtom} from "../../recoil/regisAtom";
 import fetchService from "../../util/fetchService"
+import Floating from "../../components/molecules/Floating";
+import RegisAddPlaceModal from "../../base-components/modal-components/regis/RegisAddPlaceModal";
 
 const RegisSiteWrap = styled.div``
 
@@ -64,6 +66,13 @@ const paddingWrap = styled.div`
 
 const SiteInfoWrap = styled(paddingWrap)`
 
+`
+
+const FloatingWrap = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom : 100px;
+  z-index: 100;
 `
 
 
@@ -191,6 +200,12 @@ const RegisSite = () => {
         }
       </SiteInfoWrap>
       <div ref={observeTargetRef}/>
+
+      <FloatingWrap>
+        <Floating onClick={() => openModal({...modalData, content: <RegisAddPlaceModal item={null}/>})}>
+          <i className="default-icon" />
+        </Floating>
+      </FloatingWrap>
 
     </RegisSiteWrap>
   )

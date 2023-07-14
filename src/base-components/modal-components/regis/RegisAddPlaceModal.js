@@ -147,7 +147,6 @@ const ModalBtm = styled.div`
 const RegisAddPlaceModal = ({item}) => {
   const { closeModal } = useModal();
   const user = useRecoilValue(userAtom)
-  const [isEdit, setEdit] = useState(false);
   const [body, setBody] = useState(item ? item : {
     거래처코드 : '',
     현장코드: '',
@@ -177,7 +176,7 @@ const RegisAddPlaceModal = ({item}) => {
   }
 
   const submitBody = () => {
-    const url = `/enroll/${isEdit ? 'siteAdd' : 'siteUpdate'}`
+    const url = `/enroll/${item ? 'siteAdd' : 'siteUpdate'}`
     console.log(body)
     fetchService(url, 'post', body).then(res => {
       console.log(res.data)
@@ -195,7 +194,7 @@ const RegisAddPlaceModal = ({item}) => {
   return (
     <RegisAddPlaceModalWrap>
       <div className="modal-top">
-        <h6 className="title">신규현장등록</h6>
+        <h6 className="title">{item ? '현장수정' : '신규현장등록'}</h6>
       </div>
       <div className="modal-body">
         <InputList>

@@ -10,6 +10,10 @@ import { useModal } from "../../hooks/useModal";
 import fetchService from "../../util/fetchService";
 import {useRecoilState} from "recoil";
 import {regisAtom, regisParamAtom} from "../../recoil/regisAtom";
+import Floating from "../../components/molecules/Floating";
+import SearchRegionModal from "../../components/global/SearchRegionModal";
+import NewRegisModal from "../../components/global/NewRegisModal";
+import RegisAddNewModal from "../../base-components/modal-components/regis/RegisAddNewModal";
 
 
 const RegisWrap = styled.div``
@@ -78,6 +82,13 @@ const CompanyInfoWrap = styled(paddingWrap)`
 
 `
 const RegisInfoListWrap = styled.ul``
+
+const FloatingWrap = styled.div`
+  position: fixed;
+  right: 20px;
+  bottom : 100px;
+  z-index: 100;
+`
 
 const Regis = () => {
 
@@ -174,6 +185,13 @@ const Regis = () => {
       </RegisInfoListWrap>
     </CompanyInfoWrap>
     <div ref={observeTargetRef}/>
+
+    <FloatingWrap>
+      <Floating onClick={() => openModal({ ...modalData, content: <RegisAddNewModal no={-1} /> })}>
+        <i className="default-icon" />
+      </Floating>
+    </FloatingWrap>
+
   </RegisWrap>
 }
 

@@ -178,10 +178,9 @@ const RegisAddNewModal = ({no}) => {
   }
 
   const updateRegis = () => {
-    fetchService('/enroll/clientUpdate', 'post',edit)
+    fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post',edit)
       .then((res) => {
         console.log(res.data)
-
       })
   }
 
