@@ -262,7 +262,7 @@ const BtnWrap = styled.div`
   }
 `
 
-const DStep01Modal = ({accountCode}) => {
+const DStep01Modal = () => {
 
   const { openModal, closeModal } = useModal();
 
@@ -278,10 +278,11 @@ const DStep01Modal = ({accountCode}) => {
   const [companyInfo, setCompanyInfo] = useState({});
   const receiptDetail = () => {
     fetchService('/receipt/detail', 'post', {
-      일련번호: accountCode
+      일련번호: journal?.accountCode
     }).then((res) => {
       res?.data && setCompanyInfo(res.data[0]);
       res.data && setJournal({
+        ...journal,
         companyInfo: res.data[0]
       })
     })

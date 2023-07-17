@@ -6,6 +6,8 @@ import ReceiptCheckModal from "./ReceiptCheckModal";
 import { useModal } from "../../hooks/useModal";
 import DStep01Modal from "../../base-components/modal-components/Diary/DStep01Modal";
 import moment from "moment";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../recoil/journalAtom";
 
 const ReceiptCardComponent = styled.li`
   &:not(:last-child) {
@@ -96,6 +98,9 @@ const ReceiptCard = ({
   onClick
 }) => {
 
+  // 업체정보 Recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+
   const { openModal, closeModal } = useModal();
 
   const modalData = {
@@ -122,8 +127,11 @@ const ReceiptCard = ({
               if(state == '접수완료') {
                 openModal({ ...modalData, content: <ReceiptCheckModal /> })
               } else {
-                openModal({ ...modalData, content: <DStep01Modal accountCode={no} /> })
+                openModal({ ...modalData, content: <DStep01Modal /> })
               }
+              setJournal({
+                accountCode: no
+              })
             }}
           >
             <OrderStateBtn state={state} />

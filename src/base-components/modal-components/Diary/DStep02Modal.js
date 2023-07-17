@@ -1,10 +1,12 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep01Modal from './DStep01Modal'
 import DStep03Modal from './DStep03Modal'
+import fetchService from "../../../util/fetchService";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+import moment from "moment";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -184,6 +186,20 @@ const DStep02Modal = () => {
   // 업체정보 Recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
 
+  // 현장상세 가져오기
+  const [site, setSite] = useState();
+  const siteDetail = () => {
+    fetchService('/enroll/siteDetail', 'post', {
+      거래처코드: journal?.companyInfo?.거래처코드,
+      현장코드: journal?.companyInfo?.현장코드
+    }).then((res) => {
+      setSite(res?.data[0])
+    })
+  };
+  useEffect(() => {
+    siteDetail();
+  }, []);
+
   const modalData = {
     title: 'DStep02Modal Modal',
     callback: () => alert('Modal Callback()'),
@@ -214,37 +230,37 @@ const DStep02Modal = () => {
         <dl className="input-info">
           <dt>업체명</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={journal?.companyInfo?.거래처명} disabled />
           </dd>
         </dl>
         <dl className="input-info">
           <dt>현장명</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={site?.현장명} disabled />
           </dd>
         </dl>
         <dl className="input-info">
           <dt>현장담당자</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={site?.담당자} disabled />
           </dd>
         </dl>
         <dl className="input-info w50">
           <dt className="essential">현장 연락처</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={site?.전화번호} disabled />
           </dd>
         </dl>
         <dl className="input-info w50">
           <dt className="essential">현장 담당자 연락처</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={site?.휴대폰} disabled />
           </dd>
         </dl>
         <dl className="input-info w50">
           <dt className="essential">접수일시</dt>
           <dd>
-            <input type="text" className="bg" />
+            <input type="text" className="bg" defaultValue={moment(site?.등록일).format('YYYY-MM-DD')} disabled />
           </dd>
         </dl>
         <dl className="input-info w50">
