@@ -76,8 +76,12 @@ const RPModalSearch = ({ dep1, dep2, dep3, changeParam }) => {
       <li>{dep1}</li>
       <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
       <li>{dep2}</li>
-      <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
-      <li>{dep3}</li>
+      {
+        dep3 && <>
+          <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
+          <li>{dep3}</li>
+        </>
+      }
     </RPModalSearchNavigation>
     <RPModalSearchComponent>
       <input type="text" placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}/>
