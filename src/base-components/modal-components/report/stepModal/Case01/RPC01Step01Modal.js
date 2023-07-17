@@ -10,6 +10,7 @@ import {firstExportDocument} from '../../../../../recoil/reportAtom';
 import fetchService from '../../../../../util/fetchService';
 import {DateFormat} from '../../../../../util/dateFormat';
 import ClientDetail from '../../../../../components/clientDetail';
+import {CommaPrice} from '../../../../../util/commaPrice';
 
 const RPC01Step01ModalWrap = styled.div`
   background-color: #fff;
@@ -252,19 +253,19 @@ const RPC01Step01Modal = () => {
           <li>
             <dl>
               <dt>미수총계</dt>
-              <dd>{clientCurrent.미수총계}</dd>
+              <dd>{CommaPrice(clientCurrent.미수총계)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장미수</dt>
-              <dd>{clientCurrent.현장미수}</dd>
+              <dd>{CommaPrice(clientCurrent.현장미수)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>최종거래일</dt>
-              <dd>{DateFormat(new Date(clientCurrent.최종거래일))}</dd>
+              <dd>{DateFormat(new Date(clientCurrent.최종거래일)).substr(0,10)}</dd>
             </dl>
           </li>
           <li>
