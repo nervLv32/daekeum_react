@@ -8,6 +8,7 @@ import RPC01Step03Modal from './RPC01Step03Modal';
 import OptionSelector from '../../../../../components/optionSelector';
 import fetchService from '../../../../../util/fetchService';
 import SingleDate from '../../../../../components/calander/SingleDate';
+import {DateFormat} from '../../../../../util/dateFormat';
 
 const RPC01Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -298,6 +299,31 @@ const RPC01Step02Modal = () => {
     setBody([...copy]);
   };
 
+  /***** 달력 이벤트 ****/
+  const [isOpenDate, setOpenDate] = useState({
+    flag: false,
+    type: {
+      start: false,
+      end: false,
+    },
+  });
+
+  const submit = (key, value) => {
+    console.log(key)
+    updateBody(key, value);
+    close(key);
+  };
+  const close = () => {
+    console.log(body);
+    setOpenDate({
+      flag: false,
+      type: {
+        start: false,
+        end: false,
+      },
+    });
+  };
+
 
   /***** option 아이템 조회 시작 ****/
   const callData = async (url, param) => {
@@ -337,14 +363,6 @@ const RPC01Step02Modal = () => {
   }, [body]);
   /***** option 아이템 조회 종료 ****/
 
-
-  const [isOpenDate, setOpenDate] = useState({
-    flag : false,
-    type: {
-      start: false,
-      end: false,
-    }
-  });
 
   /******* 출고요청서(세륜, 축중) 케이스의 두번째 *******/
   return <RPC01Step02ModalWrap>
@@ -439,16 +457,23 @@ const RPC01Step02Modal = () => {
               </dd>
             </dl>
             <dl>
-              <dt><button onClick={() => setOpenDate({
-                flag: true,
-                type: {
-                  ...isOpenDate,
-                  start: true
-                }}
-              )}> open </button></dt>
+              <dt>
+                <button onClick={() => setOpenDate({
+                    flag: true,
+                    type: {
+                      ...isOpenDate.type,
+                      start: true,
+                    },
+                  },
+                )}> 시작일
+                </button>
+              </dt>
               <dd className='date-dd'>
-                <input placeholder='항목입력'/>
-
+                <input
+                  value={DateFormat(new Date(body[selectIndex].start)).substr(0, 10)}
+                  placeholder='항목입력'
+                  readOnly={true}
+                />
               </dd>
             </dl>
           </li>
@@ -515,7 +540,14 @@ const RPC01Step02Modal = () => {
       </MemoInputWrap>
 
       {
-        isOpenDate.flag && <SingleDate />
+        isOpenDate.flag && <SingleDate
+          type={
+            isOpenDate.type.start ? 'start' :
+              isOpenDate.type.end ? 'end' : ''
+          }
+          submit={submit}
+          close={close}
+        />
       }
 
       <ModalBtm>

@@ -1,6 +1,7 @@
 import StandardCalendar from '../molecules/calendar/StandardCalendar';
 import styled from 'styled-components';
 import SingleCalendar from '../molecules/calendar/SingleCalendar';
+import {useState} from 'react';
 
 const DailyWrap = styled.div`
   position: fixed;
@@ -76,16 +77,20 @@ const ModalBtm = styled.div`
   }
 `
 
-const SingleDate = () => {
+const SingleDate = ({type, submit, close}) => {
+
+  const [date, setDate] = useState('');
+
+  console.log(type)
   return <DailyWrap>
     <Overlay>
       <Content>
         <ModalBody>
-          <SingleCalendar setRange={() => {}} />
+          <SingleCalendar setDay={setDate} />
         </ModalBody>
         <ModalBtm>
-          <button className="primary-btn" onClick={() => {}}>적용</button>
-          <button className="del-btn" onClick={() => {}}>취소</button>
+          <button className="primary-btn" onClick={() => submit(type, date)}>적용</button>
+          <button className="del-btn" onClick={() => close(type)}>취소</button>
         </ModalBtm>
       </Content>
     </Overlay>

@@ -87,11 +87,11 @@ const StandardCalenderContainer = styled.div`
   }
 `
 
-const StandardCalendar = ({setRange}) => {
+const StandardCalendar = ({setDay}) => {
   const [date, setDate] = useState(new Date())
 
   useEffect(() =>{
-    setRange(date)
+    setDay(date)
   },[date])
 
   return <StandardCalenderContainer>
