@@ -14,7 +14,7 @@ const Index = ({item, updateKey, updateBody, selected, selectIndex}) => {
     value={selected[selectIndex][updateKey] || ''}
     onChange={(e) => {updateBody(updateKey, e.target.value)}}
   >
-    <option value="" disabled selected>{item.length ? '항목선택' : '-'}</option>
+    <option value="" disabled>{item.length ? '항목선택' : '-'}</option>
     {
       item.length && item.map((it, idx) => <option value={it.value} key={idx}> {it.value} </option> )
     }

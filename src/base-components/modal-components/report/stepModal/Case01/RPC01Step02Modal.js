@@ -9,6 +9,7 @@ import OptionSelector from '../../../../../components/optionSelector';
 import fetchService from '../../../../../util/fetchService';
 import SingleDate from '../../../../../components/calander/SingleDate';
 import {DateFormat} from '../../../../../util/dateFormat';
+import TimeSelector from '../../../../../components/timeSelector';
 
 const RPC01Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -200,6 +201,11 @@ const AddEquipWrap = styled.div`
     background-color: #0129ff;
     border-radius: 6px;
     cursor: pointer;
+    &:nth-child(2){
+      border: 1px solid #1F319D;
+      background-color: #f6f6f6;
+      color: #777
+    }
   }
 `;
 const ModalBtm = styled.div`
@@ -309,10 +315,30 @@ const RPC01Step02Modal = () => {
     setBody([...copy]);
   };
 
+  const addBodyList = () => {
+    setBody([...body, {}])
+    setSelectIndex(prev => prev + 1)
+  }
+  const filterBodyList = () => {
+    const filterItem = body[selectIndex]
+    const result = body.filter(it => it !== filterItem)
+    setBody(result)
+    setSelectIndex(prev => prev - 1)
+  }
+
   const getBody = (key) => {
     return body[selectIndex][key];
   };
+  /***** 시간 이벤트 ****/
+  const [isOpenTime, setOpenTime] = useState(false)
 
+  const timeSubmit = () => {
+    timeClose()
+  }
+
+  const timeClose = () => {
+
+  }
   /***** 달력 이벤트 ****/
   const [isOpenDate, setOpenDate] = useState({
     flag: false,
@@ -402,7 +428,7 @@ const RPC01Step02Modal = () => {
           <h6 className='title-text'>계약사항</h6>
           <ul className='list-tab'>
             {
-              body.map((it, key) => <li className={selectIndex === key ? 'active' : ''}> {key + 1} </li>)
+              body.map((it, key) => <li key={key} onClick={() => setSelectIndex(key)} className={selectIndex === key ? 'active' : ''}> {key + 1} </li>)
             }
           </ul>
         </div>
@@ -472,6 +498,7 @@ const RPC01Step02Modal = () => {
                 <input
                   type={'number'}
                   placeholder='항목입력'
+                  value={body[selectIndex]['개월'] || ''}
                   onChange={(e) => updateBody('개월', e.target.value)}
                 />
               </dd>
@@ -538,13 +565,18 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>시간</dt>
               <dd>
-                <input placeholder='항목입력'/>
+                <p
+                  className={body[selectIndex].time ? 'fill' : ''}
+                  onClick={() => setOpenTime(true)}>
+                  {body[selectIndex].time ? body[selectIndex].time : '항목입력'}
+                </p>
               </dd>
             </dl>
           </li>
         </InfoList>
         <AddEquipWrap>
-          <button>장비추가</button>
+          <button onClick={addBodyList}>장비추가</button>
+          { body.length > 1 && <>&nbsp;<button onClick={filterBodyList}>장비삭제</button></> }
         </AddEquipWrap>
       </CustomerStatusWrap>
 
@@ -585,6 +617,10 @@ const RPC01Step02Modal = () => {
           submit={submit}
           close={close}
         />
+      }
+
+      {
+        isOpenTime && <TimeSelector close={timeClose} submit={timeSubmit}/>
       }
 
       <ModalBtm>
