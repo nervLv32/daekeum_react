@@ -87,7 +87,7 @@ const StandardCalenderContainer = styled.div`
   }
 `
 
-const StandardCalendar = ({setDay}) => {
+const SingleCalendar = ({setDay}) => {
   const [date, setDate] = useState(new Date())
 
   useEffect(() =>{
@@ -104,4 +104,4 @@ const StandardCalendar = ({setDay}) => {
   </StandardCalenderContainer>
 }
 
-export default StandardCalendar
+export default SingleCalendar

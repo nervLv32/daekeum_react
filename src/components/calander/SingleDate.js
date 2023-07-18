@@ -81,7 +81,6 @@ const SingleDate = ({type, submit, close}) => {
 
   const [date, setDate] = useState('');
 
-  console.log(type)
   return <DailyWrap>
     <Overlay>
       <Content>

@@ -108,6 +108,16 @@ const InfoList = styled.ul`
         font-weight: 400;
         width: calc(100% - 70px);
         height: 100%;
+        display: flex;
+
+        p {
+          align-self: center;
+          color: #9DA2AE;
+
+          &.fill {
+            color: #1c1b1f
+          }
+        }
 
         &.select-dd {
           position: relative;
@@ -299,22 +309,32 @@ const RPC01Step02Modal = () => {
     setBody([...copy]);
   };
 
+  const getBody = (key) => {
+    return body[selectIndex][key];
+  };
+
   /***** 달력 이벤트 ****/
   const [isOpenDate, setOpenDate] = useState({
     flag: false,
     type: {
       start: false,
       end: false,
+      deli: false
     },
   });
 
   const submit = (key, value) => {
-    console.log(key)
+    if(key === 'end'){
+      const startDate = getBody('start');
+      if (new Date(startDate) >= new Date(value)) {
+        alert('종료일이 시작일보다 빠릅니다.');
+        return false;
+      }
+    }
     updateBody(key, value);
-    close(key);
+    close();
   };
-  const close = () => {
-    console.log(body);
+  const close = (e) => {
     setOpenDate({
       flag: false,
       type: {
@@ -457,23 +477,19 @@ const RPC01Step02Modal = () => {
               </dd>
             </dl>
             <dl>
-              <dt>
-                <button onClick={() => setOpenDate({
+              <dt>시작일</dt>
+              <dd className='date-dd'>
+                <p
+                  className={body[selectIndex].start ? 'fill' : ''}
+                  onClick={() => setOpenDate({
                     flag: true,
                     type: {
                       ...isOpenDate.type,
                       start: true,
                     },
-                  },
-                )}> 시작일
-                </button>
-              </dt>
-              <dd className='date-dd'>
-                <input
-                  value={DateFormat(new Date(body[selectIndex].start)).substr(0, 10)}
-                  placeholder='항목입력'
-                  readOnly={true}
-                />
+                  })}>
+                  {body[selectIndex].start ? DateFormat(new Date(body[selectIndex].start)).substr(0, 10) : '항목입력'}
+                </p>
               </dd>
             </dl>
           </li>
@@ -488,7 +504,17 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>종료일</dt>
               <dd className='date-dd'>
-                <input placeholder='항목입력'/>
+                <p
+                  className={body[selectIndex].end ? 'fill' : ''}
+                  onClick={() => setOpenDate({
+                    flag: true,
+                    type: {
+                      ...isOpenDate.type,
+                      end: true,
+                    },
+                  })}>
+                  {body[selectIndex].end ? DateFormat(new Date(body[selectIndex].end)).substr(0, 10) : '항목입력'}
+                </p>
               </dd>
             </dl>
           </li>
@@ -496,7 +522,17 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>납풉예정일</dt>
               <dd className='date-dd'>
-                <input placeholder='항목입력'/>
+                <p
+                  className={body[selectIndex].deli ? 'fill' : ''}
+                  onClick={() => setOpenDate({
+                    flag: true,
+                    type: {
+                      ...isOpenDate.type,
+                      deli: true,
+                    },
+                  })}>
+                  {body[selectIndex].deli ? DateFormat(new Date(body[selectIndex].deli)).substr(0, 10) : '항목입력'}
+                </p>
               </dd>
             </dl>
             <dl>
@@ -543,7 +579,8 @@ const RPC01Step02Modal = () => {
         isOpenDate.flag && <SingleDate
           type={
             isOpenDate.type.start ? 'start' :
-              isOpenDate.type.end ? 'end' : ''
+              isOpenDate.type.end ? 'end' :
+              isOpenDate.type.deli ? 'deli' : ''
           }
           submit={submit}
           close={close}
