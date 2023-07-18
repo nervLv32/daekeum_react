@@ -41,8 +41,7 @@ const HomeListCard = ({
   no,
   date,
   company,
-  regionFirst,
-  regionSecond,
+  region,
   site,
   onClick
 }) => {
@@ -64,7 +63,7 @@ const HomeListCard = ({
       </dl>
       <dl>
         <dt>지역</dt>
-        <dd>{`${regionFirst}-${regionSecond}`}</dd>
+        <dd>{region}</dd>
       </dl>
     </div>
     <div>

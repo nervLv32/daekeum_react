@@ -6,6 +6,8 @@ import ReceiptCheckModal from "./ReceiptCheckModal";
 import { useModal } from "../../hooks/useModal";
 import DStep01Modal from "../../base-components/modal-components/Diary/DStep01Modal";
 import moment from "moment";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../recoil/journalAtom";
 
 const ReceiptCardComponent = styled.li`
   &:not(:last-child) {
@@ -49,7 +51,42 @@ const ReceiptCardComponent = styled.li`
       }
     }
     .state-wrap {
-      
+      button {
+        padding: 4px 8px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.ready {
+          background-color: #5A55CA;
+          i {
+            background : url('../icons/receipt-ready-icon.png') no-repeat 50% center / cover;
+          }
+        }
+        &.add {
+          background-color: #EA583F;
+          i {
+            background : url('../icons/receipt-add-icon.png') no-repeat 50% center / cover;
+          }
+        }
+        &.done {
+          background-color: #0CA35A;
+          i {
+            background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
+          }
+        }
+        i {
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          margin-right: 4px;
+        }
+        span {
+          color: #FFFFFF;
+          font-size: 10px;
+          font-weight: 700;
+        }
+      }
     }
   }
   .receipt-body {
@@ -96,6 +133,9 @@ const ReceiptCard = ({
   onClick
 }) => {
 
+  // 업체정보 Recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+
   const { openModal, closeModal } = useModal();
 
   const modalData = {
@@ -122,11 +162,20 @@ const ReceiptCard = ({
               if(state == '접수완료') {
                 openModal({ ...modalData, content: <ReceiptCheckModal /> })
               } else {
-                openModal({ ...modalData, content: <DStep01Modal accountCode={no} /> })
+                openModal({ ...modalData, content: <DStep01Modal /> })
               }
+              setJournal({
+                accountCode: no
+              })
             }}
           >
-            <OrderStateBtn state={state} />
+            <button 
+              type="button" 
+              className={state === "접수대기" ? "ready" : state === "접수완료" ? "add" : state === "처리완료" ? "done" : ""}
+            >
+              <i></i>
+              <span>{state}</span>
+            </button>
           </div>
         )
       }
