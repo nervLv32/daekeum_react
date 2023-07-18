@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
 import HomeListCard from "../components/home/HomeListCard";
 import InfoWrap from "../components/atom/InfoWrap";
@@ -6,6 +7,8 @@ import MainBtnWrap from "../components/navigation/item/MainBtnWrap";
 import { NavLink } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
 import DStep01Modal from "../base-components/modal-components/Diary/DStep01Modal";
+import fetchService from "../util/fetchService";
+import moment from 'moment';
 
 const HomeWrap = styled.div`
   width: 100vw;
@@ -52,6 +55,27 @@ const dummyData = [
 ]
 const Home = () => {
 
+  // 고객접수 목록 가져오기
+  const [list, setList] = useState([]);
+  const receiptList = () => {
+    fetchService('/receipt/list', 'post', {
+      searchword: "",
+      pageSize: "4",
+      currentPage: "1",
+      year: "",
+      month: "",
+      dtFrom: "",
+      dtTo: "",
+      지역: "",
+      처리상태: ""
+    }).then((res) => {
+      setList(res?.data);
+    })
+  };
+  useEffect(() => {
+    receiptList()
+  }, [])
+
   return (<>
     <InfoWrap>
       <UserInfo />
@@ -68,15 +92,14 @@ const Home = () => {
         </NavLink>
       </HomeListTitle>
       {
-        dummyData.map((item, key) => {
+        list.map((item, key) => {
           return <HomeListCard
             key={key}
-            no={item.no}
-            date={item.data}
-            company={item.company}
-            regionFirst={item.regionFirst}
-            regionSecond={item.regionSecond}
-            site={item.site}
+            no={item.NO}
+            date={moment(item.날짜).format('YYYY-MM-DD')}
+            company={item.업체명}
+            region={item.지역}
+            site={item.현장명}
           />
         })
       }
