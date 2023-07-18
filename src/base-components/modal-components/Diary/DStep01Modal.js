@@ -268,6 +268,7 @@ const DStep01Modal = () => {
 
   // 업체정보 Recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
+  console.log(journal)
 
   const modalData = {
     title: 'DStep01Modal Modal',
@@ -401,7 +402,7 @@ const DStep01Modal = () => {
                     {
                       equipList.map((item, index) => {
                         return (
-                          <li 
+                          <li
                             className={index === equipActive ? "list-bd on" :" list-bd"}
                             key={index}
                             onClick={() => handleClick(index, item)}
@@ -457,7 +458,7 @@ const DStep01Modal = () => {
         </div>
       </div>
       <BtnWrap>
-        <button 
+        <button
           type="button"
           onClick={() => {
             closeModal()
