@@ -501,7 +501,7 @@ const RPC01Step02Modal = () => {
                                 body={body}
                                 selectedIndex={selectIndex}
                                 depth1={'계약사항'}
-                                depth2={'세부사항'} />
+                                depth2={'전압'} />
               </dd>
             </dl>
             <dl>
@@ -512,7 +512,7 @@ const RPC01Step02Modal = () => {
                                 body={body}
                                 selectedIndex={selectIndex}
                                 depth1={'계약사항'}
-                                depth2={'세부사항'} />
+                                depth2={'방향'} />
               </dd>
             </dl>
           </li>
@@ -554,7 +554,7 @@ const RPC01Step02Modal = () => {
                                 body={body}
                                 selectedIndex={selectIndex}
                                 depth1={'계약사항'}
-                                depth2={'세부사항'} />
+                                depth2={'청구구분'} />
               </dd>
             </dl>
             <dl>
@@ -576,18 +576,18 @@ const RPC01Step02Modal = () => {
           </li>
           <li>
             <dl>
-              <dt>납풉예정일</dt>
+              <dt>납품예정일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body.계약사항[selectIndex].납풉예정일 ? 'fill' : ''}
+                  className={body.계약사항[selectIndex].납품예정일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
                       ...isOpenDate.type,
-                      납풉예정일: true,
+                      납품예정일: true,
                     },
                   })}>
-                  {body.계약사항[selectIndex].납풉예정일 ? DateFormat(new Date(body.계약사항[selectIndex].납풉예정일)).substr(0, 10) : '항목입력'}
+                  {body.계약사항[selectIndex].납품예정일 ? DateFormat(new Date(body.계약사항[selectIndex].납품예정일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -618,7 +618,7 @@ const RPC01Step02Modal = () => {
           type={
             isOpenDate.type.시작일 ? '시작일' :
               isOpenDate.type.종료일 ? '종료일' :
-                isOpenDate.type.납풉예정일 ? '납풉예정일' : ''
+                isOpenDate.type.납품예정일 ? '납품예정일' : ''
           }
           submit={submit}
           close={close}

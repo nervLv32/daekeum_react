@@ -83,7 +83,7 @@ const Index = () => {
       <dt>운송비청구방법</dt>
       <dd>
         <OptionSelectedMemo
-          list={option.shipcond || []}
+          list={option.shipchungu || []}
           updateValue={updateValue}
           body={body}
           depth1={'운송조건'}
