@@ -29,7 +29,9 @@ const Index = ({
       name={depth2}
       className={body[depth1][selectedIndex][depth2] ? 'active' : ''}
       value={body[depth1][selectedIndex][depth2] || ''}
-      onChange={(e) => {updateValue(depth2, e.target.value)}}
+      onChange={(e) => {
+        updateValue(depth2, e.target.value)
+      }}
     >
       <option value="" disabled>{list.length ? '항목선택' : '-'}</option>
       {

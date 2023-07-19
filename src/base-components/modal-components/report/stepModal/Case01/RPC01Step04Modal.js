@@ -1,11 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
 import RPModalTop from '../../../../../components/report/RPModalTop'
 import RPStepDeps from '../../../../../components/report/RPStepDeps'
 import {useModal} from '../../../../../hooks/useModal'
 import RPC01Step03Modal from './RPC01Step03Modal'
-import {useRecoilState} from 'recoil'
-import {exportDocumentBody} from '../../../../../recoil/reportAtom'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
+import userAtom from '../../../../../recoil/userAtom'
+import fetchService from '../../../../../util/fetchService'
 
 const RPC01Step04ModalWrap = styled.div`
   background-color: #fff;
@@ -52,7 +54,7 @@ const InfoList = styled.ul`
     align-items: center;
     justify-content: flex-start;
 
-    input[type="checkbox"] {
+    input[type=checkbox] {
       width: 15px;
       height: 15px;
       margin: 0;
@@ -159,6 +161,8 @@ const RPC01Step04Modal = () => {
 
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(exportDocumentBody)
+  const {auth} = useRecoilValue(userAtom)
+  const {client, site} = useRecoilValue(firstExportDocument)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
@@ -171,7 +175,7 @@ const RPC01Step04Modal = () => {
       신규사업내용: {
         ...body.신규사업내용,
         [key]: value,
-        없음: (key === '특기사항' ? body.신규사업내용.없음 : false ),
+        없음: (key === '특기사항' ? body.신규사업내용.없음 : false),
       },
     })
   }
@@ -190,6 +194,48 @@ const RPC01Step04Modal = () => {
     })
   }
 
+  const submitBody = () => {
+    fetchService('/approval/validateOutRequest', 'post', body)
+      .then(res => {
+        console.log(res)
+        console.log(res.msg)
+        console.log(body)
+        if(res.valid){
+          fetchService('/approval/approvalOutRequest', 'post', body)
+            .then(res => {
+              console.log(res)
+            })
+        }
+      })
+  }
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      setBody({
+        ...body,
+        UserInfo: {
+          DeptCd: auth.부서코드,
+          DeptNm: auth.부서명,
+          EmpNm: auth.한글이름,
+          EmpNo: auth.사원코드,
+          회사코드: auth.회사코드,
+          DIV_CD: auth.DIV_CD,
+          usergwid: auth.usergwid
+        },
+        거래처현황: {
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
+        },
+        거래처세부: {
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
+        }
+      })
+    }
+
+    fetchData()
+
+  }, [])
+
   /******* 출고요청서(세륜, 축중) 케이스의 네번째 *******/
   return <RPC01Step04ModalWrap>
     <RPModalTop title='출고요청서'/>
@@ -206,6 +252,7 @@ const RPC01Step04Modal = () => {
       <CustomerStatusWrap>
         <div className='title-wrap'>
           <h6 className='title-text'>신규사업내용</h6>
+          <button onClick={() => console.log(body)}> check data </button>
         </div>
         <InfoList>
           <li>
@@ -259,7 +306,7 @@ const RPC01Step04Modal = () => {
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          console.log(body)
+          submitBody()
           // closeModal()
           // FIX: 서류 상신 api
         }}>서류상신

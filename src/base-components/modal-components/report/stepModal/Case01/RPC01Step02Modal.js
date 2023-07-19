@@ -400,8 +400,12 @@ const RPC01Step02Modal = () => {
       setOptions(res)
     })
   }, [body])
-  /***** option 아이템 조회 종료 ****/
 
+  useEffect(() => {
+    updateBody('일시불', '일시불')
+    updateBody('금액', '10000')
+  }, [body.계약사항.length])
+  /***** option 아이템 조회 종료 ****/
 
   /******* 출고요청서(세륜, 축중) 케이스의 두번째 *******/
   return <RPC01Step02ModalWrap>
