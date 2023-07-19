@@ -1,6 +1,6 @@
-import Picker from 'react-scrollable-picker';
-import styled from 'styled-components';
-import {useState, useEffect} from 'react';
+import Picker from 'react-scrollable-picker'
+import styled from 'styled-components'
+import {useEffect, useState} from 'react'
 
 const YearWrap = styled.div`
   position: fixed;
@@ -14,7 +14,7 @@ const YearWrap = styled.div`
 const Overlay = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0, 0, 0, .5);
 `
 const Content = styled.div`
   position: absolute;
@@ -25,7 +25,7 @@ const Content = styled.div`
   border-radius: 20px 20px 0px 0px;
   background-color: #f7f7f7;
   flex-direction: column;
- `
+`
 const ModalBody = styled.div`
   width: 100%;
   max-height: 400px;
@@ -43,22 +43,26 @@ const ModalBtm = styled.div`
   left: 0;
   width: 100%;
   z-index: 10;
+
   & > *:not(:last-child) {
-      margin-right: 10px;
-    }
+    margin-right: 10px;
+  }
+
   > button {
     cursor: pointer;
     width: calc(50% - 5px);
   }
+
   .primary-btn {
     height: 34px;
     padding: 0 30px;
     font-size: 14px;
     font-weight: 700;
-    background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
     border-radius: 10px;
     color: #fff;
   }
+
   .del-btn {
     padding: 0 15px;
     height: 34px;
@@ -76,23 +80,23 @@ const ModalBtm = styled.div`
 
 const Index = ({close, submit}) => {
 
-  const hour = Array.from({length: 24}, (_, i) => i + 1);
-  const min = Array.from({length: 59}, (_, i) => i);
+  const hour = Array.from({length: 24}, (_, i) => i + 1)
+  const min = Array.from({length: 59}, (_, i) => i)
   const [range, setRange] = useState({
     hour: new Date().getHours(),
-    minute: new Date().getMinutes()
-  });
+    minute: new Date().getMinutes(),
+  })
   const optionGroups = {
-    hour: hour.map((i) => ({ value: i, label: i })),
-    minute: min.map(i => ({value: i , label: i}))
-  };
+    hour: hour.map((i) => ({value: i, label: i})),
+    minute: min.map(i => ({value: i, label: i})),
+  }
 
   const handleChange = (name, value) => {
     setRange({
       ...range,
-      [name]: value
-    });
-  };
+      [name]: value,
+    })
+  }
 
   console.log(new Date().getHours())
 
@@ -101,13 +105,13 @@ const Index = ({close, submit}) => {
     position: fixed;
     top: -${window.scrollY}px;
     overflow-y: scroll;
-    width: 100%;`;
+    width: 100%;`
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
-  }, []);
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
   useEffect(() => {
     console.log(range)
@@ -120,7 +124,7 @@ const Index = ({close, submit}) => {
     closeModal()
   }
 
-  return<YearWrap>
+  return <YearWrap>
     <Overlay>
       <Content>
         <ModalBody>
@@ -131,8 +135,8 @@ const Index = ({close, submit}) => {
           />
         </ModalBody>
         <ModalBtm>
-          <button className="primary-btn" onClick={submitData}>적용</button>
-          <button className="del-btn" onClick={closeModal}>취소</button>
+          <button className='primary-btn' onClick={submitData}>적용</button>
+          <button className='del-btn' onClick={closeModal}>취소</button>
         </ModalBtm>
       </Content>
     </Overlay>

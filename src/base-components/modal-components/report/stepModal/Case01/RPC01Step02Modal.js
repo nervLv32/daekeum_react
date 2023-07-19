@@ -1,15 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
-import RPModalTop from '../../../../../components/report/RPModalTop';
-import RPStepDeps from '../../../../../components/report/RPStepDeps';
-import {useModal} from '../../../../../hooks/useModal';
-import RPC01Step01Modal from './RPC01Step01Modal';
-import RPC01Step03Modal from './RPC01Step03Modal';
-import OptionSelector from '../../../../../components/optionSelector';
-import fetchService from '../../../../../util/fetchService';
-import SingleDate from '../../../../../components/calander/SingleDate';
-import {DateFormat} from '../../../../../util/dateFormat';
-import TimeSelector from '../../../../../components/timeSelector';
+import React, {useEffect, useState} from 'react'
+import styled from 'styled-components'
+import RPModalTop from '../../../../../components/report/RPModalTop'
+import RPStepDeps from '../../../../../components/report/RPStepDeps'
+import {useModal} from '../../../../../hooks/useModal'
+import RPC01Step01Modal from './RPC01Step01Modal'
+import RPC01Step03Modal from './RPC01Step03Modal'
+import OptionSelector from '../../../../../components/optionSelector'
+import fetchService from '../../../../../util/fetchService'
+import SingleDate from '../../../../../components/calander/SingleDate'
+import {DateFormat} from '../../../../../util/dateFormat'
+import TimeSelector from '../../../../../components/timeSelector'
+import RPCMemoInput from '../../../../../components/RPCMemoInput'
+import {useRecoilState} from 'recoil'
+import {firstExportDocuBody} from '../../../../../recoil/reportAtom'
 
 const RPC01Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -17,11 +20,11 @@ const RPC01Step02ModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
   width: 100%;
-`;
+`
 const RPC01Step02ModalBody = styled.div`
   overflow-y: scroll;
   padding-bottom: 70px;
-`;
+`
 const CustomerStatusWrap = styled.div`
   background-color: #ebecef;
 
@@ -67,7 +70,7 @@ const CustomerStatusWrap = styled.div`
       }
     }
   }
-`;
+`
 const InfoList = styled.ul`
   background-color: #fff;
 
@@ -185,7 +188,7 @@ const InfoList = styled.ul`
       }
     }
   }
-`;
+`
 const AddEquipWrap = styled.div`
   padding: 13px 30px;
   background-color: #EBECEF;
@@ -201,13 +204,14 @@ const AddEquipWrap = styled.div`
     background-color: #0129ff;
     border-radius: 6px;
     cursor: pointer;
-    &:nth-child(2){
+
+    &:nth-child(2) {
       border: 1px solid #1F319D;
       background-color: #f6f6f6;
       color: #777
     }
   }
-`;
+`
 const ModalBtm = styled.div`
   padding: 17px 30px;
   background-color: #f7f7f7;
@@ -253,43 +257,14 @@ const ModalBtm = styled.div`
     color: #1c1b1f;
     background-color: #fff;
   }
-`;
-const MemoInputWrap = styled.div`
-  dl {
-    border-bottom: 1px solid #ebecef;
-    padding: 14px 30px 10px;
-
-    dt {
-      margin-bottom: 8px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #1c1b1f;
-    }
-
-    dd {
-      input {
-        width: 100%;
-        box-sizing: border-box;
-        border: 1px solid #d9d9d9;
-        height: 30px;
-        padding-left: 4px;
-        font-weight: 500;
-        font-size: 12px;
-
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-  }
-`;
+`
 
 const RPC01Step02Modal = () => {
 
-  const {openModal, closeModal} = useModal();
+  const {openModal, closeModal} = useModal()
   /***** 사업구분 -> 매출타입 -> 장비구분 -> 기종명 -> 세부사항 ****/
-  const [body, setBody] = useState([{}]);
-  const [selectIndex, setSelectIndex] = useState(0);
+  const [body, setBody] = useRecoilState(firstExportDocuBody)
+  const [selectIndex, setSelectIndex] = useState(0)
   const [options, setOptions] = useState({
     business: [],
     sale: [],
@@ -299,21 +274,21 @@ const RPC01Step02Modal = () => {
     volt: [],
     direction: [],
     chungType: [],
-  });
+  })
 
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
-  };
+  }
 
 
   /***** body 데이터 업데이트 ****/
   const updateBody = (key, value) => {
-    let copy = [...body];
-    copy[selectIndex] = {...copy[selectIndex], [key]: value};
-    setBody([...copy]);
-  };
+    let copy = [...body]
+    copy[selectIndex] = {...copy[selectIndex], [key]: value}
+    setBody([...copy])
+  }
 
   const addBodyList = () => {
     setBody([...body, {}])
@@ -327,8 +302,8 @@ const RPC01Step02Modal = () => {
   }
 
   const getBody = (key) => {
-    return body[selectIndex][key];
-  };
+    return body[selectIndex][key]
+  }
   /***** 시간 이벤트 ****/
   const [isOpenTime, setOpenTime] = useState(false)
 
@@ -345,21 +320,21 @@ const RPC01Step02Modal = () => {
     type: {
       start: false,
       end: false,
-      deli: false
+      deli: false,
     },
-  });
+  })
 
   const submit = (key, value) => {
-    if(key === 'end'){
-      const startDate = getBody('start');
+    if (key === 'end') {
+      const startDate = getBody('start')
       if (new Date(startDate) >= new Date(value)) {
-        alert('종료일이 시작일보다 빠릅니다.');
-        return false;
+        alert('종료일이 시작일보다 빠릅니다.')
+        return false
       }
     }
-    updateBody(key, value);
-    close();
-  };
+    updateBody(key, value)
+    close()
+  }
   const close = (e) => {
     setOpenDate({
       flag: false,
@@ -367,19 +342,19 @@ const RPC01Step02Modal = () => {
         start: false,
         end: false,
       },
-    });
-  };
+    })
+  }
 
 
   /***** option 아이템 조회 시작 ****/
   const callData = async (url, param) => {
-    const res = await fetchService(`/approval/${url}`, 'post', param);
-    return res.data;
+    const res = await fetchService(`/approval/${url}`, 'post', param)
+    return res.data
     // .then((res) => setOptions({...options, [key] : res.data}) )
-  };
+  }
 
   const fetchData = async () => {
-    let copy = {...options};
+    let copy = {...options}
     if (!copy.business.length) {
       copy = {
         ...copy,
@@ -389,7 +364,7 @@ const RPC01Step02Modal = () => {
         volt: await callData('comboVolt', {}), // [6] 전압 아이템 조회
         direction: await callData('comboDirection', {}), // [7] 방향 아이템 조회
         chungType: await callData('comboChunguType', {}), // [8] 청구구분 아이템 조회
-      };
+      }
     }
 
     if (body[selectIndex].사업구분) {
@@ -397,16 +372,16 @@ const RPC01Step02Modal = () => {
         ...copy,
         eqName: await callData('comboEquipName', {bizVal: body[selectIndex].사업구분}), // [4] 기종명 아이템 조회
         detail: await callData('comboEtcDetail', {bizVal: body[selectIndex].사업구분}), // [5] 세부사항 아이템 조회
-      };
+      }
     }
-    return copy;
-  };
+    return copy
+  }
 
   useEffect(() => {
     fetchData().then((res) => {
-      setOptions(res);
-    });
-  }, [body]);
+      setOptions(res)
+    })
+  }, [body])
   /***** option 아이템 조회 종료 ****/
 
 
@@ -428,7 +403,8 @@ const RPC01Step02Modal = () => {
           <h6 className='title-text'>계약사항</h6>
           <ul className='list-tab'>
             {
-              body.map((it, key) => <li key={key} onClick={() => setSelectIndex(key)} className={selectIndex === key ? 'active' : ''}> {key + 1} </li>)
+              body.map((it, key) => <li key={key} onClick={() => setSelectIndex(key)}
+                                        className={selectIndex === key ? 'active' : ''}> {key + 1} </li>)
             }
           </ul>
         </div>
@@ -576,43 +552,20 @@ const RPC01Step02Modal = () => {
         </InfoList>
         <AddEquipWrap>
           <button onClick={addBodyList}>장비추가</button>
-          { body.length > 1 && <>&nbsp;<button onClick={filterBodyList}>장비삭제</button></> }
+          {body.length > 1 && <>&nbsp;
+            <button onClick={filterBodyList}>장비삭제</button>
+          </>}
         </AddEquipWrap>
       </CustomerStatusWrap>
 
-      <MemoInputWrap>
-        <dl>
-          <dt>운송비조건</dt>
-          <dd>
-            <input/>
-          </dd>
-        </dl>
-        <dl>
-          <dt>운송비청구방법</dt>
-          <dd>
-            <input/>
-          </dd>
-        </dl>
-        <dl>
-          <dt>운송비</dt>
-          <dd>
-            <input/>
-          </dd>
-        </dl>
-        <dl>
-          <dt>특기사항</dt>
-          <dd>
-            <input/>
-          </dd>
-        </dl>
-      </MemoInputWrap>
+      <RPCMemoInput/>
 
       {
         isOpenDate.flag && <SingleDate
           type={
             isOpenDate.type.start ? 'start' :
               isOpenDate.type.end ? 'end' :
-              isOpenDate.type.deli ? 'deli' : ''
+                isOpenDate.type.deli ? 'deli' : ''
           }
           submit={submit}
           close={close}
@@ -625,18 +578,18 @@ const RPC01Step02Modal = () => {
 
       <ModalBtm>
         <button className='del-btn' onClick={() => {
-          closeModal();
-          openModal({...modalData, content: <RPC01Step01Modal/>});
+          closeModal()
+          openModal({...modalData, content: <RPC01Step01Modal/>})
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          closeModal();
-          openModal({...modalData, content: <RPC01Step03Modal/>});
+          closeModal()
+          openModal({...modalData, content: <RPC01Step03Modal/>})
         }}>다음
         </button>
       </ModalBtm>
     </RPC01Step02ModalBody>
-  </RPC01Step02ModalWrap>;
-};
+  </RPC01Step02ModalWrap>
+}
 
-export default RPC01Step02Modal;
+export default RPC01Step02Modal
