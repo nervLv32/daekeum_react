@@ -4,7 +4,7 @@ import fetchService from '../../util/fetchService'
 import OptionSelectedMemo from '../optionSelector/OptionSelectorMemo'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {firstExportDocuBody, shipCondBody} from '../../recoil/reportAtom'
-import {CommaPrice} from '../../util/commaPrice'
+import {CommaPrice, CommaPriceRegis} from '../../util/commaPrice'
 
 const MemoInputWrap = styled.div`
   dl {
@@ -83,8 +83,8 @@ const Index = () => {
     <dl>
       <dt>운송비</dt>
       <dd>
-        <input type={'text'} value={shipBody.운송비 || ''}
-               onChange={e => setShipBody({...shipBody, 운송비: e.target.value})}/>
+        <input type={'text'} value={CommaPriceRegis(shipBody.운송비 || '')}
+               onChange={e => setShipBody({...shipBody, 운송비: (e.target.value).toString().replaceAll(',','')})}/>
       </dd>
     </dl>
     <dl>
