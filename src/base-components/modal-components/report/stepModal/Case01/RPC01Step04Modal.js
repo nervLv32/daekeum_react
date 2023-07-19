@@ -6,6 +6,8 @@ import { useModal } from "../../../../../hooks/useModal";
 import RPC01Step01Modal from "./RPC01Step01Modal";
 import RPC01Step02Modal from "./RPC01Step02Modal";
 import RPC01Step03Modal from "./RPC01Step03Modal";
+import {useRecoilValue} from 'recoil'
+import {exportDocumentBody} from '../../../../../recoil/reportAtom'
 
 const RPC01Step04ModalWrap = styled.div`
   background-color: #fff;
@@ -142,6 +144,7 @@ const ModalBtm = styled.div`
 const RPC01Step04Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const body = useRecoilValue(exportDocumentBody)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
@@ -156,7 +159,7 @@ const RPC01Step04Modal = () => {
       dep1title="거래처현황 세부정보"
       dep2title="계약사항"
       dep3title="결제조건"
-      dep4title="신규사업"
+      dep4title={body.신규사업여부}
     />
     {/* 거래처 현황 */}
     <RPC01Step04ModalBody>

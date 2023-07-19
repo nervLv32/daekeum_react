@@ -10,9 +10,9 @@ import TopSearchMenu from '../../components/molecules/TopSearchMenu';
 import ReportMainTable from '../../components/report/ReportMainTable';
 import ReportMainTableTop from '../../components/report/ReportMainTableTop';
 import {useModal} from '../../hooks/useModal';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useResetRecoilState, useSetRecoilState} from 'recoil'
 import fetchService from '../../util/fetchService';
-import {reportAtom, reportParamAtom} from '../../recoil/reportAtom';
+import {exportDocumentBody, firstExportDocument, reportAtom, reportParamAtom} from '../../recoil/reportAtom'
 
 const ReportWrap = styled.div`
   padding: 28px 30px 0;
@@ -38,6 +38,9 @@ const Report = () => {
   const [isLoading, setLoading] = useState(false);
   const [reports, setReports] = useRecoilState(reportAtom);
   const [params, setParams] = useRecoilState(reportParamAtom);
+  const setBody = useSetRecoilState(exportDocumentBody)
+  const resetBody = useResetRecoilState(exportDocumentBody)
+  const resetFirstDocument = useResetRecoilState(firstExportDocument)
 
   const changeParam = (key, value) => {
     setParams({
@@ -92,7 +95,12 @@ const Report = () => {
         <TopSearchMenu>
           <TopSearchcMenuWrap>
             <li>
-              <a onClick={() => openModal({...modalData, content: <RPCase0101Modal/>})}>
+              <a onClick={() =>{
+                resetBody()
+                resetFirstDocument()
+                setBody(prev => {return {...prev, 신규사업여부:false}})
+                openModal({...modalData, content: <RPCase0101Modal/>})
+              }}>
                 <i>
                   <img src='../icons/icon-topmenu-outbox.png' alt='topmenu icon'/>
                 </i>
@@ -100,7 +108,12 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <a onClick={() => openModal({...modalData, content: <RPCase0201Modal/>})}>
+              <a onClick={() =>{
+                resetBody()
+                resetFirstDocument()
+                setBody(prev => {return {...prev, 신규사업여부:true}})
+                openModal({...modalData, content: <RPCase0101Modal/>})
+              }}>
                 <i>
                   <img src='../icons/icon-topmenu-outbox.png' alt='topmenu icon'/>
                 </i>

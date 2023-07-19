@@ -6,7 +6,7 @@ import {useModal} from '../../../../../hooks/useModal';
 import RPCase0102Modal from '../../documentModal/Case01/RPCase0102Modal';
 import RPC01Step02Modal from './RPC01Step02Modal';
 import {useRecoilValue} from 'recoil';
-import {firstExportDocument} from '../../../../../recoil/reportAtom';
+import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
 import fetchService from '../../../../../util/fetchService';
 import {DateFormat} from '../../../../../util/dateFormat';
 import ClientDetail from '../../../../../components/clientDetail';
@@ -162,6 +162,7 @@ const ModalBtm = styled.div`
 const RPC01Step01Modal = () => {
 
   const {openModal, closeModal} = useModal();
+  const body = useRecoilValue(exportDocumentBody)
   const [clientCurrent, setClientCurrent] = useState({
     거래처코드: '',
     업체명: '',
@@ -215,7 +216,7 @@ const RPC01Step01Modal = () => {
       dep1title='거래처현황 세부정보'
       dep2title='계약사항'
       dep3title='결제조건'
-      dep4title='신규사업'
+      dep4title={body.신규사업여부}
     />
     {/* 거래처 현황 */}
     <RPC01Step01ModalBody>

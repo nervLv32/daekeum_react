@@ -253,7 +253,7 @@ const RPC01Step03Modal = () => {
         dep1title='거래처현황 세부정보'
         dep2title='계약사항'
         dep3title='결제조건'
-        dep4title='신규사업'
+        dep4title={body.신규사업여부}
       /></>
     {/* 거래처 현황 */}
     <RPC01Step03ModalBody>

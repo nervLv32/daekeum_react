@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import {useRecoilValue} from 'recoil'
+import {exportDocumentBody} from '../../recoil/reportAtom'
 
 const RPStepDepsWrap = styled.div`
   background-color: #f6f6f6;
@@ -74,6 +76,7 @@ const RPStepDepsWrap = styled.div`
 `
 
 const RPStepDeps = ({ dep, dep1title, dep2title, dep3title, dep4title }) => {
+
   return <RPStepDepsWrap>
     <ul>
       <li className={dep === "dep1" ? 'active' : ''}>
@@ -90,11 +93,15 @@ const RPStepDeps = ({ dep, dep1title, dep2title, dep3title, dep4title }) => {
         <i>3</i>
         <p>{dep3title}</p>
       </li>
-      <span className="bar"></span>
-      <li className={dep === "dep4" ? 'active' : ''}>
-        <i>4</i>
-        <p>{dep4title}</p>
-      </li>
+      {
+        dep4title && <>
+          <span className="bar"></span>
+          <li className={dep === "dep4" ? 'active' : ''}>
+            <i>4</i>
+            <p>신규사업</p>
+          </li>
+        </>
+      }
     </ul>
   </RPStepDepsWrap>
 }
