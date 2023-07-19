@@ -65,7 +65,6 @@ const RPCase0102Modal = () => {
       .then((res) => {
         const data = [...list, ...res.data];
         setSites(data);
-        console.log(data)
         if (res.data.length > 9) {
           setTimeout(() => {
             setLoading(false);

@@ -61,3 +61,21 @@ export const shipCondBody = atom({
     특기사항: '',
   },
 })
+
+export const payHow = atom({
+  key: 'payHow',
+  default: {
+    결제방법: '',
+    개월: '',
+    메일: '',
+    담당자: '',
+    연락처: '',
+    결제처: '',
+    수신: '',
+    일시불: '',
+    계약서: '',
+    청구일: '',
+    결제일: '',
+    특기사항: ''
+  }
+})

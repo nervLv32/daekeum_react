@@ -4,7 +4,7 @@ import fetchService from '../../util/fetchService'
 import OptionSelectedMemo from '../optionSelector/OptionSelectorMemo'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {firstExportDocuBody, shipCondBody} from '../../recoil/reportAtom'
-import {CommaPrice, CommaPriceRegis} from '../../util/commaPrice'
+import {CommaPriceRegis} from '../../util/commaPrice'
 
 const MemoInputWrap = styled.div`
   dl {
@@ -54,7 +54,7 @@ const Index = () => {
     })
   }
   useEffect(() => {
-    optionFetch().then(res => console.log(''))
+    optionFetch()
   }, [body])
 
   return <MemoInputWrap>
@@ -94,10 +94,6 @@ const Index = () => {
                onChange={e => setShipBody({...shipBody, 특기사항: e.target.value})}/>
       </dd>
     </dl>
-    {/*<button onClick={() => {
-      console.log(body)
-      console.log(shipBody)
-    }}> data check </button>*/}
   </MemoInputWrap>
 }
 

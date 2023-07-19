@@ -321,15 +321,15 @@ const RPC01Step02Modal = () => {
   const [isOpenDate, setOpenDate] = useState({
     flag: false,
     type: {
-      start: false,
-      end: false,
-      deli: false,
+      시작일: false,
+      종료일: false,
+      납품예정일: false,
     },
   })
 
   const submit = (key, value) => {
-    if (key === 'end') {
-      const startDate = getBody('start')
+    if (key === '종료일') {
+      const startDate = getBody('시작일')
       if (new Date(startDate) >= new Date(value)) {
         alert('종료일이 시작일보다 빠릅니다.')
         return false
@@ -344,6 +344,7 @@ const RPC01Step02Modal = () => {
       type: {
         start: false,
         end: false,
+        deli: false,
       },
     })
   }
@@ -486,15 +487,15 @@ const RPC01Step02Modal = () => {
               <dt>시작일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].start ? 'fill' : ''}
+                  className={body[selectIndex].시작일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
                       ...isOpenDate.type,
-                      start: true,
+                      시작일: true,
                     },
                   })}>
-                  {body[selectIndex].start ? DateFormat(new Date(body[selectIndex].start)).substr(0, 10) : '항목입력'}
+                  {body[selectIndex].시작일 ? DateFormat(new Date(body[selectIndex].시작일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -503,7 +504,7 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>청구구분</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.chungType || []} updateKey={'chungType'} updateBody={updateBody}
+                <OptionSelector item={options.chungType || []} updateKey={'청구구분'} updateBody={updateBody}
                                 selected={body} selectIndex={selectIndex}/>
               </dd>
             </dl>
@@ -511,15 +512,15 @@ const RPC01Step02Modal = () => {
               <dt>종료일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].end ? 'fill' : ''}
+                  className={body[selectIndex].종료일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
                       ...isOpenDate.type,
-                      end: true,
+                      종료일: true,
                     },
                   })}>
-                  {body[selectIndex].end ? DateFormat(new Date(body[selectIndex].end)).substr(0, 10) : '항목입력'}
+                  {body[selectIndex].종료일 ? DateFormat(new Date(body[selectIndex].종료일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -529,15 +530,15 @@ const RPC01Step02Modal = () => {
               <dt>납풉예정일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].deli ? 'fill' : ''}
+                  className={body[selectIndex].납풉예정일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
                       ...isOpenDate.type,
-                      deli: true,
+                      납풉예정일: true,
                     },
                   })}>
-                  {body[selectIndex].deli ? DateFormat(new Date(body[selectIndex].deli)).substr(0, 10) : '항목입력'}
+                  {body[selectIndex].납풉예정일 ? DateFormat(new Date(body[selectIndex].납풉예정일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -566,9 +567,9 @@ const RPC01Step02Modal = () => {
       {
         isOpenDate.flag && <SingleDate
           type={
-            isOpenDate.type.start ? 'start' :
-              isOpenDate.type.end ? 'end' :
-                isOpenDate.type.deli ? 'deli' : ''
+            isOpenDate.type.시작일 ? '시작일' :
+              isOpenDate.type.종료일 ? '종료일' :
+                isOpenDate.type.납풉예정일 ? '납풉예정일' : ''
           }
           submit={submit}
           close={close}

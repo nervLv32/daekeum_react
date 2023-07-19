@@ -199,7 +199,6 @@ const RPC01Step01Modal = () => {
   useEffect(() => {
     fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
       .then((res) => {
-        console.log(res.data);
         setClientCurrent(res.data[0]);
       });
     fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})

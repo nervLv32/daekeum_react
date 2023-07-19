@@ -51,7 +51,6 @@ const Report = () => {
     fetchService('/approval/approvalDocList', 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
-        console.log(data)
         setReports(data);
         if (res.data.length > 9) {
           setTimeout(() => {
