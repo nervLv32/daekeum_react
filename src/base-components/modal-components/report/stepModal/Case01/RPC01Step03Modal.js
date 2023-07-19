@@ -260,12 +260,8 @@ const RPC01Step03Modal = () => {
 
       <CustomerStatusWrap>
         <div className='title-wrap'>
-          <h6 className='title-text'>청구현황 및 수금현황</h6>
+          <h6 className='title-text'>결제조건</h6>
         </div>
-        <button onClick={() => {
-          console.log(body)
-        }
-        }> data check </button>
         <InfoList>
           <li>
             <dl>

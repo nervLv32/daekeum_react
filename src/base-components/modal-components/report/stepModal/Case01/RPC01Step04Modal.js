@@ -1,12 +1,10 @@
-import React, { useState } from "react"
-import styled from "styled-components";
-import RPModalTop from "../../../../../components/report/RPModalTop";
-import RPStepDeps from "../../../../../components/report/RPStepDeps";
-import { useModal } from "../../../../../hooks/useModal";
-import RPC01Step01Modal from "./RPC01Step01Modal";
-import RPC01Step02Modal from "./RPC01Step02Modal";
-import RPC01Step03Modal from "./RPC01Step03Modal";
-import {useRecoilValue} from 'recoil'
+import React from 'react'
+import styled from 'styled-components'
+import RPModalTop from '../../../../../components/report/RPModalTop'
+import RPStepDeps from '../../../../../components/report/RPStepDeps'
+import {useModal} from '../../../../../hooks/useModal'
+import RPC01Step03Modal from './RPC01Step03Modal'
+import {useRecoilState} from 'recoil'
 import {exportDocumentBody} from '../../../../../recoil/reportAtom'
 
 const RPC01Step04ModalWrap = styled.div`
@@ -24,14 +22,16 @@ const RPC01Step04ModalBody = styled.div`
 
 const CustomerStatusWrap = styled.div`
   background-color: #ebecef;
+
   .title-wrap {
     height: 40px;
     padding: 8px 30px;
     background-color: #fff;
-    border-bottom : 1px solid #EBECEF;
+    border-bottom: 1px solid #EBECEF;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .title-text {
       font-size: 14px;
       font-weight: 700;
@@ -43,22 +43,26 @@ const CustomerStatusWrap = styled.div`
 
 const InfoList = styled.ul`
   background-color: #fff;
+
   li {
     height: 34px;
     padding: 0 30px;
-    border-bottom : 1px solid #EBECEF;
+    border-bottom: 1px solid #EBECEF;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+
     input[type="checkbox"] {
       width: 15px;
       height: 15px;
       margin: 0;
       background: url('../icons/report-checkbox-icon.png') no-repeat 50% center / cover;
+
       &:checked {
         background: url('../icons/report-checkbox-icon-checked.png') no-repeat 50% center / cover;
       }
     }
+
     label {
       cursor: pointer;
       font-weight: 500;
@@ -66,17 +70,22 @@ const InfoList = styled.ul`
       color: #1c1b1f;
       margin-left: 10px;
     }
+
     &.textarea-li {
       height: auto;
       padding-top: 14px;
       padding-bottom: 55px;
+
       dl {
         width: 100%;
+
         dt {
           margin-bottom: 8px;
         }
+
         dd {
           width: 100%;
+
           textarea {
             resize: none;
             width: 100%;
@@ -86,6 +95,7 @@ const InfoList = styled.ul`
             font-weight: 400;
             color: #1c1b1f;
             padding: 4px;
+
             &:focus {
               outline: none;
               border-color: #1c1b1f;
@@ -109,22 +119,26 @@ const ModalBtm = styled.div`
   left: 0;
   width: 100%;
   z-index: 10;
+
   & > *:not(:last-child) {
-      margin-right: 10px;
-    }
+    margin-right: 10px;
+  }
+
   > button {
     cursor: pointer;
     width: calc(50% - 5px);
   }
+
   .primary-btn {
     height: 34px;
     padding: 0 30px;
     font-size: 14px;
     font-weight: 700;
-    background : linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #0129FF;
     border-radius: 10px;
     color: #fff;
   }
+
   .del-btn {
     padding: 0 15px;
     height: 34px;
@@ -143,57 +157,94 @@ const ModalBtm = styled.div`
 
 const RPC01Step04Modal = () => {
 
-  const { openModal, closeModal } = useModal();
-  const body = useRecoilValue(exportDocumentBody)
+  const {openModal, closeModal} = useModal()
+  const [body, setBody] = useRecoilState(exportDocumentBody)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
-  };
+  }
+
+  const updateValue = (key, value) => {
+    setBody({
+      ...body,
+      신규사업내용: {
+        ...body.신규사업내용,
+        [key]: value,
+        없음: (key === '특기사항' ? body.신규사업내용.없음 : false ),
+      },
+    })
+  }
+
+  const clearValue = () => {
+    setBody({
+      ...body,
+      신규사업내용: {
+        ...body.신규사업내용,
+        비점오염저감시설: false,
+        빗물재이용시설: false,
+        오탁수처리시설: false,
+        기타: false,
+        없음: true,
+      },
+    })
+  }
 
   /******* 출고요청서(세륜, 축중) 케이스의 네번째 *******/
   return <RPC01Step04ModalWrap>
-    <RPModalTop title="출고요청서" />
+    <RPModalTop title='출고요청서'/>
     <RPStepDeps
-      dep="dep4"
-      dep1title="거래처현황 세부정보"
-      dep2title="계약사항"
-      dep3title="결제조건"
+      dep='dep4'
+      dep1title='거래처현황 세부정보'
+      dep2title='계약사항'
+      dep3title='결제조건'
       dep4title={body.신규사업여부}
     />
     {/* 거래처 현황 */}
     <RPC01Step04ModalBody>
 
       <CustomerStatusWrap>
-        <div className="title-wrap">
-          <h6 className="title-text">청구현황 및 수금현황</h6>
+        <div className='title-wrap'>
+          <h6 className='title-text'>신규사업내용</h6>
         </div>
         <InfoList>
           <li>
-            <input name="v01" id="v01" type="checkbox" />
-            <label htmlFor="v01">결제방법</label>
+            <input name='v01' id='v01' type='checkbox'
+                   checked={body.신규사업내용.비점오염저감시설}
+                   onChange={e => updateValue('비점오염저감시설', e.target.checked)}/>
+            <label htmlFor='v01'>비점오염저감시설</label>
           </li>
           <li>
-            <input name="v02" id="v02" type="checkbox" />
-            <label htmlFor="v02">개월</label>
+            <input name='v02' id='v02' type='checkbox'
+                   checked={body.신규사업내용.빗물재이용시설}
+                   onChange={e => updateValue('빗물재이용시설', e.target.checked)}/>
+            <label htmlFor='v02'>빗물재이용시설</label>
           </li>
           <li>
-            <input name="v03" id="v03" type="checkbox" />
-            <label htmlFor="v03">메일</label>
+            <input name='v03' id='v03' type='checkbox'
+                   checked={body.신규사업내용.오탁수처리시설}
+                   onChange={e => updateValue('오탁수처리시설', e.target.checked)}/>
+            <label htmlFor='v03'>오탁수처리시설</label>
           </li>
           <li>
-            <input name="v04" id="v04" type="checkbox" />
-            <label htmlFor="v04">담당자</label>
+            <input name='v04' id='v04' type='checkbox'
+                   checked={body.신규사업내용.기타}
+                   onChange={e => updateValue('기타', e.target.checked)}/>
+            <label htmlFor='v04'>기타</label>
           </li>
           <li>
-            <input name="v05" id="v05" type="checkbox" />
-            <label htmlFor="v05">연락처</label>
+            <input name='v05' id='v05' type='checkbox'
+                   checked={body.신규사업내용.없음}
+                   onChange={clearValue}/>
+            <label htmlFor='v05'>없음</label>
           </li>
-          <li className="textarea-li">
+          <li className='textarea-li'>
             <dl>
               <dt>특기사항</dt>
               <dd>
-                <textarea />
+                <textarea
+                  value={body.신규사업내용.특기사항}
+                  onChange={e => updateValue('특기사항', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -202,17 +253,20 @@ const RPC01Step04Modal = () => {
       </CustomerStatusWrap>
 
       <ModalBtm>
-        <button className="del-btn" onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <RPC01Step03Modal /> })
-      }}>이전</button>
-        <button className="primary-btn" onClick={() => {
-        closeModal()
-        // FIX: 서류 상신 api
-      }}>서류상신</button>
+        <button className='del-btn' onClick={() => {
+          closeModal()
+          openModal({...modalData, content: <RPC01Step03Modal/>})
+        }}>이전
+        </button>
+        <button className='primary-btn' onClick={() => {
+          console.log(body)
+          // closeModal()
+          // FIX: 서류 상신 api
+        }}>서류상신
+        </button>
       </ModalBtm>
     </RPC01Step04ModalBody>
   </RPC01Step04ModalWrap>
 }
 
-export default RPC01Step04Modal;
+export default RPC01Step04Modal
