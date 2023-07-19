@@ -307,12 +307,15 @@ const RPC01Step02Modal = () => {
   /***** 시간 이벤트 ****/
   const [isOpenTime, setOpenTime] = useState(false)
 
-  const timeSubmit = () => {
+  const timeSubmit = (data) => {
+    const time = (data.hour < 10 ? '0' + data.hour : data.hour) + ':' + (data.minute < 10 ? '0' + data.minute : data.minute)
+    console.log(time)
+    updateBody('시간', time)
     timeClose()
   }
 
   const timeClose = () => {
-
+    setOpenTime(false)
   }
   /***** 달력 이벤트 ****/
   const [isOpenDate, setOpenDate] = useState({
@@ -542,9 +545,9 @@ const RPC01Step02Modal = () => {
               <dt>시간</dt>
               <dd>
                 <p
-                  className={body[selectIndex].time ? 'fill' : ''}
+                  className={body[selectIndex].시간 ? 'fill' : ''}
                   onClick={() => setOpenTime(true)}>
-                  {body[selectIndex].time ? body[selectIndex].time : '항목입력'}
+                  {body[selectIndex].시간 ? body[selectIndex].시간 : '시간선택'}
                 </p>
               </dd>
             </dl>

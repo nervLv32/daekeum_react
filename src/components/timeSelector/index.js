@@ -81,7 +81,7 @@ const ModalBtm = styled.div`
 const Index = ({close, submit}) => {
 
   const hour = Array.from({length: 24}, (_, i) => i + 1)
-  const min = Array.from({length: 59}, (_, i) => i)
+  const min = Array.from({length: 60}, (_, i) => i)
   const [range, setRange] = useState({
     hour: new Date().getHours(),
     minute: new Date().getMinutes(),
@@ -98,8 +98,6 @@ const Index = ({close, submit}) => {
     })
   }
 
-  console.log(new Date().getHours())
-
   useEffect(() => {
     document.body.style.cssText = `
     position: fixed;
@@ -113,17 +111,6 @@ const Index = ({close, submit}) => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log(range)
-  }, [range])
-
-  const closeModal = () => {
-  }
-
-  const submitData = () => {
-    closeModal()
-  }
-
   return <YearWrap>
     <Overlay>
       <Content>
@@ -135,8 +122,8 @@ const Index = ({close, submit}) => {
           />
         </ModalBody>
         <ModalBtm>
-          <button className='primary-btn' onClick={submitData}>적용</button>
-          <button className='del-btn' onClick={closeModal}>취소</button>
+          <button className='primary-btn' onClick={() => submit(range)}>적용</button>
+          <button className='del-btn' onClick={close}>취소</button>
         </ModalBtm>
       </Content>
     </Overlay>
