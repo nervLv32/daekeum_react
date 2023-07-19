@@ -7,9 +7,10 @@ import RPC01Step02Modal from './RPC01Step02Modal'
 import RPC01Step04Modal from './RPC01Step04Modal'
 import fetchService from '../../../../../util/fetchService'
 import OptionSelectedMemo from '../../../../../components/optionSelector/OptionSelectorMemo'
-import {useRecoilState} from 'recoil'
-import {payHow} from '../../../../../recoil/reportAtom'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {exportDocumentBody, firstExportDocuBody, payHow, shipCondBody} from '../../../../../recoil/reportAtom'
 import SingleDate from '../../../../../components/calander/SingleDate'
+import {DateFormat} from '../../../../../util/dateFormat'
 
 const RPC01Step03ModalWrap = styled.div`
   background-color: #fff;
@@ -106,6 +107,14 @@ const InfoList = styled.ul`
       dd {
         width: calc(100% - 80px);
 
+        p {
+          align-self: center;
+          color: #9DA2AE;
+          font-size: 12px;
+          &.fill {
+            color: #1c1b1f
+          }
+        }
         input {
           width: 100%;
           box-sizing: border-box;
@@ -182,30 +191,41 @@ const RPC01Step03Modal = () => {
     callback: () => alert('Modal Callback()'),
   }
   const {openModal, closeModal} = useModal()
-  const [howPay, setHowPay] = useRecoilState(payHow)
+  const [body, setBody] = useRecoilState(exportDocumentBody)
   const [options, setOptions] = useState({
     결제방법: [],
     결제처_수신: [],
   })
 
+  const updateValue = (key, value) => {
+    setBody({
+      ...body,
+      결제조건: {
+        ...body.결제조건,
+        [key]: value
+      }
+    })
+  }
+
   /***** 달력 이벤트 ****/
   const [isOpenDate, setOpenDate] = useState({
     flag: false,
     type: {
-      start: false,
-      end: false,
+      청구일: false,
+      결제일: false,
     },
   })
 
   const submit = (key, value) => {
+    updateValue(key, value)
     close()
   }
-  const close = (e) => {
+  const close = () => {
     setOpenDate({
       flag: false,
       type: {
-        시작일: false,
-        종료일: false,
+        청구일: false,
+        결제일: false,
       },
     })
   }
@@ -216,24 +236,25 @@ const RPC01Step03Modal = () => {
       setOptions({
         결제방법: (await fetchService('/approval/comboPayment/', 'post', {})).data,
         결제처_수신: (await fetchService('/approval/comboPayto/', 'post', {})).data,
+        일시불 : (await fetchService('/approval/comboChunguType/', 'post', {})).data,
+        계약서: (await fetchService('/approval/comboContracts', 'post', {})).data,
       })
     }
 
-    fetchData().then(() => {
-      console.log(options)
-    })
+    fetchData()
   }, [])
 
   /******* 출고요청서(세륜, 축중) 케이스의 세번째 *******/
   return <RPC01Step03ModalWrap>
-    <RPModalTop title='출고요청서'/>
-    <RPStepDeps
-      dep='dep3'
-      dep1title='거래처현황 세부정보'
-      dep2title='계약사항'
-      dep3title='결제조건'
-      dep4title='신규사업'
-    />
+    <>
+      <RPModalTop title='출고요청서'/>
+      <RPStepDeps
+        dep='dep3'
+        dep1title='거래처현황 세부정보'
+        dep2title='계약사항'
+        dep3title='결제조건'
+        dep4title='신규사업'
+      /></>
     {/* 거래처 현황 */}
     <RPC01Step03ModalBody>
 
@@ -241,16 +262,21 @@ const RPC01Step03Modal = () => {
         <div className='title-wrap'>
           <h6 className='title-text'>청구현황 및 수금현황</h6>
         </div>
+        <button onClick={() => {
+          console.log(body)
+        }
+        }> data check </button>
         <InfoList>
           <li>
             <dl>
               <dt>결제방법</dt>
               <dd>
                 <OptionSelectedMemo
-                  selected={howPay}
-                  updateKey={'결제방법'}
-                  updateBody={setHowPay}
-                  item={options.결제방법 || []}
+                  list={options.결제방법 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'결제조건'}
+                  depth2={'결제방법'}
                 />
               </dd>
             </dl>
@@ -259,7 +285,9 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>개월</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <input type='number' placeholder='항목을 입력하세요'
+                       value={body.결제조건.개월}
+                       onChange={e => updateValue('개월', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -267,7 +295,9 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>메일</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <input type='email' placeholder='항목을 입력하세요'
+                       value={body.결제조건.메일}
+                       onChange={e => updateValue('메일', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -275,7 +305,9 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>담당자</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <input type='text' placeholder='항목을 입력하세요'
+                       value={body.결제조건.담당자}
+                       onChange={e => updateValue('담당자', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -283,7 +315,9 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>연락처</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <input type='tel' placeholder='항목을 입력하세요'
+                       value={body.결제조건.연락처}
+                       onChange={e => updateValue('연락처', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -292,10 +326,11 @@ const RPC01Step03Modal = () => {
               <dt>결제처</dt>
               <dd>
                 <OptionSelectedMemo
-                  selected={howPay}
-                  updateKey={'결제처'}
-                  updateBody={setHowPay}
-                  item={options.결제처_수신 || []}
+                  list={options.결제처_수신 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'결제조건'}
+                  depth2={'결제처'}
                 />
               </dd>
             </dl>
@@ -305,10 +340,11 @@ const RPC01Step03Modal = () => {
               <dt>수신</dt>
               <dd>
                 <OptionSelectedMemo
-                  selected={howPay}
-                  updateKey={'수신'}
-                  updateBody={setHowPay}
-                  item={options.결제처_수신 || []}
+                  list={options.결제처_수신 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'결제조건'}
+                  depth2={'수신'}
                 />
               </dd>
             </dl>
@@ -317,7 +353,13 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>일시불</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  list={options.일시불 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'결제조건'}
+                  depth2={'일시불'}
+                />
               </dd>
             </dl>
           </li>
@@ -325,7 +367,13 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>계약서</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  list={options.계약서 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'결제조건'}
+                  depth2={'계약서'}
+                />
               </dd>
             </dl>
           </li>
@@ -333,7 +381,17 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>청구일</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <p
+                  className={body.결제조건.청구일 ? 'fill' : ''}
+                  onClick={() => setOpenDate({
+                    flag: true,
+                    type: {
+                      ...isOpenDate.type,
+                      청구일: true,
+                    },
+                  })}>
+                  {body.결제조건.청구일 ? DateFormat(new Date(body.결제조건.청구일)).substr(0, 10) : '항목선택'}
+                </p>
               </dd>
             </dl>
           </li>
@@ -341,7 +399,17 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>결제일</dt>
               <dd>
-                <input placeholder='항목을 입력하세요'/>
+                <p
+                  className={body.결제조건.결제일 ? 'fill' : ''}
+                  onClick={() => setOpenDate({
+                    flag: true,
+                    type: {
+                      ...isOpenDate.type,
+                      결제일: true,
+                    },
+                  })}>
+                  {body.결제조건.결제일 ? DateFormat(new Date(body.결제조건.결제일)).substr(0, 10) : '항목선택'}
+                </p>
               </dd>
             </dl>
           </li>
@@ -349,7 +417,9 @@ const RPC01Step03Modal = () => {
             <dl>
               <dt>특기사항</dt>
               <dd>
-                <textarea/>
+                <textarea placeholder='항목을 입력하세요'
+                       value={body.결제조건.특기사항}
+                       onChange={e => updateValue('특기사항', e.target.value)}/>
               </dd>
             </dl>
           </li>
@@ -360,8 +430,8 @@ const RPC01Step03Modal = () => {
       {
         isOpenDate.flag && <SingleDate
           type={
-            isOpenDate.type.start ? 'start' :
-              isOpenDate.type.end ? 'end' : ''
+            isOpenDate.type.청구일 ? '청구일' :
+              isOpenDate.type.결제일 ? '결제일' : ''
           }
           submit={submit}
           close={close}

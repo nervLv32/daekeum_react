@@ -12,7 +12,7 @@ import {DateFormat} from '../../../../../util/dateFormat'
 import TimeSelector from '../../../../../components/timeSelector'
 import RPCMemoInput from '../../../../../components/RPCMemoInput'
 import {useRecoilState} from 'recoil'
-import {firstExportDocuBody} from '../../../../../recoil/reportAtom'
+import {exportDocumentBody, firstExportDocuBody} from '../../../../../recoil/reportAtom'
 
 const RPC01Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -263,7 +263,7 @@ const RPC01Step02Modal = () => {
 
   const {openModal, closeModal} = useModal()
   /***** 사업구분 -> 매출타입 -> 장비구분 -> 기종명 -> 세부사항 ****/
-  const [body, setBody] = useRecoilState(firstExportDocuBody)
+  const [body, setBody] = useRecoilState(exportDocumentBody)
   const [selectIndex, setSelectIndex] = useState(0)
   const [options, setOptions] = useState({
     business: [],
@@ -285,24 +285,38 @@ const RPC01Step02Modal = () => {
 
   /***** body 데이터 업데이트 ****/
   const updateBody = (key, value) => {
-    let copy = [...body]
-    copy[selectIndex] = {...copy[selectIndex], [key]: value}
-    setBody([...copy])
+    let copy = [...body.계약사항]
+    copy[selectIndex] = {
+      ...copy[selectIndex],
+      [key]: value
+    }
+
+    setBody({
+      ...body,
+      계약사항: [...copy]
+    })
   }
 
   const addBodyList = () => {
-    setBody([...body, {}])
+    const temp = {
+      ...body,
+      계약사항: [...body.계약사항,{}]
+    }
+    setBody(temp)
     setSelectIndex(prev => prev + 1)
   }
   const filterBodyList = () => {
-    const filterItem = body[selectIndex]
-    const result = body.filter(it => it !== filterItem)
-    setBody(result)
+    const filterItem = body.계약사항[selectIndex]
+    const temp = {
+      ...body,
+      계약사항: body.계약사항.filter(it => it !== filterItem)
+    }
+    setBody(temp)
     setSelectIndex(prev => prev - 1)
   }
 
   const getBody = (key) => {
-    return body[selectIndex][key]
+    return body.계약사항[selectIndex][key]
   }
   /***** 시간 이벤트 ****/
   const [isOpenTime, setOpenTime] = useState(false)
@@ -371,11 +385,11 @@ const RPC01Step02Modal = () => {
       }
     }
 
-    if (body[selectIndex].사업구분) {
+    if (body.계약사항[selectIndex].사업구분) {
       copy = {
         ...copy,
-        eqName: await callData('comboEquipName', {bizVal: body[selectIndex].사업구분}), // [4] 기종명 아이템 조회
-        detail: await callData('comboEtcDetail', {bizVal: body[selectIndex].사업구분}), // [5] 세부사항 아이템 조회
+        eqName: await callData('comboEquipName', {bizVal: body.계약사항[selectIndex].사업구분}), // [4] 기종명 아이템 조회
+        detail: await callData('comboEtcDetail', {bizVal: body.계약사항[selectIndex].사업구분}), // [5] 세부사항 아이템 조회
       }
     }
     return copy
@@ -407,7 +421,7 @@ const RPC01Step02Modal = () => {
           <h6 className='title-text'>계약사항</h6>
           <ul className='list-tab'>
             {
-              body.map((it, key) => <li key={key} onClick={() => setSelectIndex(key)}
+              body.계약사항.map((it, key) => <li key={key} onClick={() => setSelectIndex(key)}
                                         className={selectIndex === key ? 'active' : ''}> {key + 1} </li>)
             }
           </ul>
@@ -417,8 +431,13 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>사업구분</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.business || []} updateKey={'사업구분'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.business || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'사업구분'}
+                />
               </dd>
             </dl>
           </li>
@@ -426,15 +445,25 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>매출타입</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.sale || []} updateKey={'매출타입'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.sale || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'매출타입'}
+                />
               </dd>
             </dl>
             <dl>
               <dt>장비구분</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.equip || []} updateKey={'장비구분'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.equip || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'장비구분'}
+                />
 
               </dd>
             </dl>
@@ -443,15 +472,23 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>기종명</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.eqName || []} updateKey={'기종명'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.eqName || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'기종명'} />
               </dd>
             </dl>
             <dl>
               <dt>세부사항</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.detail || []} updateKey={'세부사항'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.detail || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'세부사항'} />
               </dd>
             </dl>
           </li>
@@ -459,15 +496,23 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>전압</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.volt || []} updateKey={'전압'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.volt || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'세부사항'} />
               </dd>
             </dl>
             <dl>
               <dt>방향</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.direction || []} updateKey={'방향'} updateBody={updateBody} selected={body}
-                                selectIndex={selectIndex}/>
+                <OptionSelector list={options.direction || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'세부사항'} />
               </dd>
             </dl>
           </li>
@@ -478,7 +523,7 @@ const RPC01Step02Modal = () => {
                 <input
                   type={'number'}
                   placeholder='항목입력'
-                  value={body[selectIndex]['개월'] || ''}
+                  value={body.계약사항[selectIndex]['개월'] || ''}
                   onChange={(e) => updateBody('개월', e.target.value)}
                 />
               </dd>
@@ -487,7 +532,7 @@ const RPC01Step02Modal = () => {
               <dt>시작일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].시작일 ? 'fill' : ''}
+                  className={body.계약사항[selectIndex].시작일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
@@ -495,7 +540,7 @@ const RPC01Step02Modal = () => {
                       시작일: true,
                     },
                   })}>
-                  {body[selectIndex].시작일 ? DateFormat(new Date(body[selectIndex].시작일)).substr(0, 10) : '항목입력'}
+                  {body.계약사항[selectIndex].시작일 ? DateFormat(new Date(body.계약사항[selectIndex].시작일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -504,15 +549,19 @@ const RPC01Step02Modal = () => {
             <dl>
               <dt>청구구분</dt>
               <dd className='select-dd'>
-                <OptionSelector item={options.chungType || []} updateKey={'청구구분'} updateBody={updateBody}
-                                selected={body} selectIndex={selectIndex}/>
+                <OptionSelector list={options.chungType || []}
+                                updateValue={updateBody}
+                                body={body}
+                                selectedIndex={selectIndex}
+                                depth1={'계약사항'}
+                                depth2={'세부사항'} />
               </dd>
             </dl>
             <dl>
               <dt>종료일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].종료일 ? 'fill' : ''}
+                  className={body.계약사항[selectIndex].종료일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
@@ -520,7 +569,7 @@ const RPC01Step02Modal = () => {
                       종료일: true,
                     },
                   })}>
-                  {body[selectIndex].종료일 ? DateFormat(new Date(body[selectIndex].종료일)).substr(0, 10) : '항목입력'}
+                  {body.계약사항[selectIndex].종료일 ? DateFormat(new Date(body.계약사항[selectIndex].종료일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -530,7 +579,7 @@ const RPC01Step02Modal = () => {
               <dt>납풉예정일</dt>
               <dd className='date-dd'>
                 <p
-                  className={body[selectIndex].납풉예정일 ? 'fill' : ''}
+                  className={body.계약사항[selectIndex].납풉예정일 ? 'fill' : ''}
                   onClick={() => setOpenDate({
                     flag: true,
                     type: {
@@ -538,7 +587,7 @@ const RPC01Step02Modal = () => {
                       납풉예정일: true,
                     },
                   })}>
-                  {body[selectIndex].납풉예정일 ? DateFormat(new Date(body[selectIndex].납풉예정일)).substr(0, 10) : '항목입력'}
+                  {body.계약사항[selectIndex].납풉예정일 ? DateFormat(new Date(body.계약사항[selectIndex].납풉예정일)).substr(0, 10) : '항목입력'}
                 </p>
               </dd>
             </dl>
@@ -546,9 +595,9 @@ const RPC01Step02Modal = () => {
               <dt>시간</dt>
               <dd>
                 <p
-                  className={body[selectIndex].시간 ? 'fill' : ''}
+                  className={body.계약사항[selectIndex].시간 ? 'fill' : ''}
                   onClick={() => setOpenTime(true)}>
-                  {body[selectIndex].시간 ? body[selectIndex].시간 : '시간선택'}
+                  {body.계약사항[selectIndex].시간 ? body.계약사항[selectIndex].시간 : '시간선택'}
                 </p>
               </dd>
             </dl>
@@ -556,7 +605,7 @@ const RPC01Step02Modal = () => {
         </InfoList>
         <AddEquipWrap>
           <button onClick={addBodyList}>장비추가</button>
-          {body.length > 1 && <>&nbsp;
+          {body.계약사항.length > 1 && <>&nbsp;
             <button onClick={filterBodyList}>장비삭제</button>
           </>}
         </AddEquipWrap>

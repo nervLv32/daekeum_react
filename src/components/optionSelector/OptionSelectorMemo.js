@@ -7,19 +7,22 @@ const Select = styled.select`
     color: #1C1B1F;
   }
 `
-const OptionSelectedMemo = ({item, updateKey, updateBody, selected}) => {
+const OptionSelectedMemo = ({
+                              list,
+                              updateValue,
+                              body,
+                              depth1,
+                              depth2,
+                            }) => {
   return <Select
-    name={updateKey}
-    className={selected[updateKey] ? 'active' : ''}
-    value={selected[updateKey] || ''}
-    onChange={(e) => {updateBody({
-      ...selected,
-      [updateKey] : e.target.value
-    })}}
+    name={depth2}
+    className={body[depth1][depth2] ? 'active' : ''}
+    value={body[depth1][depth2] || ''}
+    onChange={(e) => updateValue(depth2, e.target.value)}
   >
-    <option value="" disabled>{item.length ? '항목선택' : '-'}</option>
+    <option value="" disabled>{list.length ? '항목선택' : '-'}</option>
     {
-      item.length && item.map((it, idx) => <option value={it.value} key={idx}> {it.value} </option> )
+      list.length && list.map((it, idx) => <option value={it.value} key={idx}> {it.value} </option> )
     }
   </Select>
 }
