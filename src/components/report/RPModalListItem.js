@@ -141,6 +141,18 @@ const RPModalListItem = ({ item, type, changeParam }) => {
     })
   }
 
+  // 장비리스트 저장
+  const [equipList, setEquipList] = useState([]);
+  const handleActive = () => {
+    setEquipList([...equipList, item]);
+  };
+  useEffect(() => {
+    setFirstExport({
+      ...firstExport,
+      'equip': equipList
+    })
+  }, [equipList]);
+
   useEffect(() => {
     if(type === "type01"){
       setIsSelected(firstExport.client.거래처코드 === item.거래처코드)
@@ -188,7 +200,7 @@ const RPModalListItem = ({ item, type, changeParam }) => {
     {
       // 입고서류상신 3번케이스
       type === "type03" && (
-        <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => updateFirstExport('equip')}>
+        <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => handleActive()}>
           <div className="dep1">{item.dkno}</div>
           <div className="dep2">{item.dkno}</div>
           <div className="dep3">{item.mcno}</div>
