@@ -162,7 +162,6 @@ const RPC01Step04Modal = () => {
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(exportDocumentBody)
   const {auth} = useRecoilValue(userAtom)
-  const {client, site} = useRecoilValue(firstExportDocument)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
@@ -210,33 +209,6 @@ const RPC01Step04Modal = () => {
         }
       })
   }
-
-  useEffect(() => {
-
-    const fetchData = async () => {
-      setBody({
-        ...body,
-        UserInfo: {
-          DeptCd: auth.부서코드,
-          DeptNm: auth.부서명,
-          EmpNm: auth.한글이름,
-          EmpNo: auth.사원코드,
-          회사코드: auth.회사코드,
-          DIV_CD: auth.DIV_CD,
-          usergwid: auth.usergwid
-        },
-        거래처현황: {
-          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
-        },
-        거래처세부: {
-          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
-        }
-      })
-    }
-
-    fetchData()
-
-  }, [])
 
   /******* 출고요청서(세륜, 축중) 케이스의 네번째 *******/
   return <RPC01Step04ModalWrap>

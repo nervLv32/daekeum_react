@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components";
 import RPModalBody from "../../../../../components/report/RPModalBody";
 import RPModalBottom from "../../../../../components/report/RPModalListBottom";
@@ -10,6 +10,9 @@ import { useModal } from "../../../../../hooks/useModal";
 
 import RPCase0401Modal from "./RPCase0401Modal";
 import RPC04Step01Modal from "../../stepModal/Case04/RPC04Step01Modal";
+import fetchService from '../../../../../util/fetchService'
+import {useRecoilState} from 'recoil'
+import {firstExportDocument} from '../../../../../recoil/reportAtom'
 
 
 const RPCase0402ModalWrap = styled.div`
@@ -20,6 +23,7 @@ const RPCase0402ModalWrap = styled.div`
 const RPCase0402Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
 
   const dummyData = [
     {
@@ -38,6 +42,66 @@ const RPCase0402Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
+  const [sites, setSites] = useState([]);
+  const [params, setParams] = useState({
+    searchword: '',
+    currentPage: '1',
+    pageSize: '10',
+    거래처코드 : firstExport.client.거래처코드
+  });
+
+  const changeParam = (key, value) => {
+    setParams({
+      ...params,
+      currentPage: '1',
+      [key] : value
+    })
+  };
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true);
+      setParams({
+        ...params,
+        currentPage: parseInt(params.currentPage) + 1,
+      });
+    }
+  });
+
+  const fetchList = (list) => {
+    fetchService('/approval/siteList', 'post', params)
+      .then((res) => {
+        const data = [...list, ...res.data];
+        setSites(data);
+        if (res.data.length > 9) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
+        }
+      });
+  };
+
+  useEffect(() => {
+    if(parseInt(params.currentPage) > 1) {
+      fetchList(sites);
+    }
+  }, [params.currentPage])
+
+  useEffect(() => {
+    fetchList([]);
+    setLoading(true)
+  }, [params.searchword])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
+  }, [isLoading])
+
+  console.log(firstExport)
+
   /******* 입출고 서류상신 - 수리기입고요청서 04의 두 번째 스텝 *******/
   return <RPCase0402ModalWrap>
     <RPModalTop title="수리기서류상신" />
@@ -45,10 +109,12 @@ const RPCase0402Modal = () => {
     <RPModalBody>
     <RPModalListTop type="type04" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="전압" dep6="방향" />
       {
-        dummyData.map((item, idx) => {
+        sites.map((item, idx) => {
           return <RPModalListItem item={item} key={idx} type="type04" />
         })
       }
+      <div ref={observeTargetRef}/>
+
     </RPModalBody>
     <RPModalBottom>
       <button className="primary-btn" onClick={() => {

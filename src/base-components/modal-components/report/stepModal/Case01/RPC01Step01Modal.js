@@ -5,12 +5,13 @@ import RPStepDeps from '../../../../../components/report/RPStepDeps';
 import {useModal} from '../../../../../hooks/useModal';
 import RPCase0102Modal from '../../documentModal/Case01/RPCase0102Modal';
 import RPC01Step02Modal from './RPC01Step02Modal';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil'
 import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
 import fetchService from '../../../../../util/fetchService';
 import {DateFormat} from '../../../../../util/dateFormat';
 import ClientDetail from '../../../../../components/clientDetail';
 import {CommaPrice} from '../../../../../util/commaPrice';
+import userAtom from '../../../../../recoil/userAtom'
 
 const RPC01Step01ModalWrap = styled.div`
   background-color: #fff;
@@ -162,7 +163,11 @@ const ModalBtm = styled.div`
 const RPC01Step01Modal = () => {
 
   const {openModal, closeModal} = useModal();
-  const body = useRecoilValue(exportDocumentBody)
+  const [body, setBody] = useRecoilState(exportDocumentBody)
+  const {auth} = useRecoilValue(userAtom)
+  const {client, site} = useRecoilValue(firstExportDocument)
+
+
   const [clientCurrent, setClientCurrent] = useState({
     거래처코드: '',
     업체명: '',
@@ -207,6 +212,34 @@ const RPC01Step01Modal = () => {
         setClientDetail(res.data);
       })
   }, []);
+
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      setBody({
+        ...body,
+        UserInfo: {
+          DeptCd: auth.부서코드,
+          DeptNm: auth.부서명,
+          EmpNm: auth.한글이름,
+          EmpNo: auth.사원코드,
+          회사코드: auth.회사코드,
+          DIV_CD: auth.DIV_CD,
+          usergwid: auth.usergwid
+        },
+        거래처현황: {
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
+        },
+        거래처세부: {
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
+        }
+      })
+    }
+
+    fetchData()
+
+  }, [])
 
   /******* 출고요청서(세륜, 축중) 케이스의 첫번째 *******/
   return <RPC01Step01ModalWrap>
