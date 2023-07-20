@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {useRecoilState} from 'recoil';
 import {firstExportDocument} from '../../recoil/reportAtom';
+import moment from 'moment';
 
 const RPModalListItemWrap = styled.div`  `
 
@@ -181,13 +182,13 @@ const RPModalListItem = ({ item, type }) => {
     {
       // 입고서류상신 3번케이스
       type === "type03" && (
-        <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => setIsSelected(prev => !prev)}>
-          <div className="dep1">{item.division}</div>
+        <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => updateFirstExport('equip')}>
+          <div className="dep1">{item.dkno}</div>
           <div className="dep2">{item.dkno}</div>
           <div className="dep3">{item.mcno}</div>
-          <div className="dep4">{item.model}</div>
-          <div className="dep5">{item.operation}</div>
-          <div className="dep6">{item.mif}</div>
+          <div className="dep4">{item.기종}</div>
+          <div className="dep5">{item.가동구분}</div>
+          <div className="dep6">{item.MIF}</div>
           <div className="icon" onClick={(e) => {
             e.stopPropagation();
             setIsOpen(prev => !prev);
@@ -285,25 +286,25 @@ const RPModalListItem = ({ item, type }) => {
                 <div>
                   <dl>
                     <dt>시작일</dt>
-                    <dd>{item.startDate}</dd>
+                    <dd>{moment(item.시작일).format('YYYY-MM-DD')}</dd>
                   </dl>
                   <dl>
                     <dt>종료일</dt>
-                    <dd>{item.endDate}</dd>
+                    <dd>{moment(item.종료일).format('YYYY-MM-DD')}</dd>
                   </dl>
                 </div>
                 <div>
                   <dl>
                     <dt>초기개월</dt>
-                    <dd>{item.defaultMonth}</dd>
+                    <dd>{item.초기개월}</dd>
                   </dl>
                   <dl>
                     <dt>변경개월</dt>
-                    <dd>{item.changeMonth}</dd>
+                    <dd>{item.변경개월}</dd>
                   </dl>
                   <dl>
                     <dt>임대료</dt>
-                    <dd>{item.price}</dd>
+                    <dd>{item.임대료}</dd>
                   </dl>
                 </div>
               </>
