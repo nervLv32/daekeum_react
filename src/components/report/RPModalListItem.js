@@ -129,7 +129,7 @@ const ListItemBody = styled.div`
   }
 `
 
-const RPModalListItem = ({ item, type }) => {
+const RPModalListItem = ({ item, type, changeParam }) => {
   const [isSelected, setIsSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
@@ -146,6 +146,12 @@ const RPModalListItem = ({ item, type }) => {
       setIsSelected(firstExport.client.거래처코드 === item.거래처코드)
     }else if(type === 'type02'){
       setIsSelected(firstExport.site.현장코드 === item.현장코드)
+    }else if(type === 'type04') {
+      // console.log(firstExport.equip.filter(it => it === item))
+      // console.log(firstExport.equip[1] === item)
+      firstExport.equip.map( (it) => {
+        if(it.DKNO === item.DKNO) setIsSelected(it.DKNO === item.DKNO)
+      })
     }
   }, [firstExport, item])
 
@@ -199,13 +205,16 @@ const RPModalListItem = ({ item, type }) => {
     {
       // 입고서류상신 4번 / 5번케이스
       type === "type04" && (
-        <ListItemTop className={`${isSelected ? 'active type04' : 'type04'}`} onClick={() => setIsSelected(prev => !prev)}>
-          <div className="dep1">{item.division}</div>
-          <div className="dep2">{item.dkno}</div>
-          <div className="dep3">{item.mcno}</div>
-          <div className="dep4">{item.model}</div>
-          <div className="dep5">{item.bolt}</div>
-          <div className="dep6">{item.direction}</div>
+        <ListItemTop className={`${isSelected ? 'active type04' : 'type04'}`} onClick={() => {
+          changeParam(isSelected, item)
+          setIsSelected(prev => !prev)
+        }}>
+          <div className="dep1">{item.구분}</div>
+          <div className="dep2">{item.DKNO}</div>
+          <div className="dep3">{item.MCNO}</div>
+          <div className="dep4">{item.모델}</div>
+          <div className="dep5">{item.전압}</div>
+          <div className="dep6">{item.방향}</div>
           <div className="icon" onClick={(e) => {
             e.stopPropagation();
             setIsOpen(prev => !prev);
@@ -317,7 +326,7 @@ const RPModalListItem = ({ item, type }) => {
                 <div>
                   <dl>
                     <dt>현장명</dt>
-                    <dd>{item.site}</dd>
+                    <dd>{item.현장명}</dd>
                   </dl>
                 </div>
               </>

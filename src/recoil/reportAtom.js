@@ -25,9 +25,7 @@ export const firstExportDocument = atom({
       현장명: '현장명',
       현장코드: '',
     },
-    equip: {
-      장비정보: null,
-    },
+    equip: []
   },
 })
 export const exportDocumentBody = atom({

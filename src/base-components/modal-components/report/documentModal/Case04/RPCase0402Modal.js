@@ -25,18 +25,6 @@ const RPCase0402Modal = () => {
   const { openModal, closeModal } = useModal();
   const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
 
-  const dummyData = [
-    {
-      division: "회수",
-      dkno: "15222",
-      mcno: "F003",
-      model: "R10DN",
-      bolt: "380",
-      direction: "역방향",
-      site: "광주순환고속도로 5공구"
-    },
-  ]
-
   const modalData = {
     title: 'RPDoc Modal Modal',
     callback: () => alert('Modal Callback()'),
@@ -47,18 +35,26 @@ const RPCase0402Modal = () => {
   const [isLoading, setLoading] = useState(false);
   const [sites, setSites] = useState([]);
   const [params, setParams] = useState({
-    searchword: '',
-    currentPage: '1',
-    pageSize: '10',
     거래처코드 : firstExport.client.거래처코드
   });
 
   const changeParam = (key, value) => {
-    setParams({
-      ...params,
-      currentPage: '1',
-      [key] : value
-    })
+    console.log(key)
+    let copy = {...firstExport}
+    if(!key) {
+      copy = {
+        ...copy,
+        equip: [ ...copy.equip, value ]
+      }
+      console.log(copy.equip)
+    } else {
+      copy = {
+        ...copy,
+        equip: copy.equip.filter(it => it !== value)
+      }
+    }
+
+    setFirstExport(copy)
   };
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
@@ -72,7 +68,7 @@ const RPCase0402Modal = () => {
   });
 
   const fetchList = (list) => {
-    fetchService('/approval/siteList', 'post', params)
+    fetchService('/approval/suliRequestDetails', 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
         setSites(data);
@@ -100,8 +96,6 @@ const RPCase0402Modal = () => {
     return () => onIntersect.disconnect();
   }, [isLoading])
 
-  console.log(firstExport)
-
   /******* 입출고 서류상신 - 수리기입고요청서 04의 두 번째 스텝 *******/
   return <RPCase0402ModalWrap>
     <RPModalTop title="수리기서류상신" />
@@ -110,7 +104,7 @@ const RPCase0402Modal = () => {
     <RPModalListTop type="type04" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="전압" dep6="방향" />
       {
         sites.map((item, idx) => {
-          return <RPModalListItem item={item} key={idx} type="type04" />
+          return <RPModalListItem item={item} key={idx} type="type04" changeParam={changeParam} />
         })
       }
       <div ref={observeTargetRef}/>
