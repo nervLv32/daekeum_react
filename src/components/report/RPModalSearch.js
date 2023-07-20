@@ -74,8 +74,12 @@ const RPModalSearch = ({ dep1, dep2, dep3, changeParam }) => {
   return <RPModalSearchWrap>
     <RPModalSearchNavigation>
       <li>{dep1}</li>
-      <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
-      <li>{dep2}</li>
+      {
+        dep2 && <>
+          <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
+          <li>{dep2}</li>
+        </>
+      }
       {
         dep3 && <>
           <img src="../../icons/tab-navi-rightarrow.png" alt="right arrow" />
