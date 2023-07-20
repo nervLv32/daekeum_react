@@ -197,14 +197,16 @@ const RPC01Step04Modal = () => {
   const submitBody = () => {
     fetchService('/approval/validateOutRequest', 'post', body)
       .then(res => {
-        console.log(res)
-        console.log(res.msg)
-        console.log(body)
         if(res.valid){
           fetchService('/approval/approvalOutRequest', 'post', body)
-            .then(res => {
-              console.log(res)
+            .then(res1 => {
+              window.alert(res1.msg)
+              if(res1.msg === '정상적으로 상신 처리되었습니다'){
+                window.location.reload()
+              }
             })
+        }else{
+          window.alert(res.msg)
         }
       })
   }

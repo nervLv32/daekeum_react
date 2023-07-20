@@ -231,6 +231,27 @@ const RPC01Step03Modal = () => {
   }
 
 
+  const submitBody = () => {
+    const copy = {...body}
+    delete copy.신규사업내용
+    setBody(copy)
+
+    fetchService('/approval/validateOutRequest', 'post', body)
+      .then(res => {
+        if(res.valid){
+          fetchService('/approval/approvalOutRequest', 'post', body)
+            .then(res1 => {
+              window.alert(res1.msg)
+              if(res1.msg === '정상적으로 상신 처리되었습니다'){
+                window.location.reload()
+              }
+            })
+        }else{
+          window.alert(res.msg)
+        }
+      })
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       setOptions({
@@ -441,9 +462,13 @@ const RPC01Step03Modal = () => {
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          closeModal()
-          openModal({...modalData, content: <RPC01Step04Modal/>})
-        }}>다음
+          if(body.신규상버여부){
+            closeModal()
+            openModal({...modalData, content: <RPC01Step04Modal/>})
+          }else{
+            submitBody()
+          }
+        }}>{body.신규사업여부 ? '다음' : '서류상신' }
         </button>
       </ModalBtm>
     </RPC01Step03ModalBody>
