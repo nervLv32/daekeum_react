@@ -40,6 +40,7 @@ const Report = () => {
   const [params, setParams] = useRecoilState(reportParamAtom);
   const setBody = useSetRecoilState(exportDocumentBody)
   const resetBody = useResetRecoilState(exportDocumentBody)
+  const [firstDocument, setFirstDocument] = useRecoilState(firstExportDocument)
   const resetFirstDocument = useResetRecoilState(firstExportDocument)
 
   const changeParam = (key, value) => {
@@ -122,7 +123,13 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <a onClick={() => openModal({...modalData, content: <RPCase0301Modal/>})}>
+              <a onClick={() => {
+                setFirstDocument({
+                  ...firstDocument,
+                  title: '입고요청서'
+                })
+                openModal({...modalData, content: <RPCase0301Modal/>})
+              }}>
                 <i>
                   <img src='../icons/icon-topmenu-inbox.png' alt='topmenu icon'/>
                 </i>
@@ -130,7 +137,13 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <a onClick={() => openModal({...modalData, content: <RPCase0401Modal/>})}>
+              <a onClick={() => {
+                setFirstDocument({
+                  ...firstDocument,
+                  title: '수리기입고요청서'
+                })
+                openModal({...modalData, content: <RPCase0301Modal/>})
+              }}>
                 <i>
                   <img src='../icons/icon-topmenu-microwave.png' alt='topmenu icon'/>
                 </i>
@@ -138,7 +151,13 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <a onClick={() => openModal({...modalData, content: <RPCase0501Modal/>})}>
+              <a onClick={() => {
+                setFirstDocument({
+                  ...firstDocument,
+                  title: '수리기출고요청서'
+                })
+                openModal({...modalData, content: <RPCase0301Modal/>})
+              }}>
                 <i>
                   <img src='../icons/icon-topmenu-microwave.png' alt='topmenu icon'/>
                 </i>

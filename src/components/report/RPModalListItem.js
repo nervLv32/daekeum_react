@@ -141,6 +141,7 @@ const RPModalListItem = ({ item, type, changeParam }) => {
     })
   }
 
+
   useEffect(() => {
     if(type === "type01"){
       setIsSelected(firstExport.client.거래처코드 === item.거래처코드)

@@ -17,6 +17,7 @@ export const reportParamAtom = atom({
 export const firstExportDocument = atom({
   key: 'firstExportDocument',
   default: {
+    title: '',
     client: {
       업체명: '업체명',
       거래처코드: '',

@@ -50,6 +50,25 @@ const RPCase0303Modal = () => {
     })
   };
 
+  const changeEquip = (key, value) => {
+    console.log(key)
+    let copy = {...firstExport}
+    if(!key) {
+      copy = {
+        ...copy,
+        equip: [ ...copy.equip, value ]
+      }
+      console.log(copy.equip)
+    } else {
+      copy = {
+        ...copy,
+        equip: copy.equip.filter(it => it !== value)
+      }
+    }
+
+    setFirstExport(copy)
+  };
+
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
       setLoading(true);
@@ -92,13 +111,13 @@ const RPCase0303Modal = () => {
 
   /******* 입출고 서류상신 - 입고요청서 case 03의 세 번째 스텝 *******/
   return <RPCase0303ModalWrap>
-    <RPModalTop title="입고서류상신" />
+    <RPModalTop title={firstExport.title} />
     <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" changeParam={changeParam} />
     <RPModalBody>
       <RPModalListTop type="type03" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="가동구분" dep6="MIF" />
       {
         equip?.length > 0 && equip.map((item, idx) => {
-          return <RPModalListItem item={item} key={idx} type="type03" />
+          return <RPModalListItem item={item} key={idx} type="type04" changeParam={changeEquip} />
         })
       }
       <div ref={observeTargetRef}/>

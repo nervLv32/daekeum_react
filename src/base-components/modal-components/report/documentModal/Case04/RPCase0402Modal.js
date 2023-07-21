@@ -53,7 +53,6 @@ const RPCase0402Modal = () => {
         equip: copy.equip.filter(it => it !== value)
       }
     }
-
     setFirstExport(copy)
   };
 
