@@ -6,8 +6,6 @@ import { useModal } from "../../../../../hooks/useModal";
 import RPC04Step01Modal from "./RPC04Step01Modal";
 import RPC04Step03Modal from "./RPC04Step03Modal";
 
-
-
 const RPC04Step02ModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
@@ -15,12 +13,10 @@ const RPC04Step02ModalWrap = styled.div`
   overflow-y: scroll;
   width: 100%;
 `
-
 const RPC04Step02ModalBody = styled.div`
   overflow-y: scroll;
   padding-bottom: 70px;
 `
-
 const CustomerStatusWrap = styled.div`
   background-color: #ebecef;
   .title-wrap {
@@ -61,7 +57,6 @@ const CustomerStatusWrap = styled.div`
     }
   }
 `
-
 const InfoList = styled.ul`
   background-color: #fff;
   li {
@@ -129,7 +124,6 @@ const InfoList = styled.ul`
     }
   }
 `
-
 const ModalBtm = styled.div`
   padding: 17px 30px;
   background-color: #f7f7f7;
@@ -172,7 +166,6 @@ const ModalBtm = styled.div`
     background-color: #fff;
   }
 `
-
 
 const RPC04Step02Modal = () => {
 
