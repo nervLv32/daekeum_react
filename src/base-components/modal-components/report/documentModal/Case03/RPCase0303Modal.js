@@ -80,7 +80,7 @@ const RPCase0303Modal = () => {
   });
 
   const fetchList = (list) => {
-    fetchService(`/approval/${firstExport === '입고요청서' ? 'equiplist' : 'suliRequestDetails'}`, 'post', params)
+    fetchService(`/approval/${firstExport.title === '입고요청서' ? 'equiplist' : 'suliRequestDetails'}`, 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
         setEquip(data);

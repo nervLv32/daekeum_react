@@ -158,14 +158,15 @@ const RPModalListItem = ({ item, type, changeParam }) => {
     }else if(type === 'type02'){
       setIsSelected(firstExport.site.현장코드 === item.현장코드)
     }else if(type === 'type04') {
-      // console.log(firstExport.equip.filter(it => it === item))
-      // console.log(firstExport.equip[1] === item)
       firstExport.equip.map( (it) => {
         if(it.DKNO === item.DKNO) setIsSelected(it.DKNO === item.DKNO)
       })
+    }else if(type === 'type03') {
+      firstExport.equip.map( (it) => {
+        if(it.dkno === item.dkno) setIsSelected(it.DKNO === item.DKNO)
+      })
     }
   }, [firstExport, item])
-  console.log(item)
 
   return <RPModalListItemWrap >
     {
@@ -199,7 +200,10 @@ const RPModalListItem = ({ item, type, changeParam }) => {
     {
       // 입고서류상신 3번케이스
       type === "type03" && (
-        <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => handleActive()}>
+          <ListItemTop className={`${isSelected ? 'active type03' : 'type03'}`} onClick={() => {
+            changeParam(isSelected, item)
+            setIsSelected(prev => !prev)
+          }}>
           <div className="dep1">{item.dkno}</div>
           <div className="dep2">{item.dkno}</div>
           <div className="dep3">{item.mcno}</div>
