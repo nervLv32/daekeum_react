@@ -80,7 +80,7 @@ const RPCase0303Modal = () => {
   });
 
   const fetchList = (list) => {
-    fetchService('/approval/equiplist', 'post', params)
+    fetchService(`/approval/${firstExport === '입고요청서' ? 'equiplist' : 'suliRequestDetails'}`, 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
         setEquip(data);
@@ -113,10 +113,15 @@ const RPCase0303Modal = () => {
     <RPModalTop title={firstExport.title} />
     <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" changeParam={changeParam} />
     <RPModalBody>
-      <RPModalListTop type="type03" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="가동구분" dep6="MIF" />
+      {
+        firstExport.title === '입고요청서'?
+          <RPModalListTop type="type03" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="가동구분" dep6="MIF" />
+          :<RPModalListTop type="type04" dep1="구분" dep2="DKNO" dep3="MCNO" dep4="기종" dep5="전압" dep6="방향" />
+      }
+
       {
         equip?.length > 0 && equip.map((item, idx) => {
-          return <RPModalListItem item={item} key={idx} type="type04" changeParam={changeEquip} />
+          return <RPModalListItem item={item} key={idx} type={firstExport.title === '입고요청서' ? 'type03' : 'type04'} changeParam={changeEquip} />
         })
       }
       <div ref={observeTargetRef}/>

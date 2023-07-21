@@ -165,7 +165,7 @@ const RPModalListItem = ({ item, type, changeParam }) => {
       })
     }
   }, [firstExport, item])
-
+  console.log(item)
 
   return <RPModalListItemWrap >
     {
