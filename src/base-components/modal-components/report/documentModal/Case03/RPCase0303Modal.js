@@ -82,7 +82,6 @@ const RPCase0303Modal = () => {
   const fetchList = (list) => {
     fetchService('/approval/equiplist', 'post', params)
       .then((res) => {
-        console.log(res)
         const data = [...list, ...res.data];
         setEquip(data);
         if (res.data.length > 9) {

@@ -6,6 +6,9 @@ import { useModal } from "../../../../../hooks/useModal";
 import RPC03Step01Modal from "./RPC03Step01Modal";
 import RPC03Step03Modal from "./RPC03Step03Modal";
 
+import {useRecoilState} from 'recoil'
+import {exportDocumentBody, firstExportDocuBody} from '../../../../../recoil/reportAtom'
+
 
 const RPC03Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -212,6 +215,9 @@ const ModalBtm = styled.div`
 const RPC03Step02Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const [body, setBody] = useRecoilState(exportDocumentBody)
+
+  console.log(body)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
