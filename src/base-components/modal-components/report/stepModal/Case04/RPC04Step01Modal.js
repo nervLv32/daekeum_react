@@ -1,10 +1,17 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
 import RPCase0402Modal from "../../documentModal/Case04/RPCase0402Modal"
 import RPC04Step02Modal from "./RPC04Step02Modal";
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
+import userAtom from '../../../../../recoil/userAtom'
+import fetchService from '../../../../../util/fetchService'
+import {CommaPrice} from '../../../../../util/commaPrice'
+import {DateFormat} from '../../../../../util/dateFormat'
+import ClientDetail from '../../../../../components/clientDetail'
 
 
 
@@ -144,12 +151,84 @@ const ModalBtm = styled.div`
 
 const RPC04Step01Modal = () => {
 
-  const { openModal, closeModal } = useModal();
+  const {openModal, closeModal} = useModal();
+  const [body, setBody] = useRecoilState(exportDocumentBody)
+  const {auth} = useRecoilValue(userAtom)
+  const {client, site} = useRecoilValue(firstExportDocument)
+
+
+  const [clientCurrent, setClientCurrent] = useState({
+    거래처코드: '',
+    업체명: '',
+    현장코드: '',
+    현장명: null,
+    고객분류: [],
+    지역분류: '',
+    미수총계: 0,
+    현장미수: 0,
+    최종거래일: '',
+    등급: null,
+    접점: '',
+  });
+  const [clientDetail, setClientDetail] = useState([
+    {
+      구분: '',
+      회사코드: 0,
+      거래처코드: 0,
+      현장코드: null,
+      전화번호1: 0,
+      담당자: null,
+      직위: null,
+      휴대전화: null,
+      주소: null
+    }
+  ]);
+  const [infoType, setInfoType] = useState('현장')
+  const exportDoc = useRecoilValue(firstExportDocument);
 
   const modalData = {
-    title: 'RPDoc01Modal Modal',
+    title: 'RPDoc04Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      setBody({
+        ...body,
+        UserInfo: {
+          DeptCd: auth.부서코드,
+          DeptNm: auth.부서명,
+          EmpNm: auth.한글이름,
+          EmpNo: auth.사원코드,
+          회사코드: auth.회사코드,
+          DIV_CD: auth.DIV_CD,
+          usergwid: auth.usergwid
+        },
+        거래처현황: {
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
+        },
+        거래처세부: {
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
+        }
+      })
+    }
+
+    fetchData()
+
+  }, [])
+
+
+  useEffect(() => {
+    fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
+      .then((res) => {
+        setClientCurrent(res.data[0]);
+      });
+    fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
+      .then((res)=>{
+        setClientDetail(res.data);
+      })
+  }, []);
 
   /******* 수리기입고요청서 케이스의 첫번째 *******/
   return <RPC04Step01ModalWrap>
@@ -172,100 +251,74 @@ const RPC04Step01Modal = () => {
           <li>
             <dl>
               <dt>거래처명</dt>
-              <dd>(주)대금지오웰</dd>
+              <dd>{clientCurrent.업체명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장명</dt>
-              <dd>호남고속도로 첨단방면 연결로 개설공사 2구간</dd>
+              <dd>{clientCurrent.현장명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>고객분류</dt>
-              <dd>고객분류</dd>
+              <dd>{(clientCurrent.고객분류 || []).map((it, key) => `${key !== 0 && it ? ' / ' : ''}${it ? it : ''}`)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>지역분류</dt>
-              <dd>인천-미추홀구</dd>
+              <dd>{exportDoc.site.지역분류}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>미수총계</dt>
-              <dd>1,400,000</dd>
+              <dd>{CommaPrice(clientCurrent.미수총계)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장미수</dt>
-              <dd>1,400,000</dd>
+              <dd>{CommaPrice(clientCurrent.현장미수)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>최종거래일</dt>
-              <dd>2023-02-08</dd>
+              <dd>{DateFormat(new Date(clientCurrent.최종거래일)).substr(0,10)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>접점</dt>
-              <dd>등급</dd>
+              <dd>{clientCurrent.접점}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>등급</dt>
-              <dd>A</dd>
+              <dd>{clientCurrent.등급}</dd>
             </dl>
           </li>
         </InfoList>
       </CustomerStatusWrap>
 
       <CustomerInfoWrap>
-        <div className="title-wrap">
-          <h6 className="title-text">거래처 현황</h6>
-          <div className="btn-wrap">
-            <button className="active">본사</button>
-            <button>현장</button>
+        <div className='title-wrap'>
+          <h6 className='title-text'>거래처 세부정보</h6>
+          <div className='btn-wrap'>
+            {
+              clientDetail.map((it, key) => {
+                return <button key={key} className={infoType === it.구분 ? 'active' : ''} onClick={() => setInfoType(it.구분)}> {it.구분} </button>
+              })
+            }
           </div>
         </div>
-        <InfoList>
-          <li>
-            <dl>
-              <dt>전화번호</dt>
-              <dd>031-1234-5679</dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>담당자</dt>
-              <dd>정명길</dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>직위</dt>
-              <dd>담당자</dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>휴대전화</dt>
-              <dd>010-1234-5679</dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>주소</dt>
-              <dd>경기도 고양시 덕양구 덕은동 427-1번지</dd>
-            </dl>
-          </li>
-        </InfoList>
+        {
+          clientDetail[0].구분 !== '' && <ClientDetail item={clientDetail.filter(it => it.구분 === infoType)[0]} />
+        }
       </CustomerInfoWrap>
       <ModalBtm>
         <button className="del-btn" onClick={() => {
