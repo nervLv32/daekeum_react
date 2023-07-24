@@ -160,7 +160,7 @@ const RPC04Step02Modal = () => {
 
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step02ModalWrap>
-    <RPModalTop title='수리기입고요청서'/>
+    <RPModalTop title={firstDoc.title}/>
     <RPStepDeps
       dep='dep2'
       dep1title='거래처현황 세부정보'
@@ -171,12 +171,6 @@ const RPC04Step02Modal = () => {
     {/* 거래처 현황 */}
     <RPC04Step02ModalBody>
 
-      <button onClick={() => {
-        console.log(suliReq)
-      }
-      }>
-        test
-      </button>
       <CustomerStatusWrap>
         <div className='title-wrap'>
           <h6 className='title-text'>계약사항</h6>

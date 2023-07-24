@@ -233,7 +233,7 @@ const RPC04Step01Modal = () => {
 
   /******* 수리기입고요청서 케이스의 첫번째 *******/
   return <RPC04Step01ModalWrap>
-    <RPModalTop title="수리기입고요청서" />
+    <RPModalTop title={title} />
     <RPStepDeps
       dep="dep1"
       dep1title="거래처현황 세부정보"

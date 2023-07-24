@@ -9,8 +9,8 @@ import SingleDate from '../../../../../components/calander/SingleDate'
 import RPC01Step02Modal from '../Case01/RPC01Step02Modal'
 import RPC01Step04Modal from '../Case01/RPC01Step04Modal'
 import fetchService from '../../../../../util/fetchService'
-import {useRecoilState} from 'recoil'
-import {approvalSuliReq, exportDocumentBody} from '../../../../../recoil/reportAtom'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {approvalSuliReq, exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
 import RPC04Step03Modal from './RPC04Step03Modal'
 
 const RPC04Step04ModalWrap = styled.div`
@@ -204,6 +204,7 @@ const ModalBtm = styled.div`
 const RPC04Step04Modal = () => {
 
   const {openModal, closeModal} = useModal()
+  const firstDoc = useRecoilValue(firstExportDocument)
 
   const [body, setBody] = useRecoilState(approvalSuliReq)
   const [options, setOptions] = useState({
@@ -272,7 +273,7 @@ const RPC04Step04Modal = () => {
 
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step04ModalWrap>
-    <RPModalTop title='수리기입고요청서'/>
+    <RPModalTop title={firstDoc.title}/>
     <RPStepDeps
       dep='dep4'
       dep1title='거래처현황 세부정보'

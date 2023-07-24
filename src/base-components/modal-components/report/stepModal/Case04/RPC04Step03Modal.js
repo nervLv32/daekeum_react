@@ -5,8 +5,8 @@ import RPStepDeps from '../../../../../components/report/RPStepDeps'
 import {useModal} from '../../../../../hooks/useModal'
 import RPC04Step04Modal from './RPC04Step04Modal'
 import RPC04Step02Modal from './RPC04Step02Modal'
-import {useRecoilState} from 'recoil'
-import {approvalSuliReq} from '../../../../../recoil/reportAtom'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {approvalSuliReq, firstExportDocument} from '../../../../../recoil/reportAtom'
 
 
 const RPC04Step03ModalWrap = styled.div`
@@ -215,6 +215,7 @@ const RPC04Step03Modal = () => {
 
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(approvalSuliReq)
+  const firstDoc = useRecoilValue(firstExportDocument)
   let msg = []
 
   const modalData = {
@@ -246,7 +247,7 @@ const RPC04Step03Modal = () => {
   }
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step03ModalWrap>
-    <RPModalTop title='수리기입고요청서'/>
+    <RPModalTop title={firstDoc.title}/>
     <RPStepDeps
       dep='dep3'
       dep1title='거래처현황 세부정보'
