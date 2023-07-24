@@ -26,7 +26,7 @@ export const firstExportDocument = atom({
       현장명: '현장명',
       현장코드: '',
     },
-    equip: []
+    equip: [],
   },
 })
 export const exportDocumentBody = atom({
@@ -79,6 +79,40 @@ export const exportDocumentBody = atom({
       오탁수처리시설: false,
       기타: false,
       없음: false,
+      특기사항: '',
+    },
+  },
+})
+
+export const approvalSuliReq = atom({
+  key: 'approvalSuliReq',
+  default: {
+    구분: '',
+    UserInfo: {},
+    거래처현황: {},
+    거래처세부: {},
+    장비리스트: [],
+    운송비: {
+      입고운송비조건: '',
+      입고운송비청구방법: '',
+      출고운송비조건: '',
+      출고운송비청구방법: '',
+      입고운임: '',
+      출고운임: '',
+      업무협의사항: '',
+    },
+    결제조건: {
+      결제방법: '',
+      개월: '',
+      메일: '',
+      담당자: '',
+      연락처: '',
+      결제처: '',
+      수신: '',
+      일시불: '',
+      계약서: '',
+      청구일: '',
+      결제일: '',
       특기사항: '',
     },
   },

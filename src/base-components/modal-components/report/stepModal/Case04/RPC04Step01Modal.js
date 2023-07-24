@@ -6,7 +6,7 @@ import { useModal } from "../../../../../hooks/useModal";
 import RPCase0402Modal from "../../documentModal/Case04/RPCase0402Modal"
 import RPC04Step02Modal from "./RPC04Step02Modal";
 import {useRecoilState, useRecoilValue} from 'recoil'
-import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
+import {approvalSuliReq, exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
 import userAtom from '../../../../../recoil/userAtom'
 import fetchService from '../../../../../util/fetchService'
 import {CommaPrice} from '../../../../../util/commaPrice'
@@ -152,10 +152,9 @@ const ModalBtm = styled.div`
 const RPC04Step01Modal = () => {
 
   const {openModal, closeModal} = useModal();
-  const [body, setBody] = useRecoilState(exportDocumentBody)
+  const [body, setBody] = useRecoilState(approvalSuliReq)
   const {auth} = useRecoilValue(userAtom)
-  const {client, site} = useRecoilValue(firstExportDocument)
-
+  const {client, site, equip, title} = useRecoilValue(firstExportDocument)
 
   const [clientCurrent, setClientCurrent] = useState({
     거래처코드: '',
@@ -191,11 +190,13 @@ const RPC04Step01Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  console.log(site)
   useEffect(() => {
 
     const fetchData = async () => {
       setBody({
         ...body,
+        구분: title,
         UserInfo: {
           DeptCd: auth.부서코드,
           DeptNm: auth.부서명,
@@ -206,10 +207,10 @@ const RPC04Step01Modal = () => {
           usergwid: auth.usergwid
         },
         거래처현황: {
-          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: equip[0].거래처코드, 현장코드: equip[0].현장코드})).data[0]
         },
         거래처세부: {
-          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: equip[0].거래처코드, 현장코드: equip[0].현장코드})).data
         }
       })
     }
@@ -220,11 +221,11 @@ const RPC04Step01Modal = () => {
 
 
   useEffect(() => {
-    fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
+    fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.equip[0].거래처코드, 현장코드: exportDoc.equip[0].현장코드})
       .then((res) => {
         setClientCurrent(res.data[0]);
       });
-    fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
+    fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.equip[0].거래처코드, 현장코드: exportDoc.equip[0].현장코드})
       .then((res)=>{
         setClientDetail(res.data);
       })

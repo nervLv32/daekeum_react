@@ -98,7 +98,7 @@ const RPStepDeps = ({ dep, dep1title, dep2title, dep3title, dep4title }) => {
           <span className="bar"></span>
           <li className={dep === "dep4" ? 'active' : ''}>
             <i>4</i>
-            <p>신규사업</p>
+            <p>{dep4title}</p>
           </li>
         </>
       }

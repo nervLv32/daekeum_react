@@ -71,6 +71,13 @@ const RPCase0402Modal = () => {
       })
   }
 
+  const checkValidation = () => {
+    /*Object.entries(firstExport.equip).forEach(([key,value]) => {
+      if(key !== '특기사항' && (!value || value !== '' || value !== null)) flag = true
+    })*/
+    return firstExport.equip.length > 0
+  }
+
   useEffect(() => {
     if (parseInt(params.currentPage) > 1) {
       fetchList(sites)
@@ -103,8 +110,12 @@ const RPCase0402Modal = () => {
     </RPModalBody>
     <RPModalBottom>
       <button className='primary-btn' onClick={() => {
-        closeModal()
-        openModal({...modalData, content: <RPC04Step01Modal/>})
+        if(checkValidation()){
+          closeModal()
+          openModal({...modalData, content: <RPC04Step01Modal/>})
+        }else{
+          alert("아이템이 선택되지 않았습니다.")
+        }
       }}>확인
       </button>
       <button className='del-btn' onClick={() => {
