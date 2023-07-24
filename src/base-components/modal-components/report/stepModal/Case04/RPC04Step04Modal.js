@@ -246,8 +246,15 @@ const RPC04Step04Modal = () => {
     })
   }
 
-  const submitBody = () => {
+  let msg = ''
 
+  const submitBody = async () => {
+    // console.log(body)
+    const res = await fetchService('/approval/approvalSuliReq', 'post', body)
+    msg = res.msg
+
+    if(res.msg === '') return true
+    else return false
   }
 
   useEffect(() => {
@@ -458,8 +465,13 @@ const RPC04Step04Modal = () => {
           openModal({...modalData, content: <RPC04Step03Modal/>})
         }}>이전
         </button>
-        <button className='primary-btn' onClick={() => {
-          submitBody()
+        <button className='primary-btn' onClick={async () => {
+          if(await submitBody()){
+            alert('상신되었습니다.')
+            window.location.reload()
+          }else{
+            alert(msg)
+          }
         }}>서류상신
         </button>
       </ModalBtm>

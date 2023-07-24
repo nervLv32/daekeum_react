@@ -10,9 +10,10 @@ import TopSearchMenu from '../../components/molecules/TopSearchMenu';
 import ReportMainTable from '../../components/report/ReportMainTable';
 import ReportMainTableTop from '../../components/report/ReportMainTableTop';
 import {useModal} from '../../hooks/useModal';
-import {useRecoilState, useResetRecoilState, useSetRecoilState} from 'recoil'
+import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil'
 import fetchService from '../../util/fetchService';
 import {exportDocumentBody, firstExportDocument, reportAtom, reportParamAtom} from '../../recoil/reportAtom'
+import userAtom from '../../recoil/userAtom'
 
 const ReportWrap = styled.div`
   padding: 28px 30px 0;
@@ -38,6 +39,7 @@ const Report = () => {
   const [isLoading, setLoading] = useState(false);
   const [reports, setReports] = useRecoilState(reportAtom);
   const [params, setParams] = useRecoilState(reportParamAtom);
+  const {auth} = useRecoilValue(userAtom)
   const setBody = useSetRecoilState(exportDocumentBody)
   const resetBody = useResetRecoilState(exportDocumentBody)
   const [firstDocument, setFirstDocument] = useRecoilState(firstExportDocument)
@@ -52,6 +54,7 @@ const Report = () => {
   };
 
   const fetchList = (list) => {
+
     fetchService('/approval/approvalDocList', 'post', params)
       .then((res) => {
         const data = [...list, ...res.data];
@@ -81,8 +84,12 @@ const Report = () => {
 
   useEffect(() => {
     setLoading(true);
+    setParams({
+      ...params,
+      작성자: auth.한글이름
+    })
     fetchList([]);
-  }, [params.searchword]);
+  }, [params.searchword, params.작성자]);
 
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
