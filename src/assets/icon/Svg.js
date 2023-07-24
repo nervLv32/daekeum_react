@@ -65,6 +65,12 @@ const MoreViewIco = () => (
   </svg>
 )
 
+const Calendar = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.5 2H9V1H8V2H4V1H3V2H2.5C1.945 2 1.505 2.45 1.505 3L1.5 10C1.5 10.55 1.945 11 2.5 11H9.5C10.05 11 10.5 10.55 10.5 10V3C10.5 2.45 10.05 2 9.5 2ZM9.5 10H2.5V5H9.5V10ZM9.5 4H2.5V3H9.5V4ZM4.5 7H3.5V6H4.5V7ZM6.5 7H5.5V6H6.5V7ZM8.5 7H7.5V6H8.5V7ZM4.5 9H3.5V8H4.5V9ZM6.5 9H5.5V8H6.5V9ZM8.5 9H7.5V8H8.5V9Z" fill={'current'}/>
+  </svg>
+)
+
 export {
   HomeIco,
   InvIco,
@@ -76,5 +82,6 @@ export {
   MenuIco,
   CheckCompIco,
   DocumentIco,
-  MoreViewIco
+  MoreViewIco,
+  Calendar
 }
