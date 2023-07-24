@@ -142,7 +142,7 @@ const Report = () => {
                   ...firstDocument,
                   title: '수리기입고요청서'
                 })
-                openModal({...modalData, content: <RPCase0301Modal/>})
+                openModal({...modalData, content: <RPCase0401Modal/>})
               }}>
                 <i>
                   <img src='../icons/icon-topmenu-microwave.png' alt='topmenu icon'/>
@@ -156,7 +156,7 @@ const Report = () => {
                   ...firstDocument,
                   title: '수리기출고요청서'
                 })
-                openModal({...modalData, content: <RPCase0301Modal/>})
+                openModal({...modalData, content: <RPCase0401Modal/>})
               }}>
                 <i>
                   <img src='../icons/icon-topmenu-microwave.png' alt='topmenu icon'/>

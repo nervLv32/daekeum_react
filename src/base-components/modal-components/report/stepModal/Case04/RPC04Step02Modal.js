@@ -5,6 +5,9 @@ import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
 import RPC04Step01Modal from "./RPC04Step01Modal";
 import RPC04Step03Modal from "./RPC04Step03Modal";
+import {useRecoilState} from 'recoil'
+import {firstExportDocument} from '../../../../../recoil/reportAtom'
+import ContList from '../../../../../components/contList'
 
 const RPC04Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -57,73 +60,6 @@ const CustomerStatusWrap = styled.div`
     }
   }
 `
-const InfoList = styled.ul`
-  background-color: #fff;
-  li {
-    height: 34px;
-    padding: 0 30px;
-    border-bottom : 1px solid #EBECEF;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    &.textarea-li {
-      height: auto;
-      padding: 14px 30px;
-      dl {
-        flex-direction: column;
-        align-items: flex-start;
-        dt {
-          margin-bottom: 8px;
-        }
-        dd {
-          width: 100%;
-          textarea {
-            resize: none;
-            width: 100%;
-            height: 80px;
-            border: 1px solid #d9d9d9;
-            font-size: 12px;
-            font-weight: 400;
-            color: #1c1b1f;
-            padding: 4px;
-            &:focus {
-              outline: none;
-              border-color: #1c1b1f;
-            }
-          }
-        }
-      }
-    }
-    dl {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      dt {
-        min-width: 80px;
-        font-weight: 500;
-        font-size: 12px;
-        color: #1c1b1f;
-      }
-      dd {
-        width: calc(100% - 80px);
-        input {
-          width: 100%;
-          box-sizing: border-box;
-          border: 0 none;
-          font-size: 12px;
-          font-weight: 400;
-          color: #1c1b1f;
-          &:focus {
-            outline: none;
-          }
-          &::placeholder {
-            color: #9da2ae;
-          }
-        }
-      }
-    }
-  }
-`
 const ModalBtm = styled.div`
   padding: 17px 30px;
   background-color: #f7f7f7;
@@ -170,12 +106,22 @@ const ModalBtm = styled.div`
 const RPC04Step02Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const [firstDoc, setFirstDoc] = useRecoilState(firstExportDocument)
+  const [selectId, setSelectId] = useState(0)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
 
+  const editEquip = (item) => {
+    const copy = [...firstDoc.equip]
+    copy[selectId] = item
+    setFirstDoc({
+      ...firstDoc,
+      equip: [...copy]
+    })
+  }
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step02ModalWrap>
     <RPModalTop title="수리기입고요청서" />
@@ -193,103 +139,13 @@ const RPC04Step02Modal = () => {
         <div className="title-wrap">
           <h6 className="title-text">계약사항</h6>
           <ul className="list-tab">
-            <li className="active">1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
+            {
+              firstDoc.equip.map((_, key) => <li className={key === selectId ? 'active' : ''}
+                                                 key={key} onClick={() => setSelectId(key)}>{key + 1}</li>)
+            }
           </ul>
         </div>
-        <InfoList>
-          <li>
-            <dl>
-              <dt>입고일</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>구분</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>모델</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>DKNO</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>MCNO</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>전압</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>방향</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>계약금액</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>출고예정</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>시간</dt>
-              <dd>
-                <input placeholder="항목을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li className="textarea-li">
-            <dl>
-              <dt>특기사항</dt>
-              <dd>
-                <textarea />
-              </dd>
-            </dl>
-          </li>
-        </InfoList>
+        <ContList item={firstDoc.equip[selectId]} editEquip={editEquip}/>
       </CustomerStatusWrap>
 
       <ModalBtm>
