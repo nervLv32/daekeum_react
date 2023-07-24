@@ -38,8 +38,13 @@ const Report = () => {
   const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const [reports, setReports] = useRecoilState(reportAtom);
-  const [params, setParams] = useRecoilState(reportParamAtom);
   const {auth} = useRecoilValue(userAtom)
+  const [params, setParams] = useState({
+    searchword: '',
+    currentPage: '1',
+    pageSize: '10',
+    작성자: auth.한글이름,
+  },);
   const setBody = useSetRecoilState(exportDocumentBody)
   const resetBody = useResetRecoilState(exportDocumentBody)
   const [firstDocument, setFirstDocument] = useRecoilState(firstExportDocument)
@@ -84,10 +89,6 @@ const Report = () => {
 
   useEffect(() => {
     setLoading(true);
-    setParams({
-      ...params,
-      작성자: auth.한글이름
-    })
     fetchList([]);
   }, [params.searchword, params.작성자]);
 
