@@ -120,6 +120,7 @@ const RPC04Step02Modal = () => {
   const [suliReq, setSuliReq] = useRecoilState(approvalSuliReq)
   const [selectId, setSelectId] = useState(0)
 
+  let errMsg = []
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
@@ -135,10 +136,26 @@ const RPC04Step02Modal = () => {
   }
 
   const updateValue = () => {
-    setSuliReq({
-      ...suliReq,
-      장비리스트: [...firstDoc.equip]
+    const equipDefault = ['입고일', '구분', '모델', 'DKNO', 'MCNO', '전압', '방향', '계약금액', '출고예정', '시간']
+    let flag = true
+    firstDoc.equip.forEach(item => {
+      equipDefault.forEach(it => {
+        let keyArr = Object.entries(item).map(([key, value]) => key)
+        if(keyArr.indexOf(it) === -1) {
+          flag = false
+          errMsg.push(it)
+        }
+      })
     })
+
+    if(flag){
+      setSuliReq({
+        ...suliReq,
+        장비리스트: [...firstDoc.equip],
+      })
+    }
+
+    return flag
   }
 
   /******* 수리기입고요청서 케이스의 두번째 *******/
@@ -175,14 +192,18 @@ const RPC04Step02Modal = () => {
 
       <ModalBtm>
         <button className='del-btn' onClick={() => {
-          updateValue()
           closeModal()
           openModal({...modalData, content: <RPC04Step01Modal/>})
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          closeModal()
-          openModal({...modalData, content: <RPC04Step03Modal/>})
+          if(updateValue()){
+            closeModal()
+            openModal({...modalData, content: <RPC04Step03Modal/>})
+          }else{
+            alert(errMsg.toString() + ' 항목이 비어있습니다.')
+            errMsg = []
+          }
         }}>다음
         </button>
       </ModalBtm>

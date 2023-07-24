@@ -1,6 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import {DateFormat} from '../../util/dateFormat'
+import SingleDate from '../calander/SingleDate'
+import TimeSelector from '../timeSelector'
 
 const InfoList = styled.ul`
   background-color: #fff;
@@ -48,6 +50,7 @@ const InfoList = styled.ul`
         font-weight: 500;
         font-size: 12px;
         color: #1c1b1f;
+        
       }
       dd {
         width: calc(100% - 80px);
@@ -65,6 +68,14 @@ const InfoList = styled.ul`
             color: #9da2ae;
           }
         }
+        p {
+          align-self: center;
+          color: #9DA2AE;
+          font-size: 12px;
+          &.fill {
+            color: #1c1b1f
+          }
+        }
       }
     }
   }
@@ -78,16 +89,66 @@ const Index = ({ item, editEquip }) => {
     editEquip(copy)
   }
 
+  /***** 시간 이벤트 ****/
+  const [isOpenTime, setOpenTime] = useState(false)
+
+  const timeSubmit = (data) => {
+    const time = (data.hour < 10 ? '0' + data.hour : data.hour) + ':' + (data.minute < 10 ? '0' + data.minute : data.minute)
+    console.log(time)
+    updateValue('시간', time)
+    timeClose()
+  }
+
+  const timeClose = () => {
+    setOpenTime(false)
+  }
+
+  /***** 달력 이벤트 ****/
+  const [isOpenDate, setOpenDate] = useState({
+    flag: false,
+    type: {
+      입고일: false,
+      출고예정: false,
+    },
+  })
+
+  const submit = (key, value) => {
+    updateValue(key, value)
+    close()
+  }
+
+  const close = (e) => {
+    setOpenDate({
+      flag: false,
+      type: {
+        start: false,
+        end: false,
+        deli: false,
+      },
+    })
+  }
+
   return <InfoList>
     <li>
       <dl>
         <dt>입고일</dt>
         <dd>
-          <input
+          {/*<input
             placeholder="항목을 입력하세요"
             value={DateFormat(new Date(item.입고일 || '')).substr(0,10)}
             onChange={(e) => updateValue('입고일', e.target.value)}
-          />
+          />*/}
+          <p
+            className={item.입고일 ? 'fill' : ''}
+            onClick={() => setOpenDate({
+              flag: true,
+              type: {
+                ...isOpenDate.type,
+                입고일: true,
+              },
+            })}>
+            {item.입고일 ? DateFormat(new Date(item.입고일)).substr(0, 10) : '항목입력'}
+          </p>
         </dd>
       </dl>
     </li>
@@ -161,8 +222,8 @@ const Index = ({ item, editEquip }) => {
         <dt>계약금액</dt>
         <dd>
           <input placeholder="항목을 입력하세요"
-                 value={item.MCNO || ''}
-                 onChange={(e) => updateValue('MCNO', e.target.value)}
+                 value={item.계약금액 || ''}
+                 onChange={(e) => updateValue('계약금액', e.target.value)}
           />
         </dd>
       </dl>
@@ -171,10 +232,22 @@ const Index = ({ item, editEquip }) => {
       <dl>
         <dt>출고예정</dt>
         <dd>
-          <input placeholder="항목을 입력하세요"
+          {/*<input placeholder="항목을 입력하세요"
                  value={item.출고예정 || ''}
                  onChange={(e) => updateValue('출고예정', e.target.value)}
-          />
+          />*/}
+
+          <p
+            className={item.출고예정 ? 'fill' : ''}
+            onClick={() => setOpenDate({
+              flag: true,
+              type: {
+                ...isOpenDate.type,
+                출고예정: true,
+              },
+            })}>
+            {item.출고예정 ? DateFormat(new Date(item.출고예정)).substr(0, 10) : '항목입력'}
+          </p>
         </dd>
       </dl>
     </li>
@@ -182,10 +255,15 @@ const Index = ({ item, editEquip }) => {
       <dl>
         <dt>시간</dt>
         <dd>
-          <input placeholder="항목을 입력하세요"
+          {/*<input placeholder="항목을 입력하세요"
                  value={item.시간 || ''}
                  onChange={(e) => updateValue('시간', e.target.value)}
-          />
+          />*/}
+          <p
+            className={item.시간 ? 'fill' : ''}
+            onClick={() => setOpenTime(true)}>
+            {item.시간 ? item.시간 : '시간선택'}
+          </p>
         </dd>
       </dl>
     </li>
@@ -197,6 +275,20 @@ const Index = ({ item, editEquip }) => {
         </dd>
       </dl>
     </li>
+
+    {
+      isOpenDate.flag && <SingleDate
+        type={
+          isOpenDate.type.입고일 ? '입고일' :
+            isOpenDate.type.출고예정 ? '출고예정' : ''
+        }
+        submit={submit}
+        close={close}
+      />
+    }
+    {
+      isOpenTime && <TimeSelector close={timeClose} submit={timeSubmit}/>
+    }
   </InfoList>
 }
 

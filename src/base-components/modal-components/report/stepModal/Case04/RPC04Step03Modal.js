@@ -215,6 +215,7 @@ const RPC04Step03Modal = () => {
 
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(approvalSuliReq)
+  let msg = []
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
@@ -229,6 +230,19 @@ const RPC04Step03Modal = () => {
         [key]: value,
       },
     })
+  }
+
+  const validBody = () => {
+    const copy = {...body.운송비}
+    let flag = true
+    Object.entries(copy).forEach(([key, value]) => {
+      if(key !== '업무협의사항' && !value) {
+        flag = false
+        msg.push(key)
+      }
+    })
+
+    return flag
   }
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step03ModalWrap>
@@ -344,8 +358,13 @@ const RPC04Step03Modal = () => {
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          closeModal()
-          openModal({...modalData, content: <RPC04Step04Modal/>})
+          if(validBody()){
+            closeModal()
+            openModal({...modalData, content: <RPC04Step04Modal/>})
+          }else{
+            alert( msg.toString() + ' 항목이 비어있습니다.' )
+            msg = []
+          }
         }}>다음
         </button>
       </ModalBtm>

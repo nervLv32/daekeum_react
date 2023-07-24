@@ -19,7 +19,6 @@ const RPCase0402ModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
 `
-
 const RPCase0402Modal = () => {
 
   const {openModal, closeModal} = useModal()
@@ -110,11 +109,11 @@ const RPCase0402Modal = () => {
     </RPModalBody>
     <RPModalBottom>
       <button className='primary-btn' onClick={() => {
-        if(checkValidation()){
+        if (checkValidation()) {
           closeModal()
           openModal({...modalData, content: <RPC04Step01Modal/>})
-        }else{
-          alert("아이템이 선택되지 않았습니다.")
+        } else {
+          alert('아이템이 선택되지 않았습니다.')
         }
       }}>확인
       </button>
