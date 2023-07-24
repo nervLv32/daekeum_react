@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import RPModalTop from '../../../../../components/report/RPModalTop'
 import RPStepDeps from '../../../../../components/report/RPStepDeps'
@@ -7,6 +7,9 @@ import RPC04Step04Modal from './RPC04Step04Modal'
 import RPC04Step02Modal from './RPC04Step02Modal'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {approvalSuliReq, firstExportDocument} from '../../../../../recoil/reportAtom'
+import fetchService from '../../../../../util/fetchService'
+import OptionSelectedMemo from '../../../../../components/optionSelector/OptionSelectorMemo'
+import {CommaPriceRegis} from '../../../../../util/commaPrice'
 
 
 const RPC04Step03ModalWrap = styled.div`
@@ -216,6 +219,11 @@ const RPC04Step03Modal = () => {
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(approvalSuliReq)
   const firstDoc = useRecoilValue(firstExportDocument)
+  const [options, setOptions] = useState({
+    조건: [],
+    청구방법: [],
+  })
+
   let msg = []
 
   const modalData = {
@@ -245,6 +253,19 @@ const RPC04Step03Modal = () => {
 
     return flag
   }
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setOptions({
+        조건: (await fetchService('/approval/comboShipCond/', 'post', {})).data,
+        청구방법: (await fetchService('/approval/comboShipChungu/', 'post', {})).data,
+      })
+    }
+
+    fetchData()
+  }, [])
+
   /******* 수리기입고요청서 케이스의 두번째 *******/
   return <RPC04Step03ModalWrap>
     <RPModalTop title={firstDoc.title}/>
@@ -255,6 +276,7 @@ const RPC04Step03Modal = () => {
       dep3title='청구·수금현황'
       dep4title='축중기체크'
     />
+    <button onClick={() => console.log(body)}> test </button>
     {/* 거래처 현황 */}
     <RPC04Step03ModalBody>
 
@@ -272,10 +294,12 @@ const RPC04Step03Modal = () => {
             <dl>
               <dt>조건</dt>
               <dd>
-                <input type={'text'}
-                       value={body.운송비.입고운송비조건}
-                       onChange={e => updateBody('입고운송비조건', e.target.value)}
-                       placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  body={body}
+                  list={options.조건}
+                  updateValue={updateBody}
+                  depth1={'운송비'}
+                  depth2={'입고운송비조건'} />
               </dd>
             </dl>
           </li>
@@ -283,10 +307,12 @@ const RPC04Step03Modal = () => {
             <dl>
               <dt>청구방법</dt>
               <dd>
-                <input type={'text'}
-                       value={body.운송비.입고운송비청구방법}
-                       onChange={e => updateBody('입고운송비청구방법', e.target.value)}
-                       placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  body={body}
+                  list={options.청구방법}
+                  updateValue={updateBody}
+                  depth1={'운송비'}
+                  depth2={'입고운송비청구방법'} />
               </dd>
             </dl>
           </li>
@@ -295,8 +321,8 @@ const RPC04Step03Modal = () => {
               <dt>입고운임</dt>
               <dd>
                 <input type={'text'}
-                       value={body.운송비.입고운임}
-                       onChange={e => updateBody('입고운임', e.target.value)}
+                       value={CommaPriceRegis(body.운송비.입고운임)}
+                       onChange={e => updateBody('입고운임', e.target.value.replaceAll(',',''))}
                        placeholder='항목을 입력하세요'/>
               </dd>
             </dl>
@@ -312,10 +338,12 @@ const RPC04Step03Modal = () => {
             <dl>
               <dt>조건</dt>
               <dd>
-                <input type={'text'}
-                       value={body.운송비.출고운송비조건}
-                       onChange={e => updateBody('출고운송비조건', e.target.value)}
-                       placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  body={body}
+                  list={options.조건}
+                  updateValue={updateBody}
+                  depth1={'운송비'}
+                  depth2={'출고운송비조건'} />
               </dd>
             </dl>
           </li>
@@ -323,10 +351,12 @@ const RPC04Step03Modal = () => {
             <dl>
               <dt>청구방법</dt>
               <dd>
-                <input type={'text'}
-                       value={body.운송비.출고운송비청구방법}
-                       onChange={e => updateBody('출고운송비청구방법', e.target.value)}
-                       placeholder='항목을 입력하세요'/>
+                <OptionSelectedMemo
+                  body={body}
+                  list={options.청구방법}
+                  updateValue={updateBody}
+                  depth1={'운송비'}
+                  depth2={'출고운송비청구방법'} />
               </dd>
             </dl>
           </li>
@@ -335,8 +365,8 @@ const RPC04Step03Modal = () => {
               <dt>출고운임</dt>
               <dd>
                 <input type={'text'}
-                       value={body.운송비.출고운임}
-                       onChange={e => updateBody('출고운임', e.target.value)}
+                       value={CommaPriceRegis(body.운송비.출고운임)}
+                       onChange={e => updateBody('출고운임', e.target.value.replaceAll(',',''))}
                        placeholder='항목을 입력하세요'/>
               </dd>
             </dl>
