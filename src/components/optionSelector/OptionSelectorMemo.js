@@ -14,17 +14,19 @@ const OptionSelectedMemo = ({
                               depth1,
                               depth2,
                             }) => {
-  return <Select
-    name={depth2}
-    className={body[depth1][depth2] ? 'active' : ''}
-    value={body[depth1][depth2] || ''}
-    onChange={(e) => updateValue(depth2, e.target.value)}
-  >
-    <option value="" disabled>{list.length ? '항목선택' : '-'}</option>
-    {
-      list.length && list.map((it, idx) => <option value={it.value} key={idx}> {it.value} </option> )
-    }
-  </Select>
+  return <>
+    <Select
+      name={depth2 ? depth2 : depth1}
+      className={ depth2 ? (body[depth1][depth2] ? 'active' : '') : (body[depth1] ? 'active' : '')}
+      value={depth2 ? (body[depth1][depth2] || '') : (body[depth1] || '')}
+      onChange={(e) => updateValue(depth2 ? depth2 : depth1, e.target.value)}
+    >
+      <option value="" disabled>{list.length ? '항목선택' : '-'}</option>
+      {
+        list.length && list.map((it, idx) => <option value={it.value} key={idx}> {it.value} </option> )
+      }
+    </Select>
+  </>
 }
 
 export default OptionSelectedMemo

@@ -1,8 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import {DateFormat} from '../../util/dateFormat'
 import SingleDate from '../calander/SingleDate'
 import TimeSelector from '../timeSelector'
+import fetchService from '../../util/fetchService'
+import OptionSelectedMemo from '../optionSelector/OptionSelectorMemo'
+import {CommaPriceRegis} from '../../util/commaPrice'
 
 const InfoList = styled.ul`
   background-color: #fff;
@@ -89,6 +92,15 @@ const Index = ({ item, editEquip }) => {
     editEquip(copy)
   }
 
+  const [options, setOptions] = useState({
+    전압: [],
+    방향: []
+  })
+
+  const callData = async (url, param) => {
+    const res = await fetchService(`/approval/${url}`, 'post', param)
+    return res.data
+  }
   /***** 시간 이벤트 ****/
   const [isOpenTime, setOpenTime] = useState(false)
 
@@ -127,6 +139,17 @@ const Index = ({ item, editEquip }) => {
       },
     })
   }
+
+  useEffect(() => {
+    const fetchOption = async () => {
+      setOptions({
+        전압: await callData('comboVolt', {}), // [6] 전압 아이템 조회
+        방향: await callData('comboDirection', {}), // [7] 방향 아이템 조회
+      })
+    }
+
+    fetchOption()
+  }, [])
 
   return <InfoList>
     <li>
@@ -199,10 +222,12 @@ const Index = ({ item, editEquip }) => {
       <dl>
         <dt>전압</dt>
         <dd>
-          <input placeholder="항목을 입력하세요"
-                 value={item.전압 || ''}
-                 onChange={(e) => updateValue('전압', e.target.value)}
-          />
+          <OptionSelectedMemo
+            body={item}
+            list={options.전압}
+            updateValue={updateValue}
+            depth1={'전압'}
+            depth2={null} />
         </dd>
       </dl>
     </li>
@@ -210,10 +235,13 @@ const Index = ({ item, editEquip }) => {
       <dl>
         <dt>방향</dt>
         <dd>
-          <input placeholder="항목을 입력하세요"
-                 value={item.방향 || ''}
-                 onChange={(e) => updateValue('방향', e.target.value)}
-          />
+
+          <OptionSelectedMemo
+            body={item}
+            list={options.방향}
+            updateValue={updateValue}
+            depth1={'방향'}
+            depth2={null} />
         </dd>
       </dl>
     </li>
@@ -222,8 +250,8 @@ const Index = ({ item, editEquip }) => {
         <dt>계약금액</dt>
         <dd>
           <input placeholder="항목을 입력하세요"
-                 value={item.계약금액 || ''}
-                 onChange={(e) => updateValue('계약금액', e.target.value)}
+                 value={CommaPriceRegis(item.계약금액 || '')}
+                 onChange={(e) => updateValue('계약금액', e.target.value.replaceAll(',',''))}
           />
         </dd>
       </dl>

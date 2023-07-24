@@ -276,7 +276,6 @@ const RPC04Step03Modal = () => {
       dep3title='청구·수금현황'
       dep4title='축중기체크'
     />
-    <button onClick={() => console.log(body)}> test </button>
     {/* 거래처 현황 */}
     <RPC04Step03ModalBody>
 

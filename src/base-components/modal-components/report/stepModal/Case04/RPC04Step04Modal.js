@@ -149,6 +149,15 @@ const InfoList = styled.ul`
             color: #9da2ae;
           }
         }
+
+        p {
+          align-self: center;
+          color: #9DA2AE;
+          font-size: 12px;
+          &.fill {
+            color: #1c1b1f
+          }
+        }
       }
     }
   }
