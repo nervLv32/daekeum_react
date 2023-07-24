@@ -4,6 +4,12 @@ import {useModal} from '../../../hooks/useModal'
 import {Calendar} from '../../../assets/icon/Svg'
 import {DateFormat} from '../../../util/dateFormat'
 import fetchService from '../../../util/fetchService'
+import StandardCalendar from '../../../components/molecules/calendar/StandardCalendar'
+import SingleCalendar from '../../../components/molecules/calendar/SingleCalendar'
+import SingleDate from '../../../components/calander/SingleDate'
+import {useRecoilValue} from 'recoil'
+import userAtom from '../../../recoil/userAtom'
+import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
 
 const InventoryRequestModalWrap = styled.div`
   background-color: #fff;
@@ -25,6 +31,7 @@ const TitleWrap = styled.div`
   flex-direction: column;
 
   > div {
+    display: inline-block;
     background-color: #F6F6F6;
     padding: 1rem .5rem .5rem;
     font-size: 1.3rem;
@@ -125,11 +132,19 @@ const Choice = styled.div`
 const InventoryRequestModal = () => {
   const {closeModal} = useModal()
   const observeTargetRef = useRef(null)
+  const [isCalendar, setCalendar] = useState(false)
+  const {auth} = useRecoilValue(userAtom)
   const [body, setBody] = useState({
-    입고요청일: DateFormat(new Date()),
-    발송공장: '공장',
-    요청자: '요청자',
+    입고요청일: '',
+    창고코드: '',
+    요청자: auth.한글이름,
+    요청자코드: auth.사원코드,
+    EmpNo: auth.사원코드,
+    EmpNm: auth.한글이름,
+    비고: '',
+    요청부서명: auth.부서명,
   })
+
   const [params, setParams] = useState({
     EmpNo: '',
     대금AS: '',
@@ -137,6 +152,7 @@ const InventoryRequestModal = () => {
     pageSize: 5,
     currentPage: 1,
   })
+  const [options, setOptions] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [list, setList] = useState({
     품목리스트: [],
@@ -144,6 +160,22 @@ const InventoryRequestModal = () => {
   })
 
   //TODO - 이제 기능 붙혀보자
+
+  const submit = (key, value) => {
+    updateBody(key, value)
+    close()
+  }
+
+  const close = () => {
+    setCalendar(false)
+  }
+
+  const updateBody = (key,value) => {
+    setBody({
+      ...body,
+      [key] : value
+    })
+  }
   const updateValue = (value) => {
     setList({
       ...list,
@@ -184,8 +216,24 @@ const InventoryRequestModal = () => {
     }
   })
 
+  const submitData = () => {
+    const reqParams = {
+      ...body,
+      reqItems: [ ...list.요청리스트 ]
+    }
+
+    fetchService('/inventory/addMaterialRequestItems', 'post', reqParams)
+      .then((res) => {
+        console.log(res)
+      })
+  }
+
   useEffect(() => {
     fetchList([])
+    fetchService('/inventory/shippingFactorylist', 'post', {})
+      .then(res => {
+        setOptions(res.data)
+    })
   }, [])
 
   useEffect(() => {
@@ -199,7 +247,6 @@ const InventoryRequestModal = () => {
     }
     return () => onIntersect.disconnect()
   }, [isLoading, list])
-
 
   useEffect(() => {
     document.body.style.cssText = `
@@ -218,11 +265,20 @@ const InventoryRequestModal = () => {
     <div className='list-top'>
       <div className='title'>간편입력</div>
       <TitleWrap>
-        <div>
-          <span><b>입고요청일</b> {body.입고요청일.substr(0, 10) || ''} <Calendar/> </span>
+        <div onClick={e => setCalendar(true)}>
+          <span ><b>입고요청일</b> {body.입고요청일 ? DateFormat(new Date(body.입고요청일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar /> </span>
         </div>
-        <div>
-          <span><b>발송공장</b> {body.발송공장 || ''} <span>|</span> <b>요청자</b> {body.요청자 || ''} </span>
+        <div onClick={() => {}}>
+          <span><b>발송공장</b>
+          <select value={body.창고코드 ? body.창고코드 : ''} onChange={e => updateBody('창고코드', e.target.value)}>
+            <option value={''} disabled>항목선택</option>
+            {
+              options.map((it, key) => {
+                return <option key={key} value={it.창고코드}> {it.대표요청부서}</option>
+              })
+            }
+          </select>
+            <span>|</span> <b>요청자</b> {body.요청자 || ''} </span>
         </div>
       </TitleWrap>
     </div>
@@ -248,9 +304,14 @@ const InventoryRequestModal = () => {
       </Choice>
     </ModalBody>
     <ModalBtm>
-      <Button>입력완료</Button>
-      <Button className='del'>취소</Button>
+      <Button onClick={submitData}>입력완료</Button>
+      <Button className='del' onClick={closeModal}>취소</Button>
     </ModalBtm>
+    {
+      isCalendar && <>
+      <SingleDate submit={submit} close={close} type={'입고요청일'} />
+      </>
+    }
   </InventoryRequestModalWrap>
 }
 

@@ -82,7 +82,6 @@ const InventoryRequest = () => {
       .then((res) => {
         const data = [...list, ...res.data]
         setMaterialRequestList(data)
-        console.log(res)
         if(res.data.length > 9) {
           setTimeout(() => {
             setLoading(false)
