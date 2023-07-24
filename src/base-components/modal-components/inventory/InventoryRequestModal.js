@@ -141,6 +141,8 @@ const InventoryRequestModal = () => {
     요청리스트: [],
   })
 
+  //TODO - 이제 기능 붙혀보자
+
   return <InventoryRequestModalWrap>
     <div className='list-top'>
       <div className='title'>간편입력</div>
