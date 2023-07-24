@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
 import {useModal} from '../../../hooks/useModal'
 import {Calendar} from '../../../assets/icon/Svg'
 import {DateFormat} from '../../../util/dateFormat'
+import fetchService from '../../../util/fetchService'
 
 const InventoryRequestModalWrap = styled.div`
   background-color: #fff;
@@ -27,6 +28,7 @@ const TitleWrap = styled.div`
     background-color: #F6F6F6;
     padding: 1rem .5rem .5rem;
     font-size: 1.3rem;
+
     &:last-child {
       padding: 0 .5rem 1rem;
     }
@@ -90,7 +92,8 @@ const Choice = styled.div`
   position: relative;
   width: 100%;
   padding: 20px 20px 10px;
-  >div{
+
+  > div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -98,10 +101,12 @@ const Choice = styled.div`
     padding: 10px;
     border-radius: 10px;
     align-items: center;
+
     &.noFill {
       background-color: transparent;
     }
-    >div{
+
+    > div {
       button:first-child {
         border: 1px solid #000;
         padding: 3px 10px;
@@ -109,7 +114,8 @@ const Choice = styled.div`
         margin-right: 10px;
         background-color: white;
       }
-      button{
+
+      button {
         margin-right: 5px;
       }
     }
@@ -118,30 +124,95 @@ const Choice = styled.div`
 
 const InventoryRequestModal = () => {
   const {closeModal} = useModal()
+  const observeTargetRef = useRef(null)
   const [body, setBody] = useState({
     입고요청일: DateFormat(new Date()),
     발송공장: '공장',
     요청자: '요청자',
   })
-
+  const [params, setParams] = useState({
+    EmpNo: '',
+    대금AS: '',
+    신규중고: '',
+    pageSize: 5,
+    currentPage: 1,
+  })
+  const [isLoading, setLoading] = useState(false)
   const [list, setList] = useState({
-    품목리스트: [{
-      품목코드: 'TNUGM03002',
-      파트: '감속기',
-      품명: 'G/M(대금감속기)',
-      재고: '1',
-      비고: '규격 : 2T*Φ610(하단)*Φ205(상단)*410(H)    사용모델 R10D-06',
-    },{
-      품목코드: 'TNUGM03002',
-      파트: '감속기',
-      품명: 'G/M(대금감속기)',
-      재고: '1',
-      비고: '규격 : 2T*Φ610(하단)*Φ205(상단)*410(H)    사용모델 R10D-06',
-    },],
+    품목리스트: [],
     요청리스트: [],
   })
 
   //TODO - 이제 기능 붙혀보자
+  const updateValue = (value) => {
+    setList({
+      ...list,
+      요청리스트: [...list.요청리스트, value],
+    })
+  }
+  const filterItem = (value) => {
+    setList({
+      ...list,
+      요청리스트: [...list.요청리스트.filter(it => it !== value)]
+    })
+  }
+
+  const fetchList = (temp) => {
+    fetchService('/inventory/materialRequestItemList', 'post', params)
+      .then((res) => {
+        const data = [...temp.품목리스트 || [] , ...res.data]
+        setList({
+          품목리스트: [...data],
+          요청리스트: [...temp.요청리스트 || []]
+        })
+        if (res.data.length > 4) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
+  }
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setParams({
+        ...params,
+        currentPage: parseInt(params.currentPage) + 1,
+      })
+      fetchList(list)
+    }
+  })
+
+  useEffect(() => {
+    fetchList([])
+  }, [])
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [])
+
+  useEffect(() => {
+    if(observeTargetRef.current){
+      !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    }
+    return () => onIntersect.disconnect()
+  }, [isLoading, list])
+
+
+  useEffect(() => {
+    document.body.style.cssText = `
+    position: fixed; 
+    top: -${window.scrollY}px;
+    overflow-y: scroll;
+    width: 100%;`
+    return () => {
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
 
   return <InventoryRequestModalWrap>
     <div className='list-top'>
@@ -158,18 +229,18 @@ const InventoryRequestModal = () => {
     <ModalBody>
       <Section>
         <div className={'title'}> 품목리스트</div>
-        <Table item={list.품목리스트}/>
+        <Table item={list.품목리스트} list={list} observeTargetRef={observeTargetRef} updateItem={updateValue} filterItem={filterItem}/>
         <div className={'title'}> 요청리스트</div>
-        <Table item={list.품목리스트}/>
+        <Table item={list.요청리스트} />
       </Section>
       <Choice>
         <div className={list.요청리스트.length <= 0 ? 'noFill' : ''}>
           {
-            list.요청리스트.length > 0 &&<>
-              <p>1개 선택</p>
+            list.요청리스트.length > 0 && <>
+              <p>{list.요청리스트.length}개 선택</p>
               <div>
-                <button> 선택취소 </button>
-                <button> X </button>
+                <button onClick={() => setList({...list, 요청리스트:[]})}> 전체 취소</button>
+                <button> X</button>
               </div>
             </>
           }
@@ -193,12 +264,62 @@ const TableContent = styled.ul`
   flex-wrap: wrap;
 
   &.body {
-    margin-top: 10px;
+    display: block;
     background-color: white;
     padding: 0;
-    li{
+    min-height: 120px;
+    height: 120px;
+    max-height: 120px;
+    overflow-y: scroll;
+
+    li {
       font-family: Montserrat;
       font-weight: normal;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding-top: 10px;
+
+      p {
+        padding: 0;
+        margin: 0;
+        flex: 2;
+        border-left: 1px solid #9DA2AE;
+
+        &:first-child {
+          border-left: none;
+        }
+
+        &:nth-child(2n) {
+          flex: 1;
+        }
+
+        &:last-child {
+          margin-top: 10px;
+          background-color: #EBECEF;
+          min-width: 80vw;
+          line-height: 30px;
+          border-left: none;
+
+          &.nullContent {
+            height: 30px;
+          }
+        }
+      }
+
+      &.active {
+        background-color: #FEF1EC;
+        font-weight: 700;
+
+        p {
+          background-color: #FEF1EC;
+
+          &:last-child {
+            font-weight: normal;
+            background-color: #FFEAE2;
+          }
+        }
+      }
     }
   }
 
@@ -215,24 +336,26 @@ const TableContent = styled.ul`
     &.small {
       flex: 1;
     }
-    &:nth-child(5n + 1), &:nth-child(5n){
-      border: none;
-    }
-    
-    &.underLine {
-      min-width: 100vw;
-      background-color: #EBECEF;
-      margin-top: 1rem;
-      padding: 1rem 0;
-      margin-bottom: 10px;
-      &:last-child{
-        margin-bottom: 0;
-      }
-    }
+  }
+
+  .nullContent:after {
+    content: '';
   }
 `
-const Table = ({item}) => {
-  console.log(item)
+const Table = ({item, observeTargetRef, updateItem, filterItem, list}) => {
+
+  const [temp, setTemp] = useState([])
+
+
+  const checkItem = (value) => {
+    updateItem(value)
+  }
+
+  /*const filterItem = (value) => {
+    const copy = [...temp]
+    setTemp(copy.filter(it => it !== value))
+  }*/
+
   return <CustomTable>
     <TableContent>
       <li> 품목코드</li>
@@ -244,19 +367,39 @@ const Table = ({item}) => {
       item.length > 0 &&
       <TableContent className={'body'}>
         {
-          item.map((it, key) => {
-            return <>
-              <li>{it.품목코드}</li>
-              <li className={'small'}>{it.파트}</li>
-              <li>{it.품명}</li>
-              <li className={'small'}>{it.재고}</li>
-              <li className={'underLine'}> {it.비고} </li>
-            </>
-          })
+          item.map((it, key) => <TableItem key={key} it={it} checkItem={checkItem} list={list} filterItem={filterItem}/>)
         }
+        <div ref={observeTargetRef ? observeTargetRef : null}/>
       </TableContent>
     }
   </CustomTable>
+}
+
+const TableItem = ({it, checkItem, filterItem, list}) => {
+
+  const [isSelected, setSeleted] = useState(false)
+  const checked = () => {
+    if (!isSelected) {
+      checkItem(it)
+    } else {
+      filterItem(it)
+    }
+    setSeleted(prev => !prev)
+  }
+
+  useEffect(() => {
+    if(isSelected && list.요청리스트){
+      setSeleted(list.요청리스트.indexOf(it) > -1)
+    }
+  }, [list])
+
+  return <li className={isSelected ? 'active' : ''} onClick={() => checked()}>
+    <p>{it.품목코드}</p>
+    <p>{it.파트}</p>
+    <p>{it.품명}</p>
+    <p>{it.재고}</p>
+    <p className={it.사용모델 ? '' : 'nullContent'}>{it.사용모델}</p>
+  </li>
 }
 
 export default InventoryRequestModal
