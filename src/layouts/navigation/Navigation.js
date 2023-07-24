@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import {useRecoilState, useResetRecoilState} from 'recoil'
 import userAtom from "../../recoil/userAtom";
 import menuAtom from "../../recoil/menuAtom";
 import { NavLink } from "react-router-dom";
@@ -137,6 +137,7 @@ const NavigationWrap = styled.div`
 const Navigation = () => {
   const [user, setUser] = useRecoilState(userAtom)
   const [menuState, setMenuState] = useRecoilState(menuAtom)
+  const resetAuth = useResetRecoilState(userAtom)
 
   const sideMenuNavi = [
     {
@@ -197,7 +198,7 @@ const Navigation = () => {
             }
           </ul>
         </div>
-        <div className="logout">
+        <div className="logout" onClick={resetAuth}>
           LOGOUT
           <i>
             <img src="../icons/icon-logout.png" alt="logout btn" />
