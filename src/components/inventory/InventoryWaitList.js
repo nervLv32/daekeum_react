@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {DateFormat} from '../../util/dateFormat'
 
 const InventoryWaitListWrap = styled.li`
   &:not(:last-child) {
@@ -94,10 +95,10 @@ const InventoryWaitList = ({ list, onClick }) => {
   return (
     <InventoryWaitListWrap className={list.no == 3 ? 'active' : ''}>
       <div className="table-body-top">
-        <div className="table-sendday">{list.sendday}</div>
-        <div className="table-reqday">{list.reqday}</div>
-        <div className="table-code">{list.name}</div>
-        <div className="table-count">{list.count}</div>
+        <div className="table-sendday">{DateFormat(new Date(list.발송일)).substr(0,10)}</div>
+        <div className="table-reqday">{DateFormat(new Date(list.입고요청일)).substr(0,10)}</div>
+        <div className="table-code">{list.품목코드}</div>
+        <div className="table-count">{list.수량}</div>
         <i className="view-more" onClick={onClick}>
           <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
         </i>
@@ -105,15 +106,15 @@ const InventoryWaitList = ({ list, onClick }) => {
       <div className="table-body-btm">
           <dl>
             <dt>파트</dt>
-            <dd>{list.part}</dd>
+            <dd>{list.파트} </dd>
           </dl>
           <dl>
             <dt>품명</dt>
-            <dd>{list.name}</dd>
+            <dd>{list.품명} </dd>
           </dl>
           <dl>
             <dt>규격</dt>
-            <dd>{list.standard}</dd>
+            <dd>{list.규격} </dd>
           </dl>
       </div>
     </InventoryWaitListWrap>

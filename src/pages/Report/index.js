@@ -1,50 +1,48 @@
-import React, {useEffect, useState, useRef} from 'react';
-import styled from 'styled-components';
-import RPCase0101Modal from '../../base-components/modal-components/report/documentModal/Case01/RPCase0101Modal';
-import RPCase0201Modal from '../../base-components/modal-components/report/documentModal/Case02/RPCase0201Modal';
-import RPCase0301Modal from '../../base-components/modal-components/report/documentModal/Case03/RPCase0301Modal';
-import RPCase0401Modal from '../../base-components/modal-components/report/documentModal/Case04/RPCase0401Modal';
-import RPCase0501Modal from '../../base-components/modal-components/report/documentModal/Case05/RPCase0501Modal';
-import TopSearch from '../../components/molecules/TopSearch';
-import TopSearchMenu from '../../components/molecules/TopSearchMenu';
-import ReportMainTable from '../../components/report/ReportMainTable';
-import ReportMainTableTop from '../../components/report/ReportMainTableTop';
-import {useModal} from '../../hooks/useModal';
+import React, {useEffect, useRef, useState} from 'react'
+import styled from 'styled-components'
+import RPCase0101Modal from '../../base-components/modal-components/report/documentModal/Case01/RPCase0101Modal'
+import RPCase0301Modal from '../../base-components/modal-components/report/documentModal/Case03/RPCase0301Modal'
+import RPCase0401Modal from '../../base-components/modal-components/report/documentModal/Case04/RPCase0401Modal'
+import TopSearch from '../../components/molecules/TopSearch'
+import TopSearchMenu from '../../components/molecules/TopSearchMenu'
+import ReportMainTable from '../../components/report/ReportMainTable'
+import ReportMainTableTop from '../../components/report/ReportMainTableTop'
+import {useModal} from '../../hooks/useModal'
 import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from 'recoil'
-import fetchService from '../../util/fetchService';
-import {exportDocumentBody, firstExportDocument, reportAtom, reportParamAtom} from '../../recoil/reportAtom'
+import fetchService from '../../util/fetchService'
+import {exportDocumentBody, firstExportDocument, reportAtom} from '../../recoil/reportAtom'
 import userAtom from '../../recoil/userAtom'
 
 const ReportWrap = styled.div`
   padding: 28px 30px 0;
-`;
+`
 
 const TopSearchcMenuWrap = styled.ul`
   width: 260px;
   height: 283px;
   background: url('../images/topmenu-search-fivebg.png') no-repeat 50% center;
   padding: 47px 30px 0px;
-`;
+`
 
 
 const Report = () => {
-  const [topMenu, setTopMenu] = useState(false);
-  const {openModal} = useModal();
+  const [topMenu, setTopMenu] = useState(false)
+  const {openModal} = useModal()
   const modalData = {
     title: 'RPCase Modal',
     callback: () => alert('Modal Callback()'),
-  };
+  }
 
-  const observeTargetRef = useRef(null);
-  const [isLoading, setLoading] = useState(false);
-  const [reports, setReports] = useRecoilState(reportAtom);
+  const observeTargetRef = useRef(null)
+  const [isLoading, setLoading] = useState(false)
+  const [reports, setReports] = useRecoilState(reportAtom)
   const {auth} = useRecoilValue(userAtom)
   const [params, setParams] = useState({
     searchword: '',
     currentPage: '1',
     pageSize: '10',
     작성자: auth.한글이름,
-  },);
+  })
   const setBody = useSetRecoilState(exportDocumentBody)
   const resetBody = useResetRecoilState(exportDocumentBody)
   const [firstDocument, setFirstDocument] = useRecoilState(firstExportDocument)
@@ -54,48 +52,48 @@ const Report = () => {
     setParams({
       ...params,
       currentPage: '1',
-      [key] : value
+      [key]: value,
     })
-  };
+  }
 
   const fetchList = (list) => {
 
     fetchService('/approval/approvalDocList', 'post', params)
       .then((res) => {
-        const data = [...list, ...res.data];
-        setReports(data);
+        const data = [...list, ...res.data]
+        setReports(data)
         if (res.data.length > 9) {
           setTimeout(() => {
-            setLoading(false);
-          }, 1000);
+            setLoading(false)
+          }, 1000)
         }
-      });
-  };
+      })
+  }
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
-      setLoading(true);
+      setLoading(true)
       setParams({
         ...params,
         currentPage: parseInt(params.currentPage) + 1,
-      });
-      fetchList(reports);
+      })
+      fetchList(reports)
     }
-  });
+  })
 
   useEffect(() => {
-    setReports([]);
-  }, []);
+    setReports([])
+  }, [])
 
   useEffect(() => {
-    setLoading(true);
-    fetchList([]);
-  }, [params.searchword, params.작성자]);
+    setLoading(true)
+    fetchList([])
+  }, [params.searchword])
 
   useEffect(() => {
-    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
-    return () => onIntersect.disconnect();
-  }, [isLoading]);
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
 
 
   return <>
@@ -105,10 +103,12 @@ const Report = () => {
         <TopSearchMenu>
           <TopSearchcMenuWrap>
             <li>
-              <a onClick={() =>{
+              <a onClick={() => {
                 resetBody()
                 resetFirstDocument()
-                setBody(prev => {return {...prev, 신규사업여부:false}})
+                setBody(prev => {
+                  return {...prev, 신규사업여부: false}
+                })
                 openModal({...modalData, content: <RPCase0101Modal/>})
               }}>
                 <i>
@@ -118,10 +118,12 @@ const Report = () => {
               </a>
             </li>
             <li>
-              <a onClick={() =>{
+              <a onClick={() => {
                 resetBody()
                 resetFirstDocument()
-                setBody(prev => {return {...prev, 신규사업여부:true}})
+                setBody(prev => {
+                  return {...prev, 신규사업여부: true}
+                })
                 openModal({...modalData, content: <RPCase0101Modal/>})
               }}>
                 <i>
@@ -134,7 +136,7 @@ const Report = () => {
               <a onClick={() => {
                 setFirstDocument({
                   ...firstDocument,
-                  title: '입고요청서'
+                  title: '입고요청서',
                 })
                 openModal({...modalData, content: <RPCase0301Modal/>})
               }}>
@@ -148,7 +150,7 @@ const Report = () => {
               <a onClick={() => {
                 setFirstDocument({
                   ...firstDocument,
-                  title: '수리기입고요청서'
+                  title: '수리기입고요청서',
                 })
                 openModal({...modalData, content: <RPCase0401Modal/>})
               }}>
@@ -162,7 +164,7 @@ const Report = () => {
               <a onClick={() => {
                 setFirstDocument({
                   ...firstDocument,
-                  title: '수리기출고요청서'
+                  title: '수리기출고요청서',
                 })
                 openModal({...modalData, content: <RPCase0401Modal/>})
               }}>
@@ -180,12 +182,12 @@ const Report = () => {
       <ReportMainTableTop/>
       {
         reports.map((list, idx) => {
-          return <ReportMainTable key={idx} list={list}/>;
+          return <ReportMainTable key={idx} list={list}/>
         })
       }
       <div ref={observeTargetRef}/>
     </ReportWrap>
-  </>;
-};
+  </>
+}
 
-export default Report;
+export default Report

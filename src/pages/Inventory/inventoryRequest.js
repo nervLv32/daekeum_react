@@ -41,12 +41,12 @@ const InventoryRequest = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  
+
   const observeTargetRef = useRef(null)
   const [topMenu, setTopMenu] = useState(false);
   const [materialRequestList,setMaterialRequestList] = useRecoilState(materialRequestAtom)
   const [user, setUser] = useRecoilState(userAtom)
-  
+
 
   const [isLoading, setLoading] = useState(false);
   const [fetchFlag, setFetchFlag] = useState(false);
@@ -66,21 +66,6 @@ const InventoryRequest = () => {
     EmpNo: user.auth.사원코드,
   })
 
-  const mappingItem = (res) => {
-    return res.data ? res.data.map(it => {
-      return {
-        state: it.문서상태,
-        no : it.요청일련번호,
-        requestDate: it.요청일,
-        writeDate: it.작성일,
-        requester : it.요청자,
-        requesterCode: it.작성자,
-        writer: it.작성자,
-        writerCode: it.작성자코드,
-      }
-    }) : []
-  }
-
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
       setLoading(true)
@@ -95,11 +80,10 @@ const InventoryRequest = () => {
   const fetchList = (list) => {
     fetchService('/inventory/materialRequestList', 'post', materialRequestParam)
       .then((res) => {
-        const temp = mappingItem(res)
-        const data = [...list, ...temp]
+        const data = [...list, ...res.data]
         setMaterialRequestList(data)
         console.log(res)
-        if(temp.length > 0) {
+        if(res.data.length > 9) {
           setTimeout(() => {
             setLoading(false)
           }, 1000)
@@ -119,7 +103,7 @@ const InventoryRequest = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-  
+
 
   return (
     <>
@@ -162,18 +146,19 @@ const InventoryRequest = () => {
             materialRequestList.map((item, key) => {
               return <InventoryRequestList
                 key={key}
-                state={item.state}
-                no={item.no}
-                requestDate={item.requestDate}
-                writeDate={item.writeDate}
-                requester ={item.requester}
-                requesterCode={item.requesterCode}
-                writer={item.writer}
-                writerCode={item.writerCode}
+                state={item.문서상태}
+                no={item.요청일련번호}
+                requestDate={item.요청일}
+                writeDate={item.작성일}
+                requester ={item.요청자}
+                requesterCode={item.요청자코드}
+                writer={item.작성자}
+                writerCode={item.작성자코드}
                 onClick={() => openModal({ ...modalData, content: <InventoryRequestListModal item={item} />})}
               />
             })
           }
+
         </InventoryRequestListWrap>
         <div ref={observeTargetRef}/>
 

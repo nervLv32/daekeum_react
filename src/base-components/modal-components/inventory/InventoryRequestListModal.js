@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import SimpleInputModal from "./SimpleInputModal";
+import fetchService from '../../../util/fetchService'
+import {DateFormat} from '../../../util/dateFormat'
 
 const InventoryRequestListModalWrap = styled.div`
   background-color: #fff;
@@ -51,6 +53,8 @@ const InventoryRequestListModalWrap = styled.div`
   }
   .list-body {
     padding: 20px;
+    max-height: 500px;
+    overflow-y: scroll;
     ul {
       li {
         &:not(:last-child) {
@@ -163,33 +167,19 @@ const InventoryRequestListModalWrap = styled.div`
 
 const InventoryRequestListModal = ({ item }) => {
   const { openModal, closeModal } = useModal();
-
-  console.log(item.no)
-
+  const [detail, setDetail] = useState([])
   const modalData = {
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
 
-  /*const fetchList = (list) => {
-    fetchService('/inventory/materialRequestDetail', 'post', inventoryParam)
+  useEffect(() => {
+    fetchService('/inventory/materialRequestDetail', 'post', {요청일련번호 : item.요청일련번호})
       .then((res) => {
         console.log("res::::", res)
-        // const temp = mappingItem(res)
-        // const data = [...list, ...temp]
-
-        // setInventoryList( data )
-        // if(temp.length > 0) {
-        //   setTimeout(() => {
-        //     setLoading(false)
-        //   }, 1000)
-        // }
+        setDetail(res.data)
       })
-  }
-
-  useEffect(() => {
-    fetchList([])
-  }, [])*/
+  }, [])
 
   return <InventoryRequestListModalWrap>
     <div className="list-top">
@@ -197,15 +187,15 @@ const InventoryRequestListModal = ({ item }) => {
       <div className="dl-list">
         <dl>
           <dt>요청지</dt>
-          <dd>{item.site}</dd>
+          <dd>{detail[0]?.수신부서명 || ''}</dd>
         </dl>
         <dl>
           <dt>상태변경시간</dt>
-          <dd>{item.date}</dd>
+          <dd>detail[0]?.상태변경시각 ? {DateFormat(new Date(detail[0]?.상태변경시각)).substr(0, 10)} : ''</dd>
         </dl>
         <dl>
           <dt>상태변경자</dt>
-          <dd>{item.stateManager}</dd>
+          <dd>{detail[0]?.상태변경자 || ''}</dd>
         </dl>
       </div>
     </div>
@@ -222,60 +212,23 @@ const InventoryRequestListModal = ({ item }) => {
           </dl>
         </li>
         {/* S: loop */}
-        <li>
-          <dl>
-            <dt>
-              <div className="code">TNUGM03002</div>
-              <div className="name">G/M(대금감속기)</div>
-              <div className="count">1.0</div>
-              <div className="state">구매요청</div>
-            </dt>
-            <dd>
-            규격  2T*Φ610(하단)*Φ205(상단)*410(H)
-            </dd>
-          </dl>
-        </li>
-        {/* E: loop */}
-
-        <li>
-          <dl>
-            <dt>
-              <div className="code">TNUGM03002</div>
-              <div className="name">G/M(대금감속기)</div>
-              <div className="count">1.0</div>
-              <div className="state">구매요청</div>
-            </dt>
-            <dd>
-            규격  2T*Φ610(하단)*Φ205(상단)*410(H)
-            </dd>
-          </dl>
-        </li>
-        <li>
-          <dl>
-            <dt>
-              <div className="code">TNUGM03002</div>
-              <div className="name">G/M(대금감속기)</div>
-              <div className="count">1.0</div>
-              <div className="state">구매요청</div>
-            </dt>
-            <dd>
-            규격  2T*Φ610(하단)*Φ205(상단)*410(H)
-            </dd>
-          </dl>
-        </li>
-        <li>
-          <dl>
-            <dt>
-              <div className="code">TNUGM03002</div>
-              <div className="name">G/M(대금감속기)</div>
-              <div className="count">1.0</div>
-              <div className="state">구매요청</div>
-            </dt>
-            <dd>
-            규격  2T*Φ610(하단)*Φ205(상단)*410(H)
-            </dd>
-          </dl>
-        </li>
+        {
+          detail.map((it, key) => {
+            return <li key={key}>
+              <dl>
+                <dt>
+                  <div className="code">{it.품목코드}</div>
+                  <div className="name">{it.품명}</div>
+                  <div className="count">{it.수량}{it.단위}</div>
+                  <div className="state">{it.상태}</div>
+                </dt>
+                <dd>
+                  {it.비고}
+                </dd>
+              </dl>
+            </li>
+          })
+        }
 
       </ul>
     </div>

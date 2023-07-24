@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +8,10 @@ import InventoryWaitList from "../../components/inventory/InventoryWaitList";
 import InventoryWaitTop from "../../components/inventory/InventoryWaitTop";
 import InventoryWaitModal from "../../components/inventory/InventoryWaitModal";
 import { useModal } from "../../hooks/useModal";
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {inventoryAtom} from '../../recoil/inventoryList'
+import userAtom from '../../recoil/userAtom'
+import fetchService from '../../util/fetchService'
 
 const InventoryWaitWrap = styled.div`
   padding: 28px 30px 0;
@@ -29,54 +33,66 @@ const InventoryWait = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const dummyData = [
-    {
-      no: 1,
-      sendday: "2023-02-08",
-      reqday: "2023-02-08",
-      code: "TNUGM03002",
-      count: "1.0",
-      part: "모형절단품",
-      name: "G/M(대금감속기)",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-      model: "R10D-06",
-      sector: "11. 수도권",
-      manager: "정명길",
-      memo: "입고요청일 20230216"
-    },
-    {
-      no: 2,
-      sendday: "2023-02-08",
-      reqday: "2023-02-08",
-      code: "TNUGM03002",
-      count: "1.0",
-      part: "모형절단품",
-      name: "G/M(대금감속기)",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-      model: "R10D-06",
-      sector: "11. 수도권",
-      manager: "팜윤태",
-      memo: "입고요청일 20230216"
-    },
-    {
-      no: 3,
-      sendday: "2023-02-08",
-      reqday: "2023-02-08",
-      code: "TNUGM03002",
-      count: "1.0",
-      part: "모형절단품",
-      name: "G/M(대금감속기)",
-      standard: "2T*Φ610(하단)*Φ205(상단)*410(H)",
-      model: "R10D-06",
-      sector: "11. 수도권",
-      manager: "정명길",
-      memo: "입고요청일 20230216"
-    }
-  ]
+  const observeTargetRef = useRef(null)
+  const [inventoryList, setInventoryList] = useRecoilState(inventoryAtom)
+  const user = useRecoilValue(userAtom)
 
+  const [isLoading, setLoading] = useState(false)
+
+  const [inventoryParam, setInventoryParam] = useState({
+    searchword: '',
+    pageSize: '10',
+    currentPage: '1',
+    EmpNo: 1184/*user.auth.사원코드*/,
+  })
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true)
+      setInventoryParam({
+        ...inventoryParam,
+        currentPage: parseInt(inventoryParam.currentPage) + 1,
+      })
+      fetchList(inventoryList)
+    }
+  })
+
+  const fetchList = (list) => {
+    fetchService('/inventory/ipgoWaitingList', 'post', inventoryParam)
+      .then((res) => {
+        console.log(res.data)
+        const data = [...list, ...res.data]
+
+        setInventoryList(data)
+        if (res.data.length > 11) {
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000)
+        }
+      })
+  }
 
   const changeParam = (key, value) => {
+    setInventoryParam({
+      ...inventoryParam,
+      currentPage: '1',
+      [key]: value,
+    })
   }
+
+  useEffect(() => {
+    setInventoryList([])
+  }, [])
+
+  useEffect(() => {
+    setLoading(true)
+    fetchList([])
+  }, [inventoryParam.searchword])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
+    return () => onIntersect.disconnect()
+  }, [isLoading])
 
 
   return <>
@@ -116,7 +132,7 @@ const InventoryWait = () => {
       <InventoryWaitWrap>
       <InventoryWaitTop />
       {
-        dummyData.map((list, idx) => {
+        inventoryList.map((list, idx) => {
           return (
             <InventoryWaitList key={idx} list={list}
               onClick={() => openModal({ ...modalData, content: <InventoryWaitModal item={list} /> })}
@@ -124,7 +140,9 @@ const InventoryWait = () => {
           )
         })
       }
-    </InventoryWaitWrap>
+        <div ref={observeTargetRef}/>
+
+      </InventoryWaitWrap>
   </>
 }
 
