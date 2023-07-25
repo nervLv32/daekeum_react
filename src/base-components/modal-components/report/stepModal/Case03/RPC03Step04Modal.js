@@ -183,8 +183,12 @@ const RPC03Step04Modal = () => {
   }
 
   const validateInRequest = () => {
-    fetchService('/approval/validateInRequest', 'post', body).then((res) => {
-      console.log(res);
+    fetchService('/approval/approvalSuliReq', 'post', body).then((res) => {
+      window.alert(res.msg)
+      if(res.msg === '동시 사용자가 있을수 있어서 종료합니다.'){
+        window.location.reload();
+        closeModal();
+      }
     });
   }
 
@@ -392,7 +396,6 @@ const RPC03Step04Modal = () => {
       }}>이전</button>
         <button className="primary-btn" onClick={() => {
           validateInRequest()
-        // closeModal()
         // FIX 서류 상신 API
       }}>서류상신</button>
       </ModalBtm>

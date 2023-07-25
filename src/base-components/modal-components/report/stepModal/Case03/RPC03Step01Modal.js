@@ -7,12 +7,13 @@ import { useModal } from "../../../../../hooks/useModal";
 import RPCase0303Modal from "../../documentModal/Case03/RPCase0303Modal";
 import RPC03Step02Modal from "./RPC03Step02Modal";
 
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
 import fetchService from '../../../../../util/fetchService';
 import {DateFormat} from '../../../../../util/dateFormat';
 import ClientDetail from '../../../../../components/clientDetail';
 import {CommaPrice} from '../../../../../util/commaPrice';
+import userAtom from '../../../../../recoil/userAtom'
 
 const RPC03Step01ModalWrap = styled.div`
   background-color: #fff;
@@ -151,7 +152,8 @@ const ModalBtm = styled.div`
 const RPC03Step01Modal = () => {
 
   const { openModal, closeModal } = useModal();
-  const body = useRecoilValue(exportDocumentBody)
+  const {auth} = useRecoilValue(userAtom)
+  const [body, setBody] = useRecoilState(exportDocumentBody);
   const [clientCurrent, setClientCurrent] = useState({
     거래처코드: '',
     업체명: '',
@@ -195,6 +197,23 @@ const RPC03Step01Modal = () => {
       .then((res)=>{
         setClientDetail(res.data);
       })
+      const fetchData = async () => {
+        setBody({
+          ...body,
+          거래처현황: clientCurrent,
+          UserInfo: {
+            DeptCd: auth.부서코드,
+            DeptNm: auth.부서명,
+            EmpNm: auth.한글이름,
+            EmpNo: auth.사원코드,
+            회사코드: auth.회사코드,
+            DIV_CD: auth.DIV_CD,
+            usergwid: auth.usergwid
+          },
+          거래처세부: clientDetail
+        })
+      }
+      fetchData()
   }, []);
 
   /******* 입고요청서 케이스의 첫번째 *******/
