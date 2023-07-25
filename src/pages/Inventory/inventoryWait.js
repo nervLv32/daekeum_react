@@ -23,9 +23,13 @@ const TopSearchcMenuWrap = styled.ul`
   padding: 47px 30px 0px 25px;
 `
 const Choice = styled.div`
-  position: relative;
+  position: fixed;
+  bottom: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   padding: 20px 20px 10px;
+  opacity: 0.8;
 
   > div {
     display: flex;
@@ -41,7 +45,7 @@ const Choice = styled.div`
     }
 
     > div {
-      button:first-child {
+      button {
         border: 1px solid #000;
         padding: 3px 10px;
         border-radius: 5px;
@@ -49,8 +53,11 @@ const Choice = styled.div`
         background-color: white;
       }
 
-      button {
+      button:last-child {
         margin-right: 5px;
+        padding: 0;
+        background-color: transparent;
+        border:none;
       }
     }
   }
@@ -68,7 +75,7 @@ const InventoryWait = () => {
   const observeTargetRef = useRef(null)
   const [inventoryList, setInventoryList] = useRecoilState(inventoryAtom)
   const [ipgo, setIpgo] = useState([])
-  const user = useRecoilValue(userAtom)
+  const {auth} = useRecoilValue(userAtom)
 
   const updateIpgo = (flag, value) => {
     if (!flag) {
@@ -143,6 +150,28 @@ const InventoryWait = () => {
     console.log(ipgo)
   }, [ipgo])
 
+
+  const sendIpgo = (type) => {
+    let body = {
+      EmpNo : auth.사원번호,
+      EmpNm: auth.한글이름,
+      ipgolist : []
+    }
+
+    if(type === 'all') body.ipgolist = [...inventoryList]
+    else if(type === 'choice') body.ipgolist = [...ipgo]
+
+    if(body.ipgolist.length <= 0){
+      alert('입고할 장비가 없습니다.')
+      return;
+    }
+
+    fetchService('/inventory/executeIpgo','post',body)
+      .then(res => {
+        alert(res.msg)
+        window.location.reload()
+      })
+  }
   return <>
     <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
     {
@@ -199,18 +228,16 @@ const InventoryWait = () => {
         })
       }
       <div ref={observeTargetRef}/>
-      <p>{ipgo.length}</p>
-      {
-        ipgo.length > 0 && <Choice>
+      <Choice>
+        <div>
+          <p>{ipgo.length || 0}개 선택</p>
           <div>
-            <p>{ipgo.length}개 선택</p>
-            <div>
-              <button onClick={() => setIpgo([])}> 전체 취소</button>
-              <button> X</button>
-            </div>
+            <button onClick={() => sendIpgo('choice')}> 선택 입고</button>
+            <button onClick={() => sendIpgo('all')}> 일괄 입고</button>
+            <button> X</button>
           </div>
-        </Choice>
-      }
+        </div>
+      </Choice>
     </InventoryWaitWrap>
   </>
 }
