@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
+import {DateFormat} from '../../util/dateFormat'
 
 const InventoryWaitModalWrap = styled.div`
   background-color: #fff;
@@ -191,11 +192,11 @@ const InventoryWaitModal = ({ item }) => {
         <div className="dl-wrap">
           <dl>
             <dt>품목코드</dt>
-            <dd>{item.code}</dd>
+            <dd>{item.품목코드}</dd>
           </dl>
           <dl>
             <dt>수량</dt>
-            <dd>{item.count}</dd>
+            <dd>{item.수량}</dd>
           </dl>
         </div>
       </div>
@@ -203,49 +204,49 @@ const InventoryWaitModal = ({ item }) => {
         <li>
           <dl>
             <dt>발 송 일</dt>
-            <dd>{item.sendday}</dd>
+            <dd>{item.발송일 ? DateFormat(new Date(item.발송일)).substr(0,10) : ''}</dd>
           </dl>
           <dl>
             <dt>요 청 일</dt>
-            <dd>{item.reqday}</dd>
+            <dd>{item.입고요청일 ? DateFormat(new Date(item.입고요청일)).substr(0,10) : ''}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>파 트</dt>
-            <dd>{item.part}</dd>
+            <dd>{item.파트}</dd>
           </dl>
           <dl>
             <dt>품 명</dt>
-            <dd>{item.name}</dd>
+            <dd>{item.품명}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>규 격</dt>
-            <dd className="oneLine">{item.standard}</dd>
+            <dd className="oneLine">{item.규격}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>사 용 모 델</dt>
-            <dd>{item.model}</dd>
+            <dd>{item.사용모델}</dd>
           </dl>
           <dl>
             <dt>발 송 부 서</dt>
-            <dd>{item.sector}</dd>
+            <dd>{item.발송부서명}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>발 송 자</dt>
-            <dd className="oneLine">{item.manager}</dd>
+            <dd className="oneLine">{item.발송자}</dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>비 고</dt>
-            <dd className="oneLine">{item.memo}</dd>
+            <dd className="oneLine">{item.비고}</dd>
           </dl>
         </li>
       </ul>

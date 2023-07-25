@@ -1,19 +1,22 @@
-import React from "react";
-import styled from "styled-components";
+import React, {useEffect, useState} from 'react'
+import styled from 'styled-components'
 import {DateFormat} from '../../util/dateFormat'
 
 const InventoryWaitListWrap = styled.li`
   &:not(:last-child) {
     margin-bottom: 10px;
   }
+
   &.active {
     .table-body-top {
       background-color: #FEF1EC;
     }
+
     .table-body-btm {
       background-color: #FFEAE2;
     }
   }
+
   .table-body-top {
     display: flex;
     align-items: center;
@@ -22,17 +25,20 @@ const InventoryWaitListWrap = styled.li`
     border-radius: 10px 10px 0 0;
     padding: 10px 0;
     position: relative;
+
     .view-more {
       position: absolute;
       top: 50%;
       right: 10px;
       transform: translateY(-50%);
       cursor: pointer;
+
       img {
         width: 3px;
         height: 9px;
       }
     }
+
     > div {
       display: flex;
       align-items: center;
@@ -41,8 +47,10 @@ const InventoryWaitListWrap = styled.li`
       font-weight: 400;
       font-size: 12px;
       font-family: var(--font-mont);
+
       &:not(:last-of-type) {
         position: relative;
+
         &::after {
           content: '';
           display: block;
@@ -52,21 +60,25 @@ const InventoryWaitListWrap = styled.li`
           position: absolute;
           top: 50%;
           right: 0;
-          transform : translateY(-50%);
+          transform: translateY(-50%);
         }
       }
     }
+
     .table-sendday,
     .table-reqday {
       width: 85px;
     }
+
     .table-code {
       width: calc(100% - 170px - 60px);
     }
+
     .table-count {
       width: 45px;
     }
   }
+
   .table-body-btm {
     padding: 10px;
     border-radius: 0 0 10px 10px;
@@ -77,12 +89,14 @@ const InventoryWaitListWrap = styled.li`
     color: #1c1b1f;
     display: flex;
     flex-wrap: wrap;
+
     dl {
       display: flex;
       align-items: center;
       color: #1C1B1F;
       font-weight: 400;
       font-size: 11px;
+
       &:last-child {
         margin-top: 4px;
         width: 100%;
@@ -91,33 +105,46 @@ const InventoryWaitListWrap = styled.li`
   }
 `
 
-const InventoryWaitList = ({ list, onClick }) => {
+const InventoryWaitList = ({list,updateIpgo, ipgo, onClick}) => {
+
+  const [selected, setSelected] = useState(false)
+
+  const checkedBody = () => {
+    updateIpgo(selected, list)
+    setSelected( prev => !prev)
+  }
+
+  useEffect(() => {
+    setSelected(ipgo.filter(it => it.입고대기일련번호 === list.입고대기일련번호).length > 0)
+  }, [ipgo])
+
+
   return (
-    <InventoryWaitListWrap className={list.no == 3 ? 'active' : ''}>
-      <div className="table-body-top">
-        <div className="table-sendday">{DateFormat(new Date(list.발송일)).substr(0,10)}</div>
-        <div className="table-reqday">{DateFormat(new Date(list.입고요청일)).substr(0,10)}</div>
-        <div className="table-code">{list.품목코드}</div>
-        <div className="table-count">{list.수량}</div>
-        <i className="view-more" onClick={onClick}>
-          <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
+    <InventoryWaitListWrap className={selected ? 'active' : ''} onClick={checkedBody}>
+      <div className='table-body-top'>
+        <div className='table-sendday'>{DateFormat(new Date(list.발송일)).substr(0, 10)}</div>
+        <div className='table-reqday'>{DateFormat(new Date(list.입고요청일)).substr(0, 10)}</div>
+        <div className='table-code'>{list.품목코드}</div>
+        <div className='table-count'>{list.수량}</div>
+        <i className='view-more' onClick={onClick}>
+          <img src='../icons/receipt-viewmore-icon.png' alt='view-more btn'/>
         </i>
       </div>
-      <div className="table-body-btm">
-          <dl>
-            <dt>파트</dt>
-            <dd>{list.파트} </dd>
-          </dl>
-          <dl>
-            <dt>품명</dt>
-            <dd>{list.품명} </dd>
-          </dl>
-          <dl>
-            <dt>규격</dt>
-            <dd>{list.규격} </dd>
-          </dl>
+      <div className='table-body-btm'>
+        <dl>
+          <dt>파트</dt>
+          <dd>{list.파트} </dd>
+        </dl>
+        <dl>
+          <dt>품명</dt>
+          <dd>{list.품명} </dd>
+        </dl>
+        <dl>
+          <dt>규격</dt>
+          <dd>{list.규격} </dd>
+        </dl>
       </div>
     </InventoryWaitListWrap>
   )
 }
-export default InventoryWaitList;
+export default InventoryWaitList
