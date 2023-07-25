@@ -224,7 +224,8 @@ const InventoryRequestModal = () => {
 
     fetchService('/inventory/addMaterialRequestItems', 'post', reqParams)
       .then((res) => {
-        console.log(res)
+        alert(res.msg)
+        closeModal()
       })
   }
 
