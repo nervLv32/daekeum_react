@@ -368,12 +368,12 @@ const DStep01Modal = () => {
         </ul>
       </div>
       <div className="modal-body">
-        <dl className="input-info">
+        {/*<dl className="input-info">
           <dt className="essential">일지번호</dt>
           <dd>
             <input type="text" className="bg" />
           </dd>
-        </dl>
+        </dl>*/}
         <dl className="input-info">
           <dt className="essential">장비정보</dt>
           <dd ref={searchListRef}>
