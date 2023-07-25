@@ -1,13 +1,17 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
 import RPC03Step01Modal from "./RPC03Step01Modal";
 import RPC03Step03Modal from "./RPC03Step03Modal";
+import OptionSelector from '../../../../../components/optionSelector'
 
-import {useRecoilState} from 'recoil'
-import {exportDocumentBody, firstExportDocuBody} from '../../../../../recoil/reportAtom'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
+import OptionSelectedMemo from "../../../../../components/optionSelector/OptionSelectorMemo";
+import {CommaPriceRegis} from '../../../../../util/commaPrice'
+import fetchService from "../../../../../util/fetchService";
 
 
 const RPC03Step02ModalWrap = styled.div`
@@ -215,14 +219,49 @@ const ModalBtm = styled.div`
 const RPC03Step02Modal = () => {
 
   const { openModal, closeModal } = useModal();
-  const [body, setBody] = useRecoilState(exportDocumentBody)
-
-  console.log(body)
+  const [body, setBody] = useRecoilState(exportDocumentBody);
+  const exportDoc = useRecoilValue(firstExportDocument);
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+  
+  const [options, setOptions] = useState({});
+
+  const updateValue = (key, value) => {
+    setBody({
+      ...body,
+      계약현황: {
+        ...body.계약현황,
+        [key]: value
+      }
+    })
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setOptions({
+        조건: (await fetchService('/approval/comboShipCond/', 'post', {})).data,
+        청구방법: (await fetchService('/approval/comboShipChungu/', 'post', {})).data,
+        위약여부: [
+          {
+            value: 'Y'
+          },
+          {
+            value: 'N'
+          },
+        ]
+      })
+    }
+    setBody({
+      ...body,
+      장비리스트: [
+        ...exportDoc.equip
+      ]
+    })
+    fetchData()
+  }, [])
 
   /******* 입고요청서 케이스의 두번째 *******/
   return <RPC03Step02ModalWrap>
@@ -239,14 +278,20 @@ const RPC03Step02Modal = () => {
 
       <CustomerStatusWrap>
         <div className="title-wrap">
-          <h6 className="title-text">거래처 현황</h6>
+          <h6 className="title-text">계약사항</h6>
         </div>
         <InfoList>
           <li>
             <dl>
               <dt>위약여부</dt>
               <dd>
-                <input placeholder="위약여부를 입력하세요" />
+                <OptionSelectedMemo
+                  list={options.위약여부 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'계약현황'}
+                  depth2={'위약여부'}
+                />
               </dd>
             </dl>
           </li>
@@ -254,7 +299,12 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>계약개월</dt>
               <dd>
-                <input placeholder="계약개월을 입력하세요" />
+                <input 
+                  type="number"
+                  placeholder="계약개월을 입력하세요" 
+                  value={body.계약현황['계약개월'] || ''}
+                  onChange={(e) => updateValue('계약개월', e.target.value)}
+                />
               </dd>
             </dl>
           </li>
@@ -262,7 +312,12 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>금액</dt>
               <dd>
-                <input placeholder="금액을 입력하세요" />
+                <input 
+                  type="text"
+                  placeholder="금액을 입력하세요" 
+                  value={CommaPriceRegis(body.계약현황.금액 || '')}
+                  onChange={e => updateValue('금액', e.target.value.replaceAll(',',''))}
+                />
               </dd>
             </dl>
           </li>
@@ -270,7 +325,12 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>사용개월</dt>
               <dd>
-                <input placeholder="사용개월을 입력하세요" />
+                <input 
+                  type="number"
+                  placeholder="사용개월을 입력하세요" 
+                  value={body.계약현황['사용개월'] || ''}
+                  onChange={(e) => updateValue('사용개월', e.target.value)}
+                />
               </dd>
             </dl>
           </li>
@@ -278,7 +338,13 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>운임조건</dt>
               <dd>
-                <input placeholder="운임조건을 입력하세요" />
+                <OptionSelectedMemo
+                  list={options.조건 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'계약현황'}
+                  depth2={'운임조건'}
+                />
               </dd>
             </dl>
           </li>
@@ -286,7 +352,13 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>운임청구방식</dt>
               <dd>
-                <input placeholder="운임청구방식을 입력하세요" />
+                <OptionSelectedMemo
+                  list={options.청구방법 || []}
+                  updateValue={updateValue}
+                  body={body}
+                  depth1={'계약현황'}
+                  depth2={'운임청구방식'}
+                />
               </dd>
             </dl>
           </li>
@@ -294,7 +366,10 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>비고</dt>
               <dd>
-                <textarea />
+                <textarea 
+                  value={body.계약현황['비고'] || ''}
+                  onChange={(e) => updateValue('비고', e.target.value)}
+                />
               </dd>
             </dl>
           </li>
@@ -302,102 +377,60 @@ const RPC03Step02Modal = () => {
       </CustomerStatusWrap>
 
       <DetailInfoListWrap>
-        <li>
-          <div>
-            <dl>
-              <dt>실적NO</dt>
-              <dd>47048</dd>
-            </dl>
-            <dl>
-              <dt>사업구분</dt>
-              <dd>세륜기</dd>
-            </dl>
-            <dl>
-              <dt>매출타입</dt>
-              <dd>회수</dd>
-            </dl>
-            <dl>
-              <dt>입고예정일</dt>
-              <dd>2022-01-04</dd>
-            </dl>
-            <dl>
-              <dt>DKNO</dt>
-              <dd>B22122904</dd>
-            </dl>
-            <dl>
-              <dt>MCNO</dt>
-              <dd>-</dd>
-            </dl>
-            <dl>
-              <dt>전압</dt>
-              <dd>380</dd>
-            </dl>
-            <dl>
-              <dt>방향</dt>
-              <dd>정방향</dd>
-            </dl>
-            <dl>
-              <dt>모델</dt>
-              <dd>박스(0.9)</dd>
-            </dl>
-            <dl>
-              <dt>일시불구분</dt>
-              <dd>일시불</dd>
-            </dl>
-            <dl>
-              <dt>임대료</dt>
-              <dd>13,500,000</dd>
-            </dl>
-          </div>
-        </li>
-        <li>
-          <div>
-            <dl>
-              <dt>실적NO</dt>
-              <dd>47048</dd>
-            </dl>
-            <dl>
-              <dt>사업구분</dt>
-              <dd>세륜기</dd>
-            </dl>
-            <dl>
-              <dt>매출타입</dt>
-              <dd>회수</dd>
-            </dl>
-            <dl>
-              <dt>입고예정일</dt>
-              <dd>2022-01-04</dd>
-            </dl>
-            <dl>
-              <dt>DKNO</dt>
-              <dd>B22122904</dd>
-            </dl>
-            <dl>
-              <dt>MCNO</dt>
-              <dd>-</dd>
-            </dl>
-            <dl>
-              <dt>전압</dt>
-              <dd>380</dd>
-            </dl>
-            <dl>
-              <dt>방향</dt>
-              <dd>정방향</dd>
-            </dl>
-            <dl>
-              <dt>모델</dt>
-              <dd>박스(0.9)</dd>
-            </dl>
-            <dl>
-              <dt>일시불구분</dt>
-              <dd>일시불</dd>
-            </dl>
-            <dl>
-              <dt>임대료</dt>
-              <dd>13,500,000</dd>
-            </dl>
-          </div>
-        </li>
+        {
+          exportDoc?.equip.length > 0 && exportDoc.equip.map((item, index) => {
+            return (
+              <li key={index}>
+                <div>
+                  <dl>
+                    <dt>실적NO</dt>
+                    <dd>{item.실적NO}</dd>
+                  </dl>
+                  <dl>
+                    <dt>사업구분</dt>
+                    <dd></dd>
+                  </dl>
+                  <dl>
+                    <dt>매출타입</dt>
+                    <dd>{item.매출타입}</dd>
+                  </dl>
+                  <dl>
+                    <dt>입고예정일</dt>
+                    <dd></dd>
+                  </dl>
+                  <dl>
+                    <dt>DKNO</dt>
+                    <dd>{item.dkno}</dd>
+                  </dl>
+                  <dl>
+                    <dt>MCNO</dt>
+                    <dd>{item.mcno}</dd>
+                  </dl>
+                  <dl>
+                    <dt>전압</dt>
+                    <dd>{item.전압}</dd>
+                  </dl>
+                  <dl>
+                    <dt>방향</dt>
+                    <dd>{item.방향}</dd>
+                  </dl>
+                  <dl>
+                    <dt>모델</dt>
+                    <dd></dd>
+                  </dl>
+                  <dl>
+                    <dt>일시불구분</dt>
+                    <dd>{item.일시불구분}</dd>
+                  </dl>
+                  <dl>
+                    <dt>임대료</dt>
+                    <dd>{item.임대료}</dd>
+                  </dl>
+                </div>
+              </li>
+            )
+          })
+        }
       </DetailInfoListWrap>
 
       <ModalBtm>

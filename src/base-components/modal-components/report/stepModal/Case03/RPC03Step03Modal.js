@@ -1,10 +1,15 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
 import RPC03Step02Modal from "./RPC03Step02Modal";
 import RPC03Step04Modal from "./RPC03Step04Modal";
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { exportDocumentBody, firstExportDocument } from '../../../../../recoil/reportAtom'
+import fetchService from "../../../../../util/fetchService";
+import moment from "moment";
+import {CommaPriceRegis} from '../../../../../util/commaPrice'
 
 
 const RPC03Step03ModalWrap = styled.div`
@@ -123,6 +128,9 @@ const InfoList = styled.ul`
           &::placeholder {
             color: #9da2ae;
           }
+          &:disabled {
+            background-color: #fff;
+          }
         }
       }
     }
@@ -176,11 +184,30 @@ const ModalBtm = styled.div`
 const RPC03Step03Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const exportDoc = useRecoilValue(firstExportDocument);
+  const [body, setBody] = useRecoilState(exportDocumentBody);
+
+  const [selectIndex, setSelectIndex] = useState(0)
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  // 청구현황 및 수금현황
+  const [collectCurrent, setCollectCurrent] = useState([]);
+  // 업무협의사항
+  const [agreement, setAgreement] = useState("");
+  // 장비파손내역
+  const [history, setHistory] = useState("");
+  useEffect(() => {
+    const equipNo = exportDoc?.equip?.map(item => item.실적NO);
+    fetchService('/approval/collectCurrent', 'post', {
+      실적번호: equipNo
+    }).then((res) => {
+      setCollectCurrent(res.data);
+    });
+  }, [])
 
   /******* 입고요청서 케이스의 세번째 *******/
   return <RPC03Step03ModalWrap>
@@ -198,85 +225,153 @@ const RPC03Step03Modal = () => {
       <CustomerStatusWrap>
         <div className="title-wrap">
           <h6 className="title-text">청구현황 및 수금현황</h6>
+          <ul className='list-tab'>
+            {
+              collectCurrent?.length > 0 && collectCurrent.map((it, key) => {
+                return (
+                  <li 
+                    key={key} 
+                    onClick={() => setSelectIndex(key)}
+                    className={selectIndex === key ? 'active' : ''}
+                  > {key + 1} </li>
+                )
+              })
+            }
+          </ul>
         </div>
         <InfoList>
-          <li>
-            <dl>
-              <dt>기간시작</dt>
-              <dd>
-                <input placeholder="위약여부를 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>기간종료</dt>
-              <dd>
-                <input placeholder="계약개월을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>DKNO</dt>
-              <dd>
-                <input placeholder="금액을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>청구금액</dt>
-              <dd>
-                <input placeholder="청구금액을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>부가세포함</dt>
-              <dd>
-                <input placeholder="운임조건을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>발행일</dt>
-              <dd>
-                <input placeholder="운임청구방식을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>입금번호</dt>
-              <dd>
-                <input placeholder="운임청구방식을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>입금일</dt>
-              <dd>
-                <input placeholder="운임청구방식을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>수금액</dt>
-              <dd>
-                <input placeholder="운임청구방식을 입력하세요" />
-              </dd>
-            </dl>
-          </li>
+          {
+            collectCurrent?.length > 0 && collectCurrent.map((item, index) => {
+              return (
+                selectIndex === index && (
+                  <>
+                  <li>
+                    <dl>
+                      <dt>기간시작</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={moment(item.기간시작).format('YYYY-MM-DD hh:mm')}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>기간종료</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={moment(item.기간종료).format('YYYY-MM-DD hh:mm')}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>DKNO</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={item.DKNO}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>청구금액</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={CommaPriceRegis(item.청구금액)}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>부가세포함</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={CommaPriceRegis(item.부가세포함)}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>발행일</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={moment(item.계산서발행일).format('YYYY-MM-DD hh:mm')}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>입금번호</dt>
+                      <dd>
+                        <input
+                          type="text"
+                          defaultValue={item.입금번호}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>입금일</dt>
+                      <dd>
+                        <input 
+                          type="text"
+                          defaultValue={moment(item.입금일).format('YYYY-MM-DD hh:mm')}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                  <li>
+                    <dl>
+                      <dt>수금액</dt>
+                      <dd>
+                        <input
+                          type="text"
+                          defaultValue={CommaPriceRegis(item.수금액)}
+                          disabled
+                        />
+                      </dd>
+                    </dl>
+                  </li>
+                </>
+                )
+              )
+            })
+          }
           <li className="textarea-li">
             <dl>
               <dt>업무협의사항(미수금처리)</dt>
               <dd>
-                <textarea />
+                <textarea 
+                  value={body?.축중기체크사항?.업무협의사항}
+                  onChange={(e) => setBody({
+                    ...body,
+                    축중기체크사항: {
+                      ...body.축중기체크사항,
+                      업무협의사항: e.target.value
+                    }
+                  })}
+                />
               </dd>
             </dl>
           </li>
@@ -284,7 +379,16 @@ const RPC03Step03Modal = () => {
             <dl>
               <dt>장비파손내역</dt>
               <dd>
-                <textarea />
+                <textarea
+                  value={body?.축중기체크사항?.장비파손내역}
+                  onChange={(e) => setBody({
+                    ...body,
+                    축중기체크사항: {
+                      ...body.축중기체크사항,
+                      장비파손내역: e.target.value
+                    }
+                  })}
+                />
               </dd>
             </dl>
           </li>
@@ -293,13 +397,13 @@ const RPC03Step03Modal = () => {
 
       <ModalBtm>
         <button className="del-btn" onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <RPC03Step02Modal /> })
-      }}>이전</button>
+          closeModal()
+          openModal({ ...modalData, content: <RPC03Step02Modal /> })
+        }}>이전</button>
         <button className="primary-btn" onClick={() => {
-        closeModal()
-        openModal({ ...modalData, content: <RPC03Step04Modal /> })
-      }}>다음</button>
+          closeModal()
+          openModal({ ...modalData, content: <RPC03Step04Modal /> })
+        }}>다음</button>
       </ModalBtm>
     </RPC03Step03ModalBody>
   </RPC03Step03ModalWrap>

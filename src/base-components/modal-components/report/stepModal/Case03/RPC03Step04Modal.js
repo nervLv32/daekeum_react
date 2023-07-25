@@ -6,6 +6,10 @@ import { useModal } from "../../../../../hooks/useModal";
 
 import RPC03Step03Modal from "./RPC03Step03Modal";
 
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { exportDocumentBody } from '../../../../../recoil/reportAtom'
+import fetchService from "../../../../../util/fetchService";
+
 
 const RPC03Step04ModalWrap = styled.div`
   background-color: #fff;
@@ -161,11 +165,30 @@ const ModalBtm = styled.div`
 const RPC03Step04Modal = () => {
 
   const { openModal, closeModal } = useModal();
+  const [body, setBody] = useRecoilState(exportDocumentBody);
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  const updateValue = (key, value) => {
+    setBody({
+      ...body,
+      축중기체크사항: {
+        ...body.축중기체크사항,
+        [key]: value
+      }
+    })
+  }
+
+  const validateInRequest = () => {
+    fetchService('/approval/validateInRequest', 'post', body).then((res) => {
+      console.log(res);
+    });
+  }
+
+  console.log(body)
 
   /******* 입고요청서 케이스의 네번째 *******/
   return <RPC03Step04ModalWrap>
@@ -192,7 +215,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.인디게이터 === 1}
+                  onChange={(e) => updateValue('인디게이터', Number(e.target.value))}
                   name="indicator"
                   id="iy"
                 />
@@ -201,7 +226,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.인디게이터 === 0}
+                  onChange={(e) => updateValue('인디게이터', Number(e.target.value))}
                   name="indicator"
                   id="in"
                 />
@@ -217,7 +244,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.계량판패드1 === 1}
+                  onChange={(e) => updateValue('계량판패드1', Number(e.target.value))}
                   name="g01"
                   id="gy"
                 />
@@ -226,7 +255,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.계량판패드1 === 0}
+                  onChange={(e) => updateValue('계량판패드1', Number(e.target.value))}
                   name="g01"
                   id="gn"
                 />
@@ -242,7 +273,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.계량판패드2 === 1}
+                  onChange={(e) => updateValue('계량판패드2', Number(e.target.value))}
                   name="g02"
                   id="g2y"
                 />
@@ -251,7 +284,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.계량판패드2 === 0}
+                  onChange={(e) => updateValue('계량판패드2', Number(e.target.value))}
                   name="g02"
                   id="g2n"
                 />
@@ -267,7 +302,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.램프4EA === 1}
+                  onChange={(e) => updateValue('램프4EA', Number(e.target.value))}
                   name="lamp"
                   id="ly"
                 />
@@ -276,7 +313,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.램프4EA === 0}
+                  onChange={(e) => updateValue('램프4EA', Number(e.target.value))}
                   name="lamp"
                   id="ln"
                 />
@@ -292,7 +331,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.케이블2EA === 1}
+                  onChange={(e) => updateValue('케이블2EA', Number(e.target.value))}
                   name="cable"
                   id="cy"
                 />
@@ -301,7 +342,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.케이블2EA === 0}
+                  onChange={(e) => updateValue('케이블2EA', Number(e.target.value))}
                   name="cable"
                   id="cn"
                 />
@@ -317,7 +360,9 @@ const RPC03Step04Modal = () => {
               <div className="y-wrap">
                 <input
                   type="radio"
-                  value="001"
+                  value={1}
+                  checked={body.축중기체크사항.충전어댑터 === 1}
+                  onChange={(e) => updateValue('충전어댑터', Number(e.target.value))}
                   name="charger"
                   id="chy"
                 />
@@ -326,7 +371,9 @@ const RPC03Step04Modal = () => {
               <div className="n-wrwap">
                 <input
                   type="radio"
-                  value="002"
+                  value={0}
+                  checked={body.축중기체크사항.충전어댑터 === 0}
+                  onChange={(e) => updateValue('충전어댑터', Number(e.target.value))}
                   name="charger"
                   id="chn"
                 />
@@ -344,7 +391,8 @@ const RPC03Step04Modal = () => {
         openModal({ ...modalData, content: <RPC03Step03Modal /> })
       }}>이전</button>
         <button className="primary-btn" onClick={() => {
-        closeModal()
+          validateInRequest()
+        // closeModal()
         // FIX 서류 상신 API
       }}>서류상신</button>
       </ModalBtm>
