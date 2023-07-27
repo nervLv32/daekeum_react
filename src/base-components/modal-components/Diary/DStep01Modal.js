@@ -309,7 +309,6 @@ const DStep01Modal = () => {
 
   // 장비정보 검색 클릭 이벤트
   const [equipActive, setEquipActive] = useState();
-  const [searchData, setSearchData] = useState();
   const handleSubmit = () => {
     getEquipList();
     searchKeyword.length > 0 ? setSearchStatus(true) : setSearchStatus(false);
@@ -322,7 +321,10 @@ const DStep01Modal = () => {
   };
   const handleClick = (i, data) => {
     setEquipActive(i);
-    setSearchData(data);
+    setJournal({
+      ...journal,
+      step01: data
+    })
     setSearchKeyword("");
     setSearchStatus(false);
   };
@@ -429,7 +431,7 @@ const DStep01Modal = () => {
         <div className="product-info">
           <dl>
             <dt>MODEL-NO</dt>
-            <dd>{searchData?.모델}</dd>
+            <dd>{journal.step01?.모델}</dd>
           </dl>
           <dl>
             <dt>수조</dt>
@@ -445,15 +447,15 @@ const DStep01Modal = () => {
           </dl>
           <dl>
             <dt>사용전압</dt>
-            <dd>{searchData?.전압}</dd>
+            <dd>{journal.step01?.전압}</dd>
           </dl>
           <dl>
             <dt>설치방향</dt>
-            <dd>{searchData?.방향}</dd>
+            <dd>{journal.step01?.방향}</dd>
           </dl>
           <dl>
             <dt>침전제</dt>
-            <dd>{searchData?.장비구분}</dd>
+            <dd>{journal.step01?.장비구분}</dd>
           </dl>
         </div>
       </div>

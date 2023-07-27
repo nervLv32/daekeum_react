@@ -1,8 +1,10 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep02Modal from './DStep02Modal'
 import DStep04Modal from './DStep04Modal'
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -200,6 +202,20 @@ const DStep03Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  // 일지작성 recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+  const handleChange = (k, v) => {
+    setJournal({
+      ...journal,
+      step03: {
+        ...journal.step03,
+        [k]: v
+      }
+    })
+  };
+
+  console.log(journal)
+
   return (
     <ModalWrap>
       <div className="title">
@@ -225,25 +241,42 @@ const DStep03Modal = () => {
         <dl className="input-info">
           <dt>요청사항</dt>
           <dd>
-            <textarea placeholder="요청사항을 입력하세요."></textarea>
+            <textarea 
+              defaultValue={journal.step03.요청사항}
+              onChange={(e) => handleChange('요청사항', e.target.value)}
+              placeholder="요청사항을 입력하세요."
+            ></textarea>
           </dd>
         </dl>
         <dl className="input-info">
           <dt>원인(점검요원소견)</dt>
           <dd>
-            <textarea placeholder="원인을 입력하세요."></textarea>
+            <textarea 
+              defaultValue={journal.step03.원인}
+              onChange={(e) => handleChange('원인', e.target.value)}
+              placeholder="원인을 입력하세요."
+            ></textarea>
           </dd>
         </dl>
         <dl className="input-info">
           <dt>업무내용</dt>
           <dd>
-            <textarea placeholder="업무내용을 입력하세요."></textarea>
+            <textarea 
+              defaultValue={journal.step03.업무내용}
+              onChange={(e) => handleChange('업무내용', e.target.value)}
+              placeholder="업무내용을 입력하세요."
+            ></textarea>
           </dd>
         </dl>
         <dl className="input-info">
           <dt>다음순회점검 예정일</dt>
           <dd>
-            <input type="text" placeholder="다음순회점검 예정일을 입력하세요." />
+            <input 
+              type="text" 
+              defaultValue={journal.step03.예정일}
+              onChange={(e) => handleChange('예정일', e.target.value)}
+              placeholder="다음순회점검 예정일을 입력하세요." 
+            />
           </dd>
         </dl>
       </div>

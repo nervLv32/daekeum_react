@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
+import {useRecoilState} from "recoil";
+import journalAtom from "../../recoil/journalAtom";
 
 const ItemWrap = styled.li`
   display: flex;
@@ -80,15 +82,34 @@ const ItemWrap = styled.li`
   }
 `
 
-const ProductListItem = ({allCheckStatus}) => {
+const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus}) => {
 
   // 체크박스 상태
   const [checkStatus, setCheckStatus] = useState(false);
 
   // 전체 체크박스 상태관리
   useEffect(() => {
-    allCheckStatus ? setCheckStatus(true) : setCheckStatus(false);
+    if(allCheckStatus) {
+      setCheckStatus(true)
+    } else {
+      setCheckStatus(false)
+    }
   }, [allCheckStatus])
+
+  // 체크된 품목 정보들 저장
+  const updateItemList = (item) => {
+    setCheckItemList(() => {
+      const updatedItemList = checkItemList.some((entry) => entry.품목코드 === item.품목코드)
+        ? checkItemList.filter((entry) => entry.품목코드 !== item.품목코드)
+        : [...checkItemList, item];
+      return updatedItemList;
+    });
+  };
+  const handleCheckboxChange = () => {
+    setCheckStatus(!checkStatus);
+    updateItemList(item);
+  };
+
 
   return (
     <ItemWrap className={checkStatus ? "on" : ""}>
@@ -96,23 +117,23 @@ const ProductListItem = ({allCheckStatus}) => {
         <input 
           type="checkbox" 
           checked={checkStatus} 
-          onChange={() => setCheckStatus(!checkStatus)} 
+          onChange={handleCheckboxChange}
         />
       </div>
       <div className="code">
-        TNUPU05001
+        {item.품목코드}
       </div>
       <div className="part">
-        펌프
+        {item.파트}
       </div>
       <div className="name">
-        PUMP(대금펌프) DTV-55L
+        {item.품명}
       </div>
       <div className="standard">
-        5.5KW/220V 380V겸용
+        {item.규격}
       </div>
       <div className="count">
-        1.0
+        {item.재고}
       </div>
     </ItemWrap>
   )

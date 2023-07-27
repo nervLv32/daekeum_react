@@ -165,6 +165,7 @@ const ReceiptCard = ({
                 openModal({ ...modalData, content: <DStep01Modal /> })
               }
               setJournal({
+                ...journal,
                 accountCode: no
               })
             }}

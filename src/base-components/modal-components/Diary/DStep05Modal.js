@@ -1,13 +1,15 @@
-import React, {useState} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import ProductListItem from "../../../components/diary/ProductListItem";
+import DStep04Modal from './DStep04Modal'
+import fetchService from "../../../util/fetchService";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
   height: auto;
-  max-height: 70vh;
-  overflow-y: auto;
   background-color: #fff;
   box-shadow: 1rem -0.4rem 1rem rgba(0, 0, 0, 0.1);
   border-radius: 2rem 2rem 0px 0px;
@@ -21,7 +23,9 @@ const ModalWrap = styled.div`
     }
   }
   .modal-body {
-    padding-bottom: 6rem;
+    height: auto;
+    max-height: calc(70vh - 11.4rem);
+    overflow-y: auto;
   }
 `
 
@@ -131,21 +135,91 @@ const ItemAddList = styled.div`
           }
         }
       }
+      &:last-child {
+        padding-bottom: 1px;
+      }
     }
   }
 `
 
-const DStep04Modal = () => {
+const DStep05Modal = () => {
 
-  const { closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
+  const modalData = {
+    title: 'DStep05Modal Modal',
+    callback: () => alert('Modal Callback()'),
+  };
+
+  // 일지작성 recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
 
   // 체크박스 상태
   const [allCheckStatus, setAllCheckStatus] = useState(false);
 
   // 아이템 배열
-  const itemList = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-  ]
+  const [params, setParams] = useState({
+    EmpNo: '',
+    대금AS: '',
+    신규중고: '',
+    pageSize: '30',
+    currentPage: '1'
+  });
+
+  const [itemList, setItemList] = useState([]);
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
+  
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true);
+      setParams({
+        ...params,
+        currentPage: parseInt(params.currentPage) + 1,
+      });
+    }
+  });
+
+
+  const materialRequestItemList = (list) => {
+    fetchService('/inventory/materialRequestItemList', 'post', params)
+    .then((res) => {
+      const data = [...list, ...res.data];
+      setItemList(data);
+      if (res.data.length > 29) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
+    })
+  };
+
+  useEffect(() => {
+    if(parseInt(params.currentPage) > 1) {
+      materialRequestItemList(itemList);
+    }
+  }, [params.currentPage])
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
+  }, [isLoading])
+
+
+  // 체크한 품목 저장
+  const [checkItemList, setCheckItemList] = useState([]);
+  useEffect(() => {
+    allCheckStatus ? setCheckItemList(itemList) : setCheckItemList([]);
+  }, [allCheckStatus])
+
+  const handleSubmit = () => {
+    setJournal({
+      ...journal,
+      step04: checkItemList
+    })
+    closeModal()
+    openModal({ ...modalData, content: <DStep04Modal /> })
+  };
 
   return (
     <ModalWrap>
@@ -182,10 +256,17 @@ const DStep04Modal = () => {
             {
               itemList?.length > 0 && itemList.map((item, index) => {
                 return (
-                  <ProductListItem key={index} allCheckStatus={allCheckStatus} />
+                  <ProductListItem 
+                    key={index} 
+                    checkItemList={checkItemList}
+                    setCheckItemList={setCheckItemList}
+                    item={item} 
+                    allCheckStatus={allCheckStatus} 
+                  />
                 )
               })
             }
+            <li ref={observeTargetRef}></li>
           </ul>
         </ItemAddList>
       </div>
@@ -194,7 +275,7 @@ const DStep04Modal = () => {
           type="button" 
           className="btn-blue"
           onClick={() => {
-            closeModal()
+            handleSubmit()
           }}
           >확인</button>
         <button 
@@ -202,6 +283,7 @@ const DStep04Modal = () => {
           className="btn-outline-gray"
           onClick={() => {
             closeModal()
+            openModal({ ...modalData, content: <DStep04Modal /> })
           }}
         >취소</button>
       </BtnWrap>
@@ -209,4 +291,4 @@ const DStep04Modal = () => {
   )
 }
 
-export default DStep04Modal;
+export default DStep05Modal;

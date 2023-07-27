@@ -4,6 +4,8 @@ import { useModal } from "../../../hooks/useModal";
 import DStep03Modal from './DStep03Modal'
 import DStep05Modal from './DStep05Modal'
 import ProductInfo from "../../../components/diary/ProductInfo";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -244,6 +246,10 @@ const DStep04Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  // 일지작성 recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+  console.log(journal)
+
   return (
     <ModalWrap>
       <div className="title">
@@ -274,7 +280,13 @@ const DStep04Modal = () => {
             </label>
             <div className="btn-wrap">
               <button type="button" className="btn-outline-gray">선택삭제</button>
-              <button type="button" className="btn-blue">품목추가</button>
+              <button 
+                type="button" 
+                className="btn-blue"
+                onClick={() => {
+                  openModal({ ...modalData, content: <DStep05Modal /> })
+                }}
+              >품목추가</button>
             </div>
           </div>
           <div className="list-wrap">
@@ -324,7 +336,6 @@ const DStep04Modal = () => {
           className="btn-blue"
           onClick={() => {
             closeModal()
-            openModal({ ...modalData, content: <DStep05Modal /> })
           }}
         >다음</button>
       </BtnWrap>

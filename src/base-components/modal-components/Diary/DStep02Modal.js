@@ -7,6 +7,7 @@ import fetchService from "../../../util/fetchService";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
 import moment from "moment";
+import SingleDate from "../../../components/calander/SingleDate";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -182,9 +183,22 @@ const BtnWrap = styled.div`
 const DStep02Modal = () => {
 
   const { openModal, closeModal } = useModal();
-
-  // 업체정보 Recoil
+  // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
+
+  // 캘린더
+  const [isCalendar, setCalendar] = useState(false);
+  const submit = (key, value) => {
+    setJournal({
+      ...journal,
+      [key]: value
+    })
+    close()
+  };
+  const close = () => {
+    setCalendar(false)
+  };
+  console.log(journal)
 
   // 현장상세 가져오기
   const [site, setSite] = useState();
@@ -206,113 +220,120 @@ const DStep02Modal = () => {
   };
 
   return (
-    <ModalWrap>
-      <div className="title">
-        <h3>일지작성</h3>
-      </div>
-      <div className="step-list">
-        <ul>
-          <li>
-            <span>1</span>
-          </li>
-          <li>
-            <span className="on">2</span>
-          </li>
-          <li>
-            <span>3</span>
-          </li>
-          <li>
-            <span>4</span>
-          </li>
-        </ul>
-      </div>
-      <div className="modal-body">
-        <dl className="input-info">
-          <dt>업체명</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={journal?.companyInfo?.거래처명} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>현장명</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={site?.현장명} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>현장담당자</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={site?.담당자} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">현장 연락처</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={site?.전화번호} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">현장 담당자 연락처</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={site?.휴대폰} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">접수일시</dt>
-          <dd>
-            <input type="text" className="bg" defaultValue={moment(site?.등록일).format('YYYY-MM-DD')} disabled />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">처리일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">도착일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">종료일시</dt>
-          <dd>
-            <input type="text" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">점검요원</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-        <dl className="input-info w50">
-          <dt className="essential">사용자 연락처</dt>
-          <dd>
-            <input type="text" className="bg" />
-          </dd>
-        </dl>
-      </div>
-      <BtnWrap>
-        <button 
-          type="button" 
-          className="btn-outline-gray"
-          onClick={() => {
-            closeModal()
-            openModal({ ...modalData, content: <DStep01Modal /> })
-          }}
-        >이전</button>
-        <button 
-          type="button" 
-          className="btn-blue"
-          onClick={() => {
-            closeModal()
-            openModal({ ...modalData, content: <DStep03Modal /> })
-          }}
-        >다음</button>
-      </BtnWrap>
-    </ModalWrap>
+    <>
+      <ModalWrap>
+        <div className="title">
+          <h3>일지작성</h3>
+        </div>
+        <div className="step-list">
+          <ul>
+            <li>
+              <span>1</span>
+            </li>
+            <li>
+              <span className="on">2</span>
+            </li>
+            <li>
+              <span>3</span>
+            </li>
+            <li>
+              <span>4</span>
+            </li>
+          </ul>
+        </div>
+        <div className="modal-body">
+          <dl className="input-info">
+            <dt>업체명</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={journal?.companyInfo?.거래처명} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>현장명</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={site?.현장명} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>현장담당자</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={site?.담당자} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">현장 연락처</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={site?.전화번호} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">현장 담당자 연락처</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={site?.휴대폰} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">접수일시</dt>
+            <dd>
+              <input type="text" className="bg" defaultValue={moment(site?.등록일).format('YYYY-MM-DD hh:mm:ss')} disabled />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">처리일시</dt>
+            <dd onClick={() => setCalendar(true)}>
+              <input type="text" />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">도착일시</dt>
+            <dd>
+              <input type="text" />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">종료일시</dt>
+            <dd>
+              <input type="text" />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">점검요원</dt>
+            <dd>
+              <input type="text" className="bg" />
+            </dd>
+          </dl>
+          <dl className="input-info w50">
+            <dt className="essential">사용자 연락처</dt>
+            <dd>
+              <input type="text" className="bg" />
+            </dd>
+          </dl>
+        </div>
+        <BtnWrap>
+          <button 
+            type="button" 
+            className="btn-outline-gray"
+            onClick={() => {
+              closeModal()
+              openModal({ ...modalData, content: <DStep01Modal /> })
+            }}
+          >이전</button>
+          <button 
+            type="button" 
+            className="btn-blue"
+            onClick={() => {
+              closeModal()
+              openModal({ ...modalData, content: <DStep03Modal /> })
+            }}
+          >다음</button>
+        </BtnWrap>
+      </ModalWrap>
+      {
+        isCalendar && (
+          <SingleDate submit={submit} close={close} type={'처리일시'} />
+        )
+      }
+    </>
   )
 }
 
