@@ -14,6 +14,13 @@ import {newReceiptParamAtom, receiptAtom} from "../../recoil/receipt";
 import Year from "../../components/calander/Year";
 import Month from "../../components/calander/Month";
 import Daily from "../../components/calander/Daily";
+import Pdf from "../../base-components/modal-components/Diary/Pdf";
+import jsPDF from 'jspdf';
+import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
+import PdfFile from "../../base-components/modal-components/Diary/PdfFile";
+
+
+
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -172,6 +179,23 @@ const Receipt = () => {
   }, [isLoading])
 
 
+  const reportTemplateRef = useRef(null);
+
+	const handleGeneratePdf = () => {
+		const doc = new jsPDF({
+			format: 'a4',
+			unit: 'px',
+		});
+
+		doc.setFont('NotoSansKR-Regular-normal', 'normal');
+
+		doc.html(reportTemplateRef.current, {
+			async callback(doc) {
+				await doc.save('sample.pdf');
+			},
+		});
+	};
+
 
   return (
     <>
@@ -216,6 +240,9 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
+      <PDFDownloadLink document={<PdfFile />} fileName="somename.pdf">
+      {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+    </PDFDownloadLink>
       <ReceiptWrap>
         {
           receipts.map((item, key) => {
@@ -316,6 +343,9 @@ const Receipt = () => {
             isFDep3.daily ? <Daily  modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> : null
       }
       <div ref={observeTargetRef}/>
+      <div ref={reportTemplateRef}>
+        <Pdf />
+      </div>
     </>
   )
 }
