@@ -18,6 +18,7 @@ import Pdf from "../../base-components/modal-components/Diary/Pdf";
 import jsPDF from 'jspdf';
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 import PdfFile from "../../base-components/modal-components/Diary/PdfFile";
+import SpoqaHanSans from '../../assets/fonts/SpoqaHanSansRegular.ttf'
 
 
 
@@ -187,7 +188,7 @@ const Receipt = () => {
 			unit: 'px',
 		});
 
-		doc.setFont('NotoSansKR-Regular-normal', 'normal');
+		doc.setFont('SpoqaHanSans', 'normal');
 
 		doc.html(reportTemplateRef.current, {
 			async callback(doc) {
@@ -240,6 +241,7 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
+      <div onClick={handleGeneratePdf}>testestestse</div>
       <PDFDownloadLink document={<PdfFile />} fileName="somename.pdf">
       {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
     </PDFDownloadLink>

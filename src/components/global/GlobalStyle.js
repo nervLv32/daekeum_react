@@ -45,6 +45,20 @@ const GlobalStyle = createGlobalStyle`
     src: url('../fonts/Montserrat/Montserrat-Bold.ttf') format("ttf");
   }
 
+  @font-face {
+    font-family: "SpoqaHanSans";
+    font-weight: normal;
+    font-style: normal;
+    src: url('/fonts/SpoqaHanSansRegular.ttf') format("ttf");
+  }
+
+  @font-face {
+    font-family: "SpoqaHanSans";
+    font-weight: normal;
+    font-style: normal;
+    src: url('../../assets/fonts/SpoqaHanSansRegular.ttf') format("ttf");
+  }
+
   :root {
     --font-mont: 'Montserrat'
   }

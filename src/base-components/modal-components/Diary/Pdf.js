@@ -5,6 +5,7 @@ const PdfWrap = styled.div`
   width: 100%;
   height: auto;
   background-color: #fff;
+  font-family: 'SpoqaHanSans',sans-serif;
   .info-wrap {
     width: 100%;
     height: auto;
