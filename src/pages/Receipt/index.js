@@ -19,6 +19,7 @@ import jsPDF from 'jspdf';
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 import PdfFile from "../../base-components/modal-components/Diary/PdfFile";
 import SpoqaHanSans from '../../assets/fonts/SpoqaHanSansRegular.ttf'
+import _fonts from "./Font";
 
 
 
@@ -188,7 +189,9 @@ const Receipt = () => {
 			unit: 'px',
 		});
 
-		doc.setFont('SpoqaHanSans', 'normal');
+    doc.addFileToVFS('SpoqaHanSans.ttf', _fonts);  //_fonts 변수는 Base64 
+    doc.addFont('SpoqaHanSans.ttf','SpoqaHanSans', 'normal');
+		doc.setFont('SpoqaHanSans');
 
 		doc.html(reportTemplateRef.current, {
 			async callback(doc) {
@@ -245,6 +248,7 @@ const Receipt = () => {
       <PDFDownloadLink document={<PdfFile />} fileName="somename.pdf">
       {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
     </PDFDownloadLink>
+    <PdfFile />
       <ReceiptWrap>
         {
           receipts.map((item, key) => {

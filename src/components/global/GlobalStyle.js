@@ -49,7 +49,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: "SpoqaHanSans";
     font-weight: normal;
     font-style: normal;
-    src: url('/fonts/SpoqaHanSansRegular.ttf') format("ttf");
+    src: url('../fonts/SpoqaHanSansRegular.ttf') format("ttf");
   }
 
   @font-face {

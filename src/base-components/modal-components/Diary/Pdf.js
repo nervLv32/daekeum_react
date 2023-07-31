@@ -14,11 +14,13 @@ const PdfWrap = styled.div`
     span {
       display: block;
       font-size: 14px;
+      font-family: 'SpoqaHanSans',sans-serif;
       font-weight: 300;
       color: #fff;
       margin-bottom: 10px;
     }
     p {
+      font-family: 'SpoqaHanSans',sans-serif;
       font-size: 18px;
       font-weight: 400;
       color: #fff;
