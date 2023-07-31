@@ -15,11 +15,11 @@ import Year from "../../components/calander/Year";
 import Month from "../../components/calander/Month";
 import Daily from "../../components/calander/Daily";
 import Pdf from "../../base-components/modal-components/Diary/Pdf";
-import jsPDF from 'jspdf';
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 import PdfFile from "../../base-components/modal-components/Diary/PdfFile";
-import SpoqaHanSans from '../../assets/fonts/SpoqaHanSansRegular.ttf'
 import _fonts from "./Font";
+import html2canvas from "html2canvas";
+import jsPdf from "jspdf";
 
 
 
@@ -183,23 +183,19 @@ const Receipt = () => {
 
   const reportTemplateRef = useRef(null);
 
-	const handleGeneratePdf = () => {
-		const doc = new jsPDF({
-			format: 'a4',
-			unit: 'px',
-		});
-
-    doc.addFileToVFS('SpoqaHanSans.ttf', _fonts);  //_fonts 변수는 Base64 
-    doc.addFont('SpoqaHanSans.ttf','SpoqaHanSans', 'normal');
-		doc.setFont('SpoqaHanSans');
-
-		doc.html(reportTemplateRef.current, {
-			async callback(doc) {
-				await doc.save('sample.pdf');
-			},
-		});
-	};
-
+  const printPDF = () => {
+    const domElement = document.getElementById("test");
+    html2canvas(domElement, {
+      onclone: document => {
+        // document.getElementById("print").style.visibility = "hidden";
+      }
+    }).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPdf();
+      pdf.addImage(imgData, "JPEG", 0, 0);
+      pdf.save(`${new Date().toISOString()}.pdf`);
+    });
+  };
 
   return (
     <>
@@ -244,11 +240,7 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
-      <div onClick={handleGeneratePdf}>testestestse</div>
-      <PDFDownloadLink document={<PdfFile />} fileName="somename.pdf">
-      {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-    </PDFDownloadLink>
-    <PdfFile />
+      <div onClick={printPDF}>PDF Test Download</div>
       <ReceiptWrap>
         {
           receipts.map((item, key) => {
@@ -349,7 +341,7 @@ const Receipt = () => {
             isFDep3.daily ? <Daily  modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> : null
       }
       <div ref={observeTargetRef}/>
-      <div ref={reportTemplateRef}>
+      <div id="test" ref={reportTemplateRef}>
         <Pdf />
       </div>
     </>
