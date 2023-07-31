@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { companyListAtom, keywordAtom, pagingAtom, salesStateAtom,companyDetailAtom } from "../../recoil/salesAtom"
 import axios from 'axios';
 import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
+import SaleSubmitModal from '../../base-components/modal-components/sale/SaleSubmitModal'
 
 const SaleWrap = styled.div``
 
@@ -88,13 +89,13 @@ const FloatingWrap = styled.div`
 `
 
 const Sale = () => {
-  
+
   const [companyList, setCompanyList] = useRecoilState(companyListAtom);
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom);
   const [keyword, setKeyword] = useRecoilState(keywordAtom)
   const [paging, setPaging] = useRecoilState(pagingAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom)
-  
+
   const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleInfoList Modal',
@@ -105,7 +106,7 @@ const Sale = () => {
   const search = () => {
     //console.log(  {
     //   searchword: keyword.company,
-    //   pageSize: paging.size, 
+    //   pageSize: paging.size,
     //   currentPage: paging.company
     // })
 
@@ -115,7 +116,7 @@ const Sale = () => {
         method: 'post',
         data: {
           searchword: keyword.company,
-          pageSize: paging.size, 
+          pageSize: paging.size,
           currentPage: paging.company
         }
         // ,headers: {
@@ -128,7 +129,7 @@ const Sale = () => {
         //console.log(data)
 
         setCompanyList(oldData => [
-         ...data 
+         ...data
         ])
       },
       error => {
@@ -136,24 +137,24 @@ const Sale = () => {
       }
     )
   }
-  
+
 
   const setValue = e =>{
-    let val = e.target.value 
-    
+    let val = e.target.value
+
     //console.log('key:',key ,'val:',val)
     setKeyword(oldData =>{
       return {
         ...oldData,
-        company : val      
+        company : val
       }
     })
   }
-  
+
   useEffect(() => {
-    
+
     search()
-    
+
     setSalesState(oldData =>{
       return {
         ...oldData,
@@ -192,9 +193,9 @@ const Sale = () => {
 
     <FloatingWrap>
       <Floating onClick={() =>{
-        setCompanyDetail({}) 
+        setCompanyDetail({})
         closeModal()
-        openModal({ ...modalData, content: <SaleAddNewModal item={''} /> })
+        openModal({ ...modalData, content: <SaleSubmitModal item={''} /> })
       }}>
         <i className="default-icon"></i>
       </Floating>

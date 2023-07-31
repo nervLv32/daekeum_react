@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
-import { useRecoilState } from "recoil";
-import { visitDetailAtom, visitListAtom, salesStateAtom } from "../../../recoil/salesAtom"
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {visitDetailAtom, visitListAtom, salesStateAtom, newSaleAtom} from '../../../recoil/salesAtom'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import SearchModal from '../../../components/searchModal'
+import fetchService from '../../../util/fetchService'
+import userAtom from '../../../recoil/userAtom'
+
 const SaleSubmitModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -30,7 +34,6 @@ const SaleSubmitModalWrap = styled.div`
     background-color: #fff;
   }
 `
-
 const InputList = styled.ul`
   display: flex;
   flex-wrap: wrap;
@@ -54,7 +57,7 @@ const InputList = styled.ul`
       color: #1c1b1f;
       margin-bottom: 4px;
     }
-    input {
+    input, div.input {
       width: 100%;
       box-sizing: border-box;
       border: 1px solid #8885CB;
@@ -66,6 +69,9 @@ const InputList = styled.ul`
       color: #1c1b1f;
       &::placeholder {
         color: #9DA2AE;
+      }
+      &.readonly{
+        background: var(--sky, #EFF2FF);
       }
     }
     textarea {
@@ -85,7 +91,6 @@ const InputList = styled.ul`
     }
   }
 `
-
 const ModalBtm = styled.div`
   padding: 17px 30px;
   background-color: #f7f7f7;
@@ -132,20 +137,25 @@ const ModalBtm = styled.div`
 const SaleSubmitModal = ({item}) => {
   const 거래처코드 = item.거래처코드
   const 방문번호 = item.방문번호
-  const 일지번호 = item.일지번호 
-  //console.log(item)
-  //console.log('pk : ', 방문번호, 일지번호 )
-  
+  const 일지번호 = item.일지번호
+
   const { closeModal } = useModal();
   const navigate = useNavigate();
   const [visitDetail,setVisitDetail] = useRecoilState(visitDetailAtom)
   const [visitList, setVisitList] = useRecoilState(visitListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom);
-  
+  const [isLoadState, setLoadState] = useState(false)
+  const user = useRecoilValue(userAtom)
+
   const modalData = {
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
   };
+
+  const [searchModal, setSearchModal] = useState({
+    flag: false,
+    url: '',
+  })
 
   /*
   const detail = (거래처코드, 현장코드, 방문번호, 일지번호) =>{
@@ -155,7 +165,7 @@ const SaleSubmitModal = ({item}) => {
         method: 'post',
         data: {
           거래처코드: 거래처코드,
-          현장코드: 현장코드 , 
+          현장코드: 현장코드 ,
           방문번호: 방문번호,
           일지번호 : 일지번호
 
@@ -177,21 +187,31 @@ const SaleSubmitModal = ({item}) => {
   }
   */
   const setValue = e =>{
-    let val = e.target.value 
+    let val = e.target.value
     let key = e.target.id
     //console.log('key:',key ,'val:',val)
     setVisitDetail(oldData =>{
       return {
         ...oldData,
-        [key] : val      
+        [key] : val
       }
     })
   }
-  
-  const setVisitHistory = () => {  
+
+  const setVisitHistory = () => {
     let url = '/sales/visitHistoryInsert'
     if(방문번호 && 일지번호) url = '/sales/visitHistoryUpdate'
-    
+
+    console.log({
+      data: {
+        ...visitDetail,
+        비고: null,
+        구분: null,
+        UserInfo:{
+          ...user.auth
+        }
+      }
+    })
     return axios(
       process.env.REACT_APP_API_URL + url,
       {
@@ -199,8 +219,13 @@ const SaleSubmitModal = ({item}) => {
         data: {
           ...visitDetail,
           UserInfo:{
-            EmpNo: 1111,
-            EmpNm: '강민아'
+            DeptCd: user.auth.부서코드,
+            DeptNm: user.auth.부서명,
+            EmpNm: user.auth.한글이름,
+            EmpNo: user.auth.사원코드,
+            회사코드: user.auth.회사코드,
+            DIV_CD: user.auth.DIV_CD,
+            usergwid: user.auth.usergwid
           }
         }
         // ,headers: {
@@ -218,67 +243,100 @@ const SaleSubmitModal = ({item}) => {
             visit: 1
           }
         })
-        
+
         navigate('/sale/visit',{
           state: {
             현장코드 : data[0].현장코드,
             현장명: data[0].현장명
           }
         })
-        
+
       },
       error => {
         console.log(error)
       }
     )
   }
-  
+
+  const openSearchModal = (e, url) => {
+    setSearchModal({
+      flag: true,
+      content: url.replace('/sales/', ''),
+      url: url,
+      elem: e
+    })
+  }
+
+  const searchFetch = async (searchParam) => {
+    return await fetchService(searchModal.url, 'post', searchParam)
+  }
+
   useEffect(() => {
-    setVisitDetail(item)
+    let def = {}
+    if(!item.방문번호){
+      def = {
+        부서명: user.auth.부서명,
+        부서코드: user.auth.부서코드,
+        영업담당자명: user.auth.한글이름,
+        사원코드: user.auth.사원코드,
+        회사코드: user.auth.회사코드
+      }
+    }
+    setVisitDetail({
+      ...item,
+      ...def
+    })
   }, [])
 
   return (
     <SaleSubmitModalWrap>
       <div className="modal-top">
-        <h6 className="title">영업등록</h6>
+        <h6 className="title">영업등록 </h6>
       </div>
       <div className="modal-body">
         <InputList>
           <li className="full required">
             <p>거래처코드</p>
-            <input type="text"  readOnly id="거래처코드" value={visitDetail.거래처코드 || ''} onChange={setValue} />
+            {/*<input type="text"  readOnly id="거래처코드" value={visitDetail.거래처코드 || ''} onChange={setValue} />*/}
+            <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/clientlist')}>
+              {visitDetail.거래처코드 ? visitDetail.거래처코드 : '거래처검색'}
+            </div>
           </li>
           <li className="full required">
             <p>현장코드</p>
-            <input type="text"  readOnly  id="현장코드" value={visitDetail.현장코드 || ''} onChange={setValue} />
+            <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/sitelist')}>
+              {visitDetail.현장코드 ? visitDetail.현장코드 : '현장코드검색'}
+            </div>
           </li>
           <li>
             <p>부서명</p>
-            <input type="text"  placeholder="부서명를 입력하세요" id="부서명" value={visitDetail.부서명 || ''} onChange={setValue}/>
+            <input type="text"  placeholder="부서명를 입력하세요" id="부서명" value={visitDetail.부서명  || ''} readOnly/>
           </li>
           <li>
             <p>부서코드</p>
-            <input type="text"  placeholder="부서코드를 입력하세요" id="부서코드" value={visitDetail.부서코드 || ''} onChange={setValue}/>
+            <input type="text"  placeholder="부서코드를 입력하세요" id="부서코드" value={visitDetail.부서코드 || ''} readOnly/>
           </li>
           <li>
             <p>영업담당자</p>
-            <input type="text"  placeholder="영업담당자를 입력하세요" id="영업담당자명" value={visitDetail.영업담당자명 || ''} onChange={setValue}/>
+            <input type="text"  placeholder="영업담당자를 입력하세요" id="영업담당자명" value={visitDetail.영업담당자명 || ''} readOnly/>
           </li>
           <li>
             <p>영업담당자코드</p>
-            <input type="text"  placeholder="영업담당자코드를 입력하세요" id="영업담당자코드" value={visitDetail.영업담당자코드 || ''} onChange={setValue}/>
+            <input type="text"  placeholder="영업담당자코드를 입력하세요" id="영업담당자코드" value={visitDetail.사원코드 || ''} readOnly/>
           </li>
-          <li>
-            <p>방문번호</p>
-            <input type="text"  readOnly id="방문번호" value={visitDetail.방문번호 || ''} onChange={setValue}/>
-          </li>
+          { isLoadState && <>
+            <li>
+              <p>방문번호</p>
+              <input type='text' readOnly id='방문번호' value={visitDetail.방문번호 || ''} readOnly/>
+              <li>
+                <p>일지번호</p>
+                <input type='text' readOnly id='일지번호' value={visitDetail.일지번호 || ''} readOnly/>
+              </li>
+            </li>
+          </>}
           <li>
             <p>방문일</p>
             <input type="text"  placeholder="방문일을 입력하세요" id="방문일" value={visitDetail.방문일 || ''} onChange={setValue}/>
-          </li>
-          <li className="full">
-            <p>방문목적</p>
-            <input type="text"  placeholder="방문목적을 입력하세요" id="방문목적" value={visitDetail.방문목적 || ''} onChange={setValue}/>
           </li>
           <li>
             <p>업체담당자</p>
@@ -288,25 +346,27 @@ const SaleSubmitModal = ({item}) => {
             <p>직책</p>
             <input type="text"  placeholder="직책을 입력하세요" id="직책" value={visitDetail.직책 || ''} onChange={setValue}/>
           </li>
-          <li>
-            <p>일지번호</p>
-            <input type="text"  readOnly id="일지번호" value={visitDetail.일지번호 || ''} onChange={setValue}/>
-          </li>
+
           <li>
             <p>회사코드</p>
-            <input type="text"  placeholder="회사코드를 입력하세요" id="회사코드" value={visitDetail.회사코드 || ''} onChange={setValue}/>
+            <input type="text"  placeholder="회사코드를 입력하세요" id="회사코드" value={visitDetail.회사코드 || ''} readOnly/>
+          </li>
+          <li className="full">
+            <p>방문목적</p>
+            <input type="text"  placeholder="방문목적을 입력하세요" id="방문목적" value={visitDetail.방문목적 || ''} onChange={setValue}/>
           </li>
           <li className="full">
             <p>상담내역</p>
             <textarea  placeholder="주소를 입력하세요." id="상담내역" value={visitDetail.상담내역 || ''} onChange={setValue} />
           </li>
         </InputList>
+        {searchModal.flag && <SearchModal dataAtom={visitDetailAtom} data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
         setVisitHistory()
-        closeModal()
+        // closeModal()
         // openModal({ ...modalData, content: <RPC01Step03Modal /> })
       }}>저장</button>
        <button className="del-btn" onClick={() => {

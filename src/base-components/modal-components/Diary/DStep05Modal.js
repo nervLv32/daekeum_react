@@ -169,7 +169,7 @@ const DStep05Modal = () => {
   const [itemList, setItemList] = useState([]);
   const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
-  
+
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
       setLoading(true);
@@ -186,6 +186,7 @@ const DStep05Modal = () => {
     .then((res) => {
       const data = [...list, ...res.data];
       setItemList(data);
+      console.log(res.data)
       if (res.data.length > 29) {
         setTimeout(() => {
           setLoading(false);
@@ -231,10 +232,10 @@ const DStep05Modal = () => {
           <ul>
             <li className="hd">
               <div className="check-box">
-                <input 
-                  type="checkbox" 
-                  checked={allCheckStatus} 
-                  onChange={() => setAllCheckStatus(!allCheckStatus)} 
+                <input
+                  type="checkbox"
+                  checked={allCheckStatus}
+                  onChange={() => setAllCheckStatus(!allCheckStatus)}
                 />
               </div>
               <div className="code">
@@ -256,12 +257,12 @@ const DStep05Modal = () => {
             {
               itemList?.length > 0 && itemList.map((item, index) => {
                 return (
-                  <ProductListItem 
-                    key={index} 
+                  <ProductListItem
+                    key={index}
                     checkItemList={checkItemList}
                     setCheckItemList={setCheckItemList}
-                    item={item} 
-                    allCheckStatus={allCheckStatus} 
+                    item={item}
+                    allCheckStatus={allCheckStatus}
                   />
                 )
               })
@@ -271,15 +272,15 @@ const DStep05Modal = () => {
         </ItemAddList>
       </div>
       <BtnWrap>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="btn-blue"
           onClick={() => {
             handleSubmit()
           }}
           >확인</button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="btn-outline-gray"
           onClick={() => {
             closeModal()

@@ -147,14 +147,14 @@ const ModalBtm = styled.div`
 
 const SaleAddNewModal = ({item}) => {
   const 거래처코드 = item.거래처코드
-  
+
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
   const [companyList, setCompanyList] = useRecoilState(companyListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom)
 
   const { closeModal } = useModal();
   const navigate = useNavigate();
-  
+
   const detail = (거래처코드) =>{
     return axios(
       process.env.REACT_APP_API_URL + '/sales/clientDetail',
@@ -181,22 +181,22 @@ const SaleAddNewModal = ({item}) => {
   }
 
   const setValue = e =>{
-    let val = e.target.value 
+    let val = e.target.value
     let key = e.target.id
     //console.log('key:',key ,'val:',val)
     setCompanyDetail(oldData =>{
       return {
         ...oldData,
-        [key] : val      
+        [key] : val
       }
     })
   }
-  
+
   const setCompany = () => {
-    
+
     let url = '/enroll/clientAdd'
     if(거래처코드) url = '/sales/clientUpdate'
-    
+
     return axios(
       process.env.REACT_APP_API_URL + url,
       {
@@ -226,7 +226,7 @@ const SaleAddNewModal = ({item}) => {
         })
         navigate('/sale')
 
-        
+
       },
       error => {
         console.log(error)
@@ -237,7 +237,7 @@ const SaleAddNewModal = ({item}) => {
   useEffect(() => {
     if(거래처코드) {
       detail(거래처코드)
-    } 
+    }
     else {
       setCompanyDetail({})
     }

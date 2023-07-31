@@ -5,6 +5,15 @@ export const salesStateAtom = atom({
     default: { company: 0, site: 0 , visit: 0 }
 })
 
+export const newSaleAtom = atom({
+    key: 'newSaleAtom',
+    default: {
+        날짜: new Date(),
+        회사코드: 1000,
+        접수내용: ''
+    }
+})
+
 export const companyAtom = atom({
     key: 'companyAtom',
     default: { 거래처코드: '', 업체명: ''}
@@ -42,7 +51,7 @@ export const visitDetailAtom = atom({
     key: 'visitDetailAtom',
     default: {}
 })
-         
+
 export const keywordAtom = atom({
     key: 'keywordAtom',
     default: {
@@ -52,14 +61,13 @@ export const keywordAtom = atom({
 
     }
 })
-       
+
 export const pagingAtom = atom({
     key: 'pagingAtom',
     default: {
        size: 5,
-       company: 0, 
+       company: 1,
        site: 0,
        visit: 0
     }
 })
-       

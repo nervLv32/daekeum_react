@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {newReceiptAtom} from "../../recoil/receipt";
+import {useNavigate} from 'react-router-dom'
+import {useEffect} from 'react'
 
 const Li = styled.li`
   margin-top: 1rem;
@@ -25,10 +27,10 @@ const Li = styled.li`
   }
 `
 
-const ClientList = ({searchList, searchModal, setSearchModal}) => {
+const ClientList = ({  dataAtom, searchList, searchModal, setSearchModal, searchWord}) => {
 
   // const setNewReceipt = useSetRecoilState(newReceiptAtom)
-  const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
+  const [newReceipt, setNewReceipt] = useRecoilState(dataAtom)
 
   const updateValue = (name, code) => {
     setNewReceipt({
@@ -43,9 +45,11 @@ const ClientList = ({searchList, searchModal, setSearchModal}) => {
     })
   }
 
+  console.log(searchList)
+
   return <>
     {
-      searchList.map((it, key)=>{
+      searchList.length > 0 ? searchList.map((it, key)=>{
         return (
           <Li key={key} onClick={() => updateValue(it.업체명, it.거래처코드)}>
             <div>
@@ -59,6 +63,9 @@ const ClientList = ({searchList, searchModal, setSearchModal}) => {
           </Li>
         )
       })
+        : window.location.pathname.indexOf('sale') === 1 ? null : <li onClick={() => updateValue(searchWord,0)}>
+          <p>"{searchWord}" 가 존재하지 않습니다. "{searchWord}" 등록하시겠습니까?</p>
+        </li>
     }
   </>
 }

@@ -25,12 +25,10 @@ const Li = styled.li`
   }
 `
 
-const SiteList = ({searchList, searchModal, setSearchModal}) => {
-
-  console.log(searchList)
+const SiteList = ({dataAtom, searchList, searchModal, setSearchModal}) => {
 
   // const setNewReceipt = useSetRecoilState(newReceiptAtom)
-  const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
+  const [newReceipt, setNewReceipt] = useRecoilState(dataAtom)
 
   const updateValue = (name, code,address1, address2, manager, phone) => {
     setNewReceipt({
@@ -48,12 +46,27 @@ const SiteList = ({searchList, searchModal, setSearchModal}) => {
       flag: false,
     })
   }
+
+  const updateSale = (item) => {
+    setNewReceipt({
+      ...newReceipt,
+      ...item
+    })
+
+    setSearchModal({
+      ...searchModal,
+      flag: false,
+    })
+  }
   return <>
     {
       searchList.map((it, key)=>{
         return (
           <Li key={key}
-              onClick={() => updateValue(it.현장명, it.현장코드, it.지역분류, it.주소, it.담당자, it.휴대폰)}
+              onClick={() => {
+                window.location.pathname.indexOf('sale') ? updateSale(it)
+                  : updateValue(it.현장명, it.현장코드, it.지역분류, it.주소, it.담당자, it.휴대폰)
+              }}
           >
             <div>
               <p>{it.현장명}</p>

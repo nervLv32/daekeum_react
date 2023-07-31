@@ -197,10 +197,6 @@ const NewRegisModal = () => {
     return await fetchService(searchModal.url, 'post', searchParam)
   }
 
-  useEffect(() => {
-    console.log(newReceipt)
-  }, [newReceipt])
-
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
@@ -273,8 +269,7 @@ const NewRegisModal = () => {
             })}/>
           </li>
         </InputList>
-        {searchModal.flag &&
-          <SearchModal data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
+        {searchModal.flag && <SearchModal dataAtom={newReceiptAtom} data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
       </div>
       {
         !searchModal.flag && <ModalBtm>

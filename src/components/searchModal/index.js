@@ -49,11 +49,11 @@ const Ul = styled.ul`
   overflow-y: scroll;
 `
 
-const Index = ({data, searchFetch, setSearchModal}) => {
+const Index = ({dataAtom, data, searchFetch, setSearchModal}) => {
 
   let debounce = null
 
-  const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
+  const [newReceipt, setNewReceipt] = useRecoilState(dataAtom)
   const [searchWord, setSearchWord] = useState('')
   const [searchList, setSearchList] = useState([])
   const [search, setSearch] = useState({
@@ -93,8 +93,8 @@ const Index = ({data, searchFetch, setSearchModal}) => {
         <Ul>
           {
             data.content === 'clientlist' ?
-              <ClientList searchModal={data} setSearchModal={setSearchModal} searchList={searchList}/> :
-              <SiteList searchModal={data} setSearchModal={setSearchModal} searchList={searchList} />
+              <ClientList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/> :
+              <SiteList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/>
           }
         </Ul>
       </ModalBody>
