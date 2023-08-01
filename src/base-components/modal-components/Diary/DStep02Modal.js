@@ -149,6 +149,22 @@ const ModalWrap = styled.div`
             color: #9da2ae;
           }
         }
+        span {
+          display: block;
+          width: 100%;
+          height: 3.3rem;
+          background: #fff;
+          border: 0.1rem solid #8885CB;
+          border-radius: 1rem;
+          font-size: 1.2rem;
+          line-height: 3.1rem;
+          font-weight: 500;
+          color: #1c1b1f;
+          padding: 0 1.5rem;
+          &.bg {
+            background: #F7F7F7;
+          }
+        }
       }
     }
   }
@@ -186,6 +202,13 @@ const DStep02Modal = () => {
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
 
+  // 캘린더 타입
+  const [type, setType] = useState("");
+  const handleType = (t) => {
+    setType(t)
+    setCalendar(true)
+  };
+
   // 캘린더
   const [isCalendar, setCalendar] = useState(false);
   const submit = (key, value) => {
@@ -199,6 +222,7 @@ const DStep02Modal = () => {
     setCalendar(false)
   };
   console.log(journal)
+  console.log(type)
 
   // 현장상세 가져오기
   const [site, setSite] = useState();
@@ -280,20 +304,20 @@ const DStep02Modal = () => {
           </dl>
           <dl className="input-info w50">
             <dt className="essential">처리일시</dt>
-            <dd onClick={() => setCalendar(true)}>
-              <input type="text" />
+            <dd onClick={() => handleType("처리일시")}>
+              <span>{journal.처리일시 ? moment(journal.처리일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
             <dt className="essential">도착일시</dt>
-            <dd>
-              <input type="text" />
+            <dd onClick={() => handleType("도착일시")}>
+              <span>{journal.도착일시 ? moment(journal.도착일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
             <dt className="essential">종료일시</dt>
-            <dd>
-              <input type="text" />
+            <dd onClick={() => handleType("종료일시")}>
+              <span>{journal.종료일시 ? moment(journal.종료일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
@@ -330,7 +354,7 @@ const DStep02Modal = () => {
       </ModalWrap>
       {
         isCalendar && (
-          <SingleDate submit={submit} close={close} type={'처리일시'} />
+          <SingleDate submit={submit} close={close} type={type} />
         )
       }
     </>

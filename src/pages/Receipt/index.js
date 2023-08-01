@@ -193,7 +193,7 @@ const Receipt = () => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPdf();
       pdf.addImage(imgData, "JPEG", 0, 0);
-      pdf.save(`${new Date().toISOString()}.pdf`);
+      pdf.save(`test-sample.pdf`);
     });
   };
 
