@@ -6,6 +6,7 @@ import {useRecoilState} from "recoil";
 import {regisAtom} from "../../../recoil/regisAtom";
 import userAtom from "../../../recoil/userAtom";
 import fetchService from "../../../util/fetchService";
+import ConfirmAlert from '../ConfirmAlert'
 
 const RegisAddNewModalWrap = styled.div`
   max-height: 70vh;
@@ -146,7 +147,12 @@ const ModalBtm = styled.div`
 `
 
 const RegisAddNewModal = ({no}) => {
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
+
+  const modalData = {
+    title: 'ConfirmAlert',
+    callback: () => alert('Modal Callback()'),
+  };
 
   const [regis, setRegis] = useRecoilState(regisAtom)
   const [user, setUser] = useRecoilState(userAtom)
@@ -181,6 +187,8 @@ const RegisAddNewModal = ({no}) => {
     fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post',edit)
       .then((res) => {
         console.log(res.data)
+        closeModal()
+        // window.location.reload()
       })
   }
 
@@ -309,9 +317,15 @@ const RegisAddNewModal = ({no}) => {
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
-          updateRegis()
+          // updateRegis()
         // closeModal()
-        // openModal({ ...modalData, content: <RPC01Step03Modal /> })
+        openModal({ ...modalData, content: <ConfirmAlert
+            client={edit.업체명}
+            site={''}
+            text={no !== -1 ? '수정' : '등록'}
+            submit={updateRegis}
+            cancel={closeModal}
+          /> })
       }}>저장</button>
        <button className="del-btn" onClick={() => {
         closeModal()

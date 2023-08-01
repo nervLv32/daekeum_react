@@ -240,7 +240,7 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
-      <div onClick={printPDF}>PDF Test Download</div>
+      <div onClick={printPDF}>PDF Test  Download</div>
       <ReceiptWrap>
         {
           receipts.map((item, key) => {
