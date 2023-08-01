@@ -213,7 +213,7 @@ const Receipt = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => changeParam('처리상태', '신규접수')}>
+                <a onClick={() => changeParam('처리상태', '접수대기')}>
                   <i>
                     <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
                   </i>
@@ -221,7 +221,7 @@ const Receipt = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => changeParam('처리상태', '접수확인')}>
+                <a onClick={() => changeParam('처리상태', '접수완료')}>
                   <i>
                     <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
                   </i>

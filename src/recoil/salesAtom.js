@@ -1,73 +1,74 @@
-import {atom} from "recoil";
+import {atom} from 'recoil'
 
 export const salesStateAtom = atom({
-    key: 'salesStateAtom',
-    default: { company: 0, site: 0 , visit: 0 }
+  key: 'salesStateAtom',
+  default: {company: 0, site: 0, visit: 0},
 })
 
 export const newSaleAtom = atom({
-    key: 'newSaleAtom',
-    default: {
-        날짜: new Date(),
-        회사코드: 1000,
-        접수내용: ''
-    }
+  key: 'newSaleAtom',
+  default: {
+    날짜: new Date(),
+    회사코드: 1000,
+    접수내용: '',
+  },
 })
 
 export const companyAtom = atom({
-    key: 'companyAtom',
-    default: { 거래처코드: '', 업체명: ''}
-});
+  key: 'companyAtom',
+  default: {거래처코드: '', 업체명: ''},
+})
 export const companyListAtom = atom({
-    key: 'companyListAtom',
-    default: []
-});
+  key: 'companyListAtom',
+  default: [],
+})
 
 export const companyDetailAtom = atom({
-    key: 'companyDetailAtom',
-    default: {}
+  key: 'companyDetailAtom',
+  default: {},
 })
 export const siteAtom = atom({
-    key: 'siteAtom',
-    default: { 현장코드: '', 현장명: ''}
-});
+  key: 'siteAtom',
+  default: {현장코드: '', 현장명: ''},
+})
 
 export const siteListAtom = atom({
-    key: 'siteListAtom',
-    default: []
-});
+  key: 'siteListAtom',
+  default: [],
+})
 
 export const siteDetailAtom = atom({
-    key: 'siteDetailAtom',
-    default: {}
-});
+  key: 'siteDetailAtom',
+  default: {},
+})
 
 export const visitListAtom = atom({
-    key: 'visitListAtom',
-    default: []
-});
+  key: 'visitListAtom',
+  default: [],
+})
 
 export const visitDetailAtom = atom({
-    key: 'visitDetailAtom',
-    default: {}
+  key: 'visitDetailAtom',
+  default: {},
 })
 
 export const keywordAtom = atom({
-    key: 'keywordAtom',
-    default: {
-        company:'',
-        site:'',
-        visit:''
+  key: 'keywordAtom',
+  default: {
+    company: '',
+    site: '',
+    visit: '',
 
-    }
+  },
 })
 
 export const pagingAtom = atom({
-    key: 'pagingAtom',
-    default: {
-       size: 5,
-       company: 1,
-       site: 0,
-       visit: 0
-    }
+  key: 'pagingAtom',
+  default: {
+    size: 10,
+    company: 1,
+    currentPage: 1,
+    site: 0,
+    visit: 0,
+  },
 })

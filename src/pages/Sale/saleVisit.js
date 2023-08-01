@@ -144,7 +144,7 @@ const SaleVisit = () => {
 
   useEffect(() => {
     if(현장코드) setSite({ 현장코드: 현장코드, 현장명: 현장명 })
-    search('', 0)
+    search('', 1)
     setSalesState(oldData =>{
       return {
         ...oldData,

@@ -156,13 +156,13 @@ const ReceiptCard = ({
       </div>
       {
         state && (
-          <div 
+          <div
             className="state-wrap"
             onClick={() => {
-              if(state == '접수완료') {
-                openModal({ ...modalData, content: <ReceiptCheckModal /> })
-              } else {
+              if(state === '접수완료') {
                 openModal({ ...modalData, content: <DStep01Modal /> })
+              } else if(state === '접수대기'){
+                openModal({ ...modalData, content: <ReceiptCheckModal /> })
               }
               setJournal({
                 ...journal,
@@ -170,8 +170,8 @@ const ReceiptCard = ({
               })
             }}
           >
-            <button 
-              type="button" 
+            <button
+              type="button"
               className={state === "접수대기" ? "ready" : state === "접수완료" ? "add" : state === "처리완료" ? "done" : ""}
             >
               <i></i>

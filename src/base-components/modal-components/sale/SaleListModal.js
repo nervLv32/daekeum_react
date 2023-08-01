@@ -5,6 +5,7 @@ import {useModal} from "../../../hooks/useModal";
 import {useNavigate} from "react-router-dom";
 import SaleAddNewModal from "./SaleAddNewModal";
 import SaleSubmitModal from './SaleSubmitModal'
+import RegisAddNewModal from '../regis/RegisAddNewModal'
 
 const SaleListModalWrap = styled.div`
   background-color: #fff;
@@ -287,7 +288,7 @@ const SaleListModal = ({item}) => {
         }}>현장조회</button>
         <button className="primary-btn" onClick={() => {
           closeModal()
-          openModal({ ...modalData, content: <SaleSubmitModal item={item} /> })
+          openModal({ ...modalData, content: <SaleAddNewModal item={item} /> })
         }}>업체수정</button>
         <button className="del-btn" onClick={closeModal}>닫기</button>
       </div>

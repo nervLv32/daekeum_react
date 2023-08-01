@@ -91,7 +91,7 @@ const FloatingWrap = styled.div`
 `
 
 const SaleSite = () => {
-  
+
   const location = useLocation();
   const 거래처코드 = location.state?.거래처코드
   const 업체명 = location.state?.업체명
@@ -102,16 +102,16 @@ const SaleSite = () => {
   const [paging, setPaging] = useRecoilState(pagingAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom)
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
-  
+
   const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'SaleSiteList Modal',
     content: <SaleSiteListModal />,
     callback: () => alert('Modal Callback()'),
   };
-  
+
   const search = () => {
-    
+
     return axios(
       process.env.REACT_APP_API_URL + '/sales/siteList',
       {
@@ -119,8 +119,8 @@ const SaleSite = () => {
         data: {
           searchword: keyword.site,
           pageSize: paging.size,
-          currentPage: paging.site,
-          거래처코드 : 거래처코드 || company.거래처코드 
+          currentPage: paging.currentPage,
+          거래처코드 : 거래처코드 || company.거래처코드
         }
         // ,headers: {
         //   'authorization': `${auth.auth.token}`
@@ -129,7 +129,7 @@ const SaleSite = () => {
     ).then(
       res => {
         const { data } = res.data
-        
+
         setSiteList(oldData => [
           ...data
         ])
@@ -139,16 +139,16 @@ const SaleSite = () => {
       }
     )
   }
-  
+
   const setValue = e =>{
-    let val = e.target.value 
-    
+    let val = e.target.value
+
     setKeyword(oldData =>{
       return {
         ...oldData,
-        site : val      
+        site : val
       }
-    })  
+    })
   }
 
   useEffect(() => {
@@ -164,7 +164,7 @@ const SaleSite = () => {
       }
     })
   }, [salesState.site])
-  
+
   return <SaleWrap>
     <SaleTapWrap title="현장정보" />
     <SaleTabSearch>
@@ -194,7 +194,7 @@ const SaleSite = () => {
 
     <FloatingWrap>
       <Floating onClick={() => {
-         setSiteDetail({}) 
+         setSiteDetail({})
         closeModal()
         openModal({ ...modalData, content: <SaleAddPlaceModal item={{거래처코드: 거래처코드}} /> })
       }}>

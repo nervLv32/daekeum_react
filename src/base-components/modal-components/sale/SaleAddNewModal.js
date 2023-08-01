@@ -246,7 +246,7 @@ const SaleAddNewModal = ({item}) => {
   return (
     <SaleAddNewModalWrap>
       <div className="modal-top">
-        <h6 className="title">신규업체등록</h6>
+        <h6 className="title">업체수정</h6>
       </div>
       <div className="modal-body">
         <InputList>
