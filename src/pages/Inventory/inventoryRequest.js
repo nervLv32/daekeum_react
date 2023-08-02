@@ -145,6 +145,7 @@ const InventoryRequest = () => {
             materialRequestList.map((item, key) => {
               return <InventoryRequestList
                 key={key}
+                item={item}
                 state={item.문서상태}
                 no={item.요청일련번호}
                 requestDate={item.요청일}

@@ -6,6 +6,8 @@ import fetchService from '../../../util/fetchService'
 import {DateFormat} from '../../../util/dateFormat'
 import InventoryRequestModal from './InventoryRequestModal'
 import ConfirmAlert from '../ConfirmAlert'
+import {useRecoilValue} from 'recoil'
+import userAtom from '../../../recoil/userAtom'
 
 const InventoryRequestListModalWrap = styled.div`
   background-color: #fff;
@@ -170,6 +172,7 @@ const InventoryRequestListModalWrap = styled.div`
 const InventoryRequestListModal = ({ item }) => {
   const { openModal, closeModal } = useModal();
   const [detail, setDetail] = useState([])
+  const {auth} = useRecoilValue(userAtom)
   const modalData = {
     title: 'Modal',
     callback: () => alert('Modal Callback()'),
@@ -182,9 +185,17 @@ const InventoryRequestListModal = ({ item }) => {
       })
   }
 
+  const updateItem = () => {
+    fetchService('/inventory/doMaterialRequest', 'post', {요청일련번호 : item.요청일련번호, EmpNm: auth.한글이름})
+      .then(() => {
+        window.location.reload()
+      })
+  }
+
   useEffect(() => {
     fetchService('/inventory/materialRequestDetail', 'post', {요청일련번호 : item.요청일련번호})
       .then((res) => {
+        console.log(res.data)
         setDetail(res.data)
       })
   }, [])
@@ -242,7 +253,8 @@ const InventoryRequestListModal = ({ item }) => {
     </div>
     <div className="modal-btm">
       <button className="primary-btn" onClick={() => {
-        openModal({ ...modalData, content: <InventoryRequestModal detail={detail} item={item} /> })
+        // openModal({ ...modalData, content: <InventoryRequestModal detail={detail} item={item} /> })
+        openModal({ ...modalData, content: <ConfirmAlert client={item.요청일련번호 + '번 자재요청을'} text={'입고대기'} submit={updateItem} cancel={closeModal} /> })
       }}>요청</button>
       <button className="del-btn" onClick={() => {
         openModal({ ...modalData, content: <ConfirmAlert client={item.요청일련번호 + '요청을'} text={'삭제'} submit={deleteItem} cancel={closeModal} /> })

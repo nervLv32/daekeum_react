@@ -74,7 +74,8 @@ const InventoryRequestList = ({
   requesterCode,
   writer,
   writerCode,
-  onClick
+  onClick,
+                                item
 }) => {
 
   const dateObj = new Date(requestDate);
@@ -83,6 +84,7 @@ const InventoryRequestList = ({
   const day = String(dateObj.getDate()).padStart(2, "0");
 
   const date = `${year}-${month}-${day}`;
+
 
   return <InventoryRequestListComponent>
     <div className="list-top">

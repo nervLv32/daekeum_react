@@ -95,7 +95,7 @@ const InventoryWait = () => {
     searchword: '',
     pageSize: '10',
     currentPage: '1',
-    EmpNo: 1184/*user.auth.사원코드*/,
+    EmpNo: auth.사원코드
   })
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
