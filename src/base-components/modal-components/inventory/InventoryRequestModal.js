@@ -5,8 +5,9 @@ import {Calendar} from '../../../assets/icon/Svg'
 import {DateFormat} from '../../../util/dateFormat'
 import fetchService from '../../../util/fetchService'
 import SingleDate from '../../../components/calander/SingleDate'
-import {useRecoilValue} from 'recoil'
+import {useRecoilState, useRecoilValue} from 'recoil'
 import userAtom from '../../../recoil/userAtom'
+import {itemAndRequestList} from '../../../recoil/inventoryList'
 
 const InventoryRequestModalWrap = styled.div`
   background-color: #fff;
@@ -151,10 +152,7 @@ const InventoryRequestModal = ({item}) => {
   })
   const [options, setOptions] = useState([])
   const [isLoading, setLoading] = useState(false)
-  const [list, setList] = useState({
-    품목리스트: [],
-    요청리스트: [],
-  })
+  const [list, setList] = useRecoilState(itemAndRequestList)
 
   //TODO - 이제 기능 붙혀보자
 
@@ -167,10 +165,10 @@ const InventoryRequestModal = ({item}) => {
     setCalendar(false)
   }
 
-  const updateBody = (key,value) => {
+  const updateBody = (key, value) => {
     setBody({
       ...body,
-      [key] : value
+      [key]: value,
     })
   }
   const updateValue = (value) => {
@@ -182,17 +180,17 @@ const InventoryRequestModal = ({item}) => {
   const filterItem = (value) => {
     setList({
       ...list,
-      요청리스트: [...list.요청리스트.filter(it => it !== value)]
+      요청리스트: [...list.요청리스트.filter(it => it !== value)],
     })
   }
 
   const fetchList = (temp) => {
     fetchService('/inventory/materialRequestItemList', 'post', params)
       .then((res) => {
-        const data = [...temp.품목리스트 || [] , ...res.data]
+        const data = [...temp.품목리스트 || [], ...res.data]
         setList({
           품목리스트: [...data],
-          요청리스트: [...temp.요청리스트 || []]
+          요청리스트: [...temp.요청리스트 || []],
         })
         if (res.data.length > 4) {
           setTimeout(() => {
@@ -216,7 +214,7 @@ const InventoryRequestModal = ({item}) => {
   const submitData = () => {
     const reqParams = {
       ...body,
-      reqItems: [ ...list.요청리스트 ]
+      reqItems: [...list.요청리스트],
     }
 
     fetchService('/inventory/addMaterialRequestItems', 'post', reqParams)
@@ -225,28 +223,28 @@ const InventoryRequestModal = ({item}) => {
         closeModal()
       })
   }
-
   useEffect(() => {
     fetchService('/inventory/shippingFactorylist', 'post', {})
       .then(res => {
         setOptions(res.data)
       })
-    setLoading(true)
-    fetchList([])
   }, [])
 
-
   useEffect(() => {
-    if(observeTargetRef.current){
+    if (observeTargetRef.current) {
       !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
     }
     return () => onIntersect.disconnect()
   }, [isLoading, list])
 
   useEffect(() => {
-    //FIXME : 무한스크롤 조회가 이상하다
-    fetchList([])
-  }, [params.currentPage])
+    if(item && item.length > 0) {
+      setList({
+        ...list,
+        요청리스트: [...item]
+      })
+    }
+  }, [])
 
   useEffect(() => {
     document.body.style.cssText = `
@@ -266,9 +264,11 @@ const InventoryRequestModal = ({item}) => {
       <div className='title'>간편입력</div>
       <TitleWrap>
         <div onClick={e => setCalendar(true)}>
-          <span ><b>입고요청일</b> {body.입고요청일 ? DateFormat(new Date(body.입고요청일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar /> </span>
+          <span><b>입고요청일</b> {body.입고요청일 ? DateFormat(new Date(body.입고요청일)).substr(0, 10) : '날짜를 선택해주세요'}
+            <Calendar/> </span>
         </div>
-        <div onClick={() => {}}>
+        <div onClick={() => {
+        }}>
           <span><b>발송공장</b>
           <select value={body.창고코드 ? body.창고코드 : ''} onChange={e => updateBody('창고코드', e.target.value)}>
             <option value={''} disabled>항목선택</option>
@@ -285,9 +285,10 @@ const InventoryRequestModal = ({item}) => {
     <ModalBody>
       <Section>
         <div className={'title'}> 품목리스트</div>
-        <Table item={list.품목리스트} list={list} observeTargetRef={observeTargetRef} updateItem={updateValue} filterItem={filterItem}/>
+        <Table item={list.품목리스트} list={list} observeTargetRef={observeTargetRef} updateItem={updateValue}
+               filterItem={filterItem}/>
         <div className={'title'}> 요청리스트</div>
-        <Table item={list.요청리스트} />
+        <Table item={list.요청리스트}/>
       </Section>
       <Choice>
         <div className={list.요청리스트.length <= 0 ? 'noFill' : ''}>
@@ -295,7 +296,7 @@ const InventoryRequestModal = ({item}) => {
             list.요청리스트.length > 0 && <>
               <p>{list.요청리스트.length}개 선택</p>
               <div>
-                <button onClick={() => setList({...list, 요청리스트:[]})}> 전체 취소</button>
+                <button onClick={() => setList({...list, 요청리스트: []})}> 전체 취소</button>
                 <button> X</button>
               </div>
             </>
@@ -309,7 +310,7 @@ const InventoryRequestModal = ({item}) => {
     </ModalBtm>
     {
       isCalendar && <>
-      <SingleDate submit={submit} close={close} type={'입고요청일'} />
+        <SingleDate submit={submit} close={close} type={'입고요청일'}/>
       </>
     }
   </InventoryRequestModalWrap>
@@ -341,18 +342,25 @@ const TableContent = styled.ul`
       flex-wrap: wrap;
       padding-top: 10px;
 
-      p {
+      div {
         padding: 0;
         margin: 0;
         flex: 2;
         border-left: 1px solid #9DA2AE;
-
+        text-align: center;
         &:first-child {
           border-left: none;
         }
 
         &:nth-child(2n) {
           flex: 1;
+        }
+
+        input{
+          padding: 0;
+          border: none;
+          max-width: 2rem;
+          text-align: center;
         }
 
         &:last-child {
@@ -367,6 +375,7 @@ const TableContent = styled.ul`
           }
         }
       }
+      
 
       &.active {
         background-color: #FEF1EC;
@@ -405,11 +414,10 @@ const TableContent = styled.ul`
 `
 const Table = ({item, observeTargetRef, updateItem, filterItem, list}) => {
 
-  const [temp, setTemp] = useState([])
-
-
   const checkItem = (value) => {
-    updateItem(value)
+    if(updateItem){
+      updateItem(value)
+    }
   }
 
   /*const filterItem = (value) => {
@@ -422,44 +430,68 @@ const Table = ({item, observeTargetRef, updateItem, filterItem, list}) => {
       <li> 품목코드</li>
       <li className={'small'}> 파트</li>
       <li> 품명</li>
-      <li className={'small'}> 재고</li>
+      <li className={'small'}>{updateItem ? '재고' : '수량'}</li>
     </TableContent>
-    {
-      item.length > 0 &&
-      <TableContent className={'body'}>
-        {
-          item.map((it, key) => <TableItem key={key} it={it} checkItem={checkItem} list={list} filterItem={filterItem}/>)
-        }
-        <div ref={observeTargetRef ? observeTargetRef : null}/>
-      </TableContent>
-    }
+    <TableContent className={'body'}>
+      {
+        item.length > 0 && item.map((it, key) => <TableItem key={key} it={it} checkItem={checkItem} list={list}
+                                                            filterItem={filterItem}/>)
+      }
+      <div ref={observeTargetRef ? observeTargetRef : null} />
+    </TableContent>
   </CustomTable>
 }
 
 const TableItem = ({it, checkItem, filterItem, list}) => {
 
   const [isSelected, setSeleted] = useState(false)
+  const [lst, setlst] = useRecoilState(itemAndRequestList)
+
   const checked = () => {
-    if (!isSelected) {
-      checkItem(it)
-    } else {
-      filterItem(it)
+    if(checkItem && filterItem){
+      if (!isSelected) {
+        checkItem(it)
+      } else {
+        filterItem(it)
+      }
+      setSeleted(prev => !prev)
     }
-    setSeleted(prev => !prev)
+  }
+
+  const updateNumber = (e) => {
+    let copy = [...lst.요청리스트]
+    let temp = lst.요청리스트.filter(item => item === it)[0]
+    const idx = lst.요청리스트.indexOf(temp)
+    copy[idx] = {
+      ...copy[idx],
+      재고: parseInt(e.target.value)
+    }
+    setlst({
+      ...lst,
+      요청리스트: [...copy]
+    })
+    /*copy.요청리스트[idx] = temp
+    setlst(copy)*/
   }
 
   useEffect(() => {
-    if(isSelected && list.요청리스트){
+    if (isSelected && list.요청리스트) {
       setSeleted(list.요청리스트.indexOf(it) > -1)
     }
   }, [list])
 
+
   return <li className={isSelected ? 'active' : ''} onClick={() => checked()}>
-    <p>{it.품목코드}</p>
-    <p>{it.파트}</p>
-    <p>{it.품명}</p>
-    <p>{it.재고}</p>
-    <p className={it.사용모델 ? '' : 'nullContent'}>{it.사용모델}</p>
+    <div>{it.품목코드}</div>
+    <div>{it.파트}</div>
+    <div>{it.품명}</div>
+    <div>
+      {
+        checkItem && filterItem ? <p>{it.재고}</p> :
+          <input type={'number'} max={it.재고} value={it.재고} onChange={updateNumber}/>
+      }
+    </div>
+    <div className={it.사용모델 ? '' : 'nullContent'}>{it.사용모델}</div>
   </li>
 }
 
