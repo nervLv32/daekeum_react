@@ -46,7 +46,6 @@ const ConfirmBtn = styled.div`
 `
 
 const ConfirmAlert = ({client, site, text, submit, cancel}) => {
-  console.log(client)
   return <ModalBody>
     <p> {client} { site && '/' + site} </p>
     <p> <b>{text}</b>하시겠습니까? </p>

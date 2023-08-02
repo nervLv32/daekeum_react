@@ -185,7 +185,6 @@ const InventoryRequestListModal = ({ item }) => {
   useEffect(() => {
     fetchService('/inventory/materialRequestDetail', 'post', {요청일련번호 : item.요청일련번호})
       .then((res) => {
-        console.log("res::::", res)
         setDetail(res.data)
       })
   }, [])
@@ -243,7 +242,7 @@ const InventoryRequestListModal = ({ item }) => {
     </div>
     <div className="modal-btm">
       <button className="primary-btn" onClick={() => {
-        openModal({ ...modalData, content: <InventoryRequestModal item={item} /> })
+        openModal({ ...modalData, content: <InventoryRequestModal item={detail} /> })
       }}>요청</button>
       <button className="del-btn" onClick={() => {
         openModal({ ...modalData, content: <ConfirmAlert client={item.요청일련번호 + '요청을'} text={'삭제'} submit={deleteItem} cancel={closeModal} /> })

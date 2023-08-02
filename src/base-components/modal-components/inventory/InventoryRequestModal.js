@@ -227,17 +227,14 @@ const InventoryRequestModal = ({item}) => {
   }
 
   useEffect(() => {
-    fetchList([])
     fetchService('/inventory/shippingFactorylist', 'post', {})
       .then(res => {
         setOptions(res.data)
-    })
-  }, [])
-
-  useEffect(() => {
+      })
     setLoading(true)
     fetchList([])
   }, [])
+
 
   useEffect(() => {
     if(observeTargetRef.current){
@@ -245,6 +242,11 @@ const InventoryRequestModal = ({item}) => {
     }
     return () => onIntersect.disconnect()
   }, [isLoading, list])
+
+  useEffect(() => {
+    //FIXME : 무한스크롤 조회가 이상하다
+    fetchList([])
+  }, [params.currentPage])
 
   useEffect(() => {
     document.body.style.cssText = `
