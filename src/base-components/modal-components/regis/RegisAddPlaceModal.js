@@ -5,6 +5,9 @@ import {useRecoilState, useRecoilValue} from 'recoil'
 import userAtom from '../../../recoil/userAtom'
 import fetchService from '../../../util/fetchService'
 import {selectCompanyAtom} from '../../../recoil/regisAtom'
+import SingleDate from '../../../components/calander/SingleDate'
+import {DateFormat} from '../../../util/dateFormat'
+import {Calendar} from '../../../assets/icon/Svg'
 
 const RegisAddPlaceModalWrap = styled.div`
   max-height: 70vh;
@@ -80,6 +83,30 @@ const InputList = styled.ul`
       }
     }
 
+    > div {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 10px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      font-size: 1.3rem;
+      color: #9DA2AE;
+      &.full {
+        color: #1c1b1f;
+      }
+
+      svg {
+        float: right;
+        fill: #555555;
+        width: 1.5rem;
+        height: 1.5rem;
+        align-self: center;
+        margin-left: .5rem;
+      }
+    }
     input {
       width: 100%;
       box-sizing: border-box;
@@ -175,8 +202,8 @@ const RegisAddPlaceModal = ({item}) => {
     전화번호: '',
     팩스번호: '',
     주소: '',
-    종료예정일: new Date(),
-    설치예정일: new Date(),
+    종료예정일: null,
+    설치예정일: null,
     알림: '',
     고객분류: '',
     지역분류: '',
@@ -197,6 +224,25 @@ const RegisAddPlaceModal = ({item}) => {
     console.log(body)
     fetchService(url, 'post', body).then(res => {
       console.log(res.data)
+    })
+  }
+
+  const [isCalendar, setCalendar] = useState({
+    flag: false,
+    exit: false,
+    build: false,
+  })
+
+  const submit = (key, value) => {
+    updateBody(key, value)
+    close()
+  }
+
+  const close = () => {
+    setCalendar({
+      flag: false,
+      exit: false,
+      build: false,
     })
   }
 
@@ -280,16 +326,19 @@ const RegisAddPlaceModal = ({item}) => {
           </li>
           <li>
             <p>종료예정일</p>
-            <input type='text' placeholder='날짜를 입력하세요'
-                   value={body.종료예정일} onChange={(e) => updateBody('종료예정일', e.target.value)}
-            />
+            <div className={body.종료예정일 ? 'full' : ''} onClick={e => setCalendar({flag: true, exit: true, build: false,})}>
+              {body.종료예정일 ? DateFormat(new Date(body.종료예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar />
+            </div>
           </li>
           <li>
             <p>설치예정일</p>
-            <input type='text' placeholder='날짜를 입력하세요'
-                   value={body.설치예정일} onChange={(e) => updateBody('설치예정일', e.target.value)}
-            />
+            <div className={body.설치예정일 ? 'full' : ''} onClick={e => setCalendar({flag: true, exit: false, build: true,})}>
+              {body.설치예정일 ? DateFormat(new Date(body.설치예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar />
+            </div>
           </li>
+          {
+            isCalendar.flag && <SingleDate submit={submit} close={close} type={isCalendar.exit ? '종료예정일' : '설치예정일'} />
+          }
           <li>
             <p>알림</p>
             <input type='text' placeholder='알림을 입력하세요'
