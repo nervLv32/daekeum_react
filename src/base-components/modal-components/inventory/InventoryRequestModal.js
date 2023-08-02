@@ -126,7 +126,7 @@ const Choice = styled.div`
   }
 `
 
-const InventoryRequestModal = () => {
+const InventoryRequestModal = ({item}) => {
   const {closeModal} = useModal()
   const observeTargetRef = useRef(null)
   const [isCalendar, setCalendar] = useState(false)

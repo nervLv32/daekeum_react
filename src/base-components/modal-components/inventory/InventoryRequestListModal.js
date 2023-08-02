@@ -4,6 +4,8 @@ import { useModal } from "../../../hooks/useModal";
 import SimpleInputModal from "./SimpleInputModal";
 import fetchService from '../../../util/fetchService'
 import {DateFormat} from '../../../util/dateFormat'
+import InventoryRequestModal from './InventoryRequestModal'
+import ConfirmAlert from '../ConfirmAlert'
 
 const InventoryRequestListModalWrap = styled.div`
   background-color: #fff;
@@ -173,6 +175,13 @@ const InventoryRequestListModal = ({ item }) => {
     callback: () => alert('Modal Callback()'),
   };
 
+  const deleteItem = () => {
+    fetchService('/inventory/materialRequestDelete', 'post', {요청일련번호 : item.요청일련번호})
+      .then(() => {
+        window.location.reload()
+      })
+  }
+
   useEffect(() => {
     fetchService('/inventory/materialRequestDetail', 'post', {요청일련번호 : item.요청일련번호})
       .then((res) => {
@@ -234,11 +243,12 @@ const InventoryRequestListModal = ({ item }) => {
     </div>
     <div className="modal-btm">
       <button className="primary-btn" onClick={() => {
-        openModal({ ...modalData, content: <SimpleInputModal item={item} /> })
-      }}>입력완료</button>
+        openModal({ ...modalData, content: <InventoryRequestModal item={item} /> })
+      }}>요청</button>
       <button className="del-btn" onClick={() => {
-        closeModal()
-      }}>닫기</button>
+        openModal({ ...modalData, content: <ConfirmAlert client={item.요청일련번호 + '요청을'} text={'삭제'} submit={deleteItem} cancel={closeModal} /> })
+      }}>삭제</button>
+      <button className="del-btn" onClick={closeModal}>닫기</button>
     </div>
   </InventoryRequestListModalWrap>
 }
