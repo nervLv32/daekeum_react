@@ -27,10 +27,7 @@ const CountWrap = styled.div`
   }
 `
 
-const Count = () => {
-
-  // Count State
-  const [count, setCount] = useState(1);
+const Count = ({count, setCount, maxCount}) => {
 
   const handlePlus = () => {
     setCount(count + 1);

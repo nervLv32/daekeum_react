@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep03Modal from './DStep03Modal'
@@ -6,6 +6,9 @@ import DStep05Modal from './DStep05Modal'
 import ProductInfo from "../../../components/diary/ProductInfo";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+import OptionSelectedMemo from "../../../components/optionSelector/OptionSelectorMemo";
+import fetchService from "../../../util/fetchService";
+import { CommaPrice } from "../../../util/commaPrice";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -239,8 +242,8 @@ const BtnWrap = styled.div`
 
 const DStep04Modal = () => {
 
+  // 모달관련
   const { openModal, closeModal } = useModal();
-
   const modalData = {
     title: 'DStep04Modal Modal',
     callback: () => alert('Modal Callback()'),
@@ -248,7 +251,38 @@ const DStep04Modal = () => {
 
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
-  console.log(journal)
+
+  // 결제방식
+  const [options, setOptions] = useState([]);
+  const updateValue = (key, value) => {
+    setJournal({
+      ...journal,
+      [key]: value
+    })
+  }
+
+  // 결제방식 가져오기
+  useEffect(() => {
+    fetchService('/approval/comboPayment', 'post', {})
+    .then((res) => {
+      setOptions(res.data)
+    })
+  }, []);
+
+  // 네고 및 합계 계산
+  const [freePrice, setFreePrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  useEffect(() => {
+    const price01 = journal.품목리스트.filter(item => item.무상체크)
+    .map(item => item.단가 * item.수량)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    const price02 = journal.품목리스트.map(item => item.단가 * item.수량)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    setFreePrice(price01)
+    setTotalPrice(price02)
+  }, [journal?.품목리스트])
 
   return (
     <ModalWrap>
@@ -291,22 +325,34 @@ const DStep04Modal = () => {
           </div>
           <div className="list-wrap">
             <ul>
-              <li>
-                <ProductInfo />
-              </li>
-              <li>
-                <ProductInfo />
-              </li>
-              <li>
-                <ProductInfo />
-              </li>
+              {
+                journal?.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                  return (
+                    <li key={index}>
+                      <ProductInfo 
+                        item={item} 
+                        journal={journal} 
+                        setJournal={setJournal} 
+                      />  
+                    </li>
+                  )
+                })
+              }
             </ul>
           </div>
         </div>
         <div className="total-price-info">
           <dl>
-            <dt>합계</dt>
-            <dd><strong>45,000</strong> 원(VAT별도)</dd>
+            <dt>청구금액</dt>
+            <dd><strong>{CommaPrice(totalPrice - freePrice)}</strong> 원(VAT별도)</dd>
+          </dl>
+          <dl>
+            <dt>합계금액</dt>
+            <dd>{CommaPrice(totalPrice)}</dd>
+          </dl>
+          <dl>
+            <dt>네고금액</dt>
+            <dd>{CommaPrice(freePrice)}</dd>
           </dl>
           <dl>
             <dt>계산서발행일</dt>
@@ -318,7 +364,14 @@ const DStep04Modal = () => {
           </dl>
           <dl>
             <dt>결제방식</dt>
-            <dd>현금결제</dd>
+            <dd>
+              <OptionSelectedMemo
+                list={options || []}
+                updateValue={updateValue}
+                body={journal}
+                depth1={'결제방식'}
+              />
+            </dd>
           </dl>
         </div>
       </div>

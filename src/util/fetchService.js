@@ -6,7 +6,7 @@ const fetchService = (path, method, param) => {
     axios(
       API_URL + path, {
         method: method,
-        data: param,
+        ...(method.toLowerCase() === "post" ? { data: param } : { params: param }),
         validateStatus: false
       })
       .then(res => resolve(res.data))

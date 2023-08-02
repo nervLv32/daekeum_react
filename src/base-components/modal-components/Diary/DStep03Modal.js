@@ -5,6 +5,9 @@ import DStep02Modal from './DStep02Modal'
 import DStep04Modal from './DStep04Modal'
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+import moment from "moment";
+import SingleDate from "../../../components/calander/SingleDate";
+import fetchService from "../../../util/fetchService";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -143,6 +146,22 @@ const ModalWrap = styled.div`
             color: #9da2ae;
           }
         }
+        span {
+          display: block;
+          width: 100%;
+          height: 3.3rem;
+          background: #fff;
+          border: 0.1rem solid #8885CB;
+          border-radius: 1rem;
+          font-size: 1.2rem;
+          line-height: 3.1rem;
+          font-weight: 500;
+          color: #1c1b1f;
+          padding: 0 1.5rem;
+          &.bg {
+            background: #F7F7F7;
+          }
+        }
         textarea {
           width: 100%;
           height: auto;
@@ -202,6 +221,12 @@ const DStep03Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
+  // 캘린더
+  const [isCalendar, setCalendar] = useState(false);
+  const close = () => {
+    setCalendar(false)
+  };
+
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
   const handleChange = (k, v) => {
@@ -212,93 +237,114 @@ const DStep03Modal = () => {
         [k]: v
       }
     })
+    close()
   };
+
+  useEffect(() => {
+    fetchService('/enroll/diaryCombo', 'get', {type: "처리구분"})
+    .then((res) => {
+      console.log(res)
+    })
+  }, [])
 
   console.log(journal)
 
   return (
-    <ModalWrap>
-      <div className="title">
-        <h3>일지작성</h3>
-      </div>
-      <div className="step-list">
-        <ul>
-          <li>
-            <span>1</span>
-          </li>
-          <li>
-            <span>2</span>
-          </li>
-          <li>
-            <span className="on">3</span>
-          </li>
-          <li>
-            <span>4</span>
-          </li>
-        </ul>
-      </div>
-      <div className="modal-body">
-        <dl className="input-info">
-          <dt>요청사항</dt>
-          <dd>
-            <textarea 
-              defaultValue={journal.step03.요청사항}
-              onChange={(e) => handleChange('요청사항', e.target.value)}
-              placeholder="요청사항을 입력하세요."
-            ></textarea>
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>원인(점검요원소견)</dt>
-          <dd>
-            <textarea 
-              defaultValue={journal.step03.원인}
-              onChange={(e) => handleChange('원인', e.target.value)}
-              placeholder="원인을 입력하세요."
-            ></textarea>
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>업무내용</dt>
-          <dd>
-            <textarea 
-              defaultValue={journal.step03.업무내용}
-              onChange={(e) => handleChange('업무내용', e.target.value)}
-              placeholder="업무내용을 입력하세요."
-            ></textarea>
-          </dd>
-        </dl>
-        <dl className="input-info">
-          <dt>다음순회점검 예정일</dt>
-          <dd>
-            <input 
-              type="text" 
-              defaultValue={journal.step03.예정일}
-              onChange={(e) => handleChange('예정일', e.target.value)}
-              placeholder="다음순회점검 예정일을 입력하세요." 
-            />
-          </dd>
-        </dl>
-      </div>
-      <BtnWrap>
-        <button 
-          type="button" 
-          className="btn-outline-gray"
-          onClick={() => {
-            closeModal()
-            openModal({ ...modalData, content: <DStep02Modal /> })
-          }}
-        >이전</button>
-        <button 
-          type="button" 
-          className="btn-blue"
-          onClick={() => {
-            closeModal()
-            openModal({ ...modalData, content: <DStep04Modal /> })
-          }}
-        >다음</button>
-      </BtnWrap>
-    </ModalWrap>
+    <>
+      <ModalWrap>
+        <div className="title">
+          <h3>일지작성</h3>
+        </div>
+        <div className="step-list">
+          <ul>
+            <li>
+              <span>1</span>
+            </li>
+            <li>
+              <span>2</span>
+            </li>
+            <li>
+              <span className="on">3</span>
+            </li>
+            <li>
+              <span>4</span>
+            </li>
+          </ul>
+        </div>
+        <div className="modal-body">
+          <dl className="input-info">
+            <dt>처리구분</dt>
+            <dd>
+              {/* <OptionSelectedMemo
+                list={options || []}
+                updateValue={updateValue}
+                body={journal}
+                depth1={'결제방식'}
+              /> */}
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>요청사항</dt>
+            <dd>
+              <textarea 
+                defaultValue={journal.step03.요청사항}
+                onChange={(e) => handleChange('요청사항', e.target.value)}
+                placeholder="요청사항을 입력하세요."
+              ></textarea>
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>원인(점검요원소견)</dt>
+            <dd>
+              <textarea 
+                defaultValue={journal.step03.원인}
+                onChange={(e) => handleChange('원인', e.target.value)}
+                placeholder="원인을 입력하세요."
+              ></textarea>
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>업무내용</dt>
+            <dd>
+              <textarea 
+                defaultValue={journal.step03.업무내용}
+                onChange={(e) => handleChange('업무내용', e.target.value)}
+                placeholder="업무내용을 입력하세요."
+              ></textarea>
+            </dd>
+          </dl>
+          <dl className="input-info">
+            <dt>다음순회점검 예정일</dt>
+            <dd onClick={() => setCalendar(true)}>
+              <span>{journal?.step03?.다음순회점검예정일 ? moment(journal?.step03?.다음순회점검예정일).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
+            </dd>
+          </dl>
+        </div>
+        <BtnWrap>
+          <button 
+            type="button" 
+            className="btn-outline-gray"
+            onClick={() => {
+              closeModal()
+              openModal({ ...modalData, content: <DStep02Modal /> })
+            }}
+          >이전</button>
+          <button 
+            type="button" 
+            className="btn-blue"
+            onClick={() => {
+              closeModal()
+              openModal({ ...modalData, content: <DStep04Modal /> })
+            }}
+          >다음</button>
+        </BtnWrap>
+      </ModalWrap>
+      {
+        isCalendar && (
+          <SingleDate submit={handleChange} close={close} type={'다음순회점검예정일'} />
+        )
+      }
+    </>
   )
 }
 

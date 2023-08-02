@@ -186,7 +186,6 @@ const DStep05Modal = () => {
     .then((res) => {
       const data = [...list, ...res.data];
       setItemList(data);
-      console.log(res.data)
       if (res.data.length > 29) {
         setTimeout(() => {
           setLoading(false);
@@ -214,9 +213,13 @@ const DStep05Modal = () => {
   }, [allCheckStatus])
 
   const handleSubmit = () => {
+    const modifiedCheckItemList = checkItemList.map(item => ({
+      ...item,
+      수량: 1,
+    }));
     setJournal({
       ...journal,
-      step04: checkItemList
+      품목리스트: modifiedCheckItemList
     })
     closeModal()
     openModal({ ...modalData, content: <DStep04Modal /> })
