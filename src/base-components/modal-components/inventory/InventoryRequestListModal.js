@@ -191,7 +191,7 @@ const InventoryRequestListModal = ({ item }) => {
         </dl>
         <dl>
           <dt>상태변경시간</dt>
-          <dd>detail[0]?.상태변경시각 ? {DateFormat(new Date(detail[0]?.상태변경시각)).substr(0, 10)} : ''</dd>
+          <dd>{detail[0]?.상태변경시각 ? DateFormat(new Date(detail[0]?.상태변경시각)).substr(0, 10) : ''}</dd>
         </dl>
         <dl>
           <dt>상태변경자</dt>
