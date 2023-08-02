@@ -162,7 +162,7 @@ const ReceiptCard = ({
               if(state === '접수완료') {
                 openModal({ ...modalData, content: <DStep01Modal /> })
               } else if(state === '접수대기'){
-                openModal({ ...modalData, content: <ReceiptCheckModal /> })
+                openModal({ ...modalData, content: <DStep01Modal /> })
               }
               setJournal({
                 ...journal,

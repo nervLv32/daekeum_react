@@ -174,6 +174,19 @@ const ModalWrap = styled.div`
             &:not(:last-child) {
               margin-bottom: 2rem;
             }
+            &.empty {
+              width: 100%;
+              height: 10rem;
+              background-color: #fff;
+              border: 0.1rem solid #D9D9D9;
+              border-radius: 0.5rem;
+              overflow: hidden;
+              text-align: center;
+              font-size: 1.3rem;
+              line-height: 10rem;
+              font-weight: 500;
+              color: #1c1b1f;
+            }
           }
         }
       }
@@ -207,6 +220,16 @@ const ModalWrap = styled.div`
               font-weight: 600;
               color: #ea583f;
             }
+          }
+        }
+        dd {
+          select {
+            width: 8rem;
+            border: 0.1rem solid #8885CB;
+            border-radius: 0.3rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #555;
           }
         }
       }
@@ -251,6 +274,22 @@ const DStep04Modal = () => {
 
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
+
+  // 체크박스
+  const [allChecked, setAllChecked] = useState(false);
+
+  // 체크된 리스트 정보 저장
+  const [checkListItem, setCheckListItem] = useState([]);
+
+  // 삭제 기능 추가
+  const handleDelete = () => {
+    const resultArray = journal.품목리스트.filter(item1 => !checkListItem.some(item2 => item2.rownum === item1.rownum));
+    setJournal({
+      ...journal,
+      품목리스트: resultArray
+    });
+    setCheckListItem([]);
+  };
 
   // 결제방식
   const [options, setOptions] = useState([]);
@@ -309,11 +348,15 @@ const DStep04Modal = () => {
         <div className="product-list-wrap">
           <div className="add-ons">
             <label className="all-check">
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                checked={allChecked}
+                onChange={() => setAllChecked(!allChecked)}
+              />
               <span>전체선택</span>
             </label>
             <div className="btn-wrap">
-              <button type="button" className="btn-outline-gray">선택삭제</button>
+              <button type="button" className="btn-outline-gray" onClick={handleDelete}>선택삭제</button>
               <button 
                 type="button" 
                 className="btn-blue"
@@ -326,17 +369,23 @@ const DStep04Modal = () => {
           <div className="list-wrap">
             <ul>
               {
-                journal?.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                journal?.품목리스트?.length > 0 ? journal.품목리스트.map((item, index) => {
                   return (
                     <li key={index}>
                       <ProductInfo 
                         item={item} 
                         journal={journal} 
-                        setJournal={setJournal} 
+                        setJournal={setJournal}
+                        allChecked={allChecked}
+                        setCheckListItem={setCheckListItem}
                       />  
                     </li>
                   )
-                })
+                }) : (
+                  <li className="empty">
+                    추가된 품목이 없습니다.
+                  </li>
+                )
               }
             </ul>
           </div>

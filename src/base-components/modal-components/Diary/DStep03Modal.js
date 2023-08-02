@@ -8,6 +8,7 @@ import journalAtom from "../../../recoil/journalAtom";
 import moment from "moment";
 import SingleDate from "../../../components/calander/SingleDate";
 import fetchService from "../../../util/fetchService";
+import OptionSelectedMemo from "../../../components/optionSelector/OptionSelectorMemo";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -127,7 +128,7 @@ const ModalWrap = styled.div`
       dd {
         width: 100%;
         height: auto;
-        input {
+        input, select {
           width: 100%;
           height: 3.3rem;
           background: #fff;
@@ -240,10 +241,16 @@ const DStep03Modal = () => {
     close()
   };
 
+  const [typeList, setTypeList] = useState([]);
   useEffect(() => {
-    fetchService('/enroll/diaryCombo', 'get', {type: "처리구분"})
-    .then((res) => {
-      console.log(res)
+    fetchService('/enroll/diaryCombo', 'get', {
+      type: "처리구분"
+    }).then((res) => {
+      const list = res.data.map(item => ({
+        ...item,
+        value: item.관리내역명,
+      }));
+      setTypeList(list)
     })
   }, [])
 
@@ -275,12 +282,13 @@ const DStep03Modal = () => {
           <dl className="input-info">
             <dt>처리구분</dt>
             <dd>
-              {/* <OptionSelectedMemo
-                list={options || []}
-                updateValue={updateValue}
+              <OptionSelectedMemo
+                list={typeList || []}
+                updateValue={handleChange}
                 body={journal}
-                depth1={'결제방식'}
-              /> */}
+                depth1={'step03'}
+                depth2={'처리구분'}
+              />
             </dd>
           </dl>
           <dl className="input-info">

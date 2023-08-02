@@ -163,19 +163,36 @@ const ProductInfoWrap = styled.div`
   }
 `
 
-const ProductInfo = ({item, journal, setJournal}) => {
+const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) => {
 
   // Count State
   const [count, setCount] = useState(1);
+
+  // 기본 체크박스 관련
+  const [isChecked, setIsChecked] = useState(false);
+  const handleCheckedChange = () => {
+    setIsChecked(!isChecked);
+  };
+  useEffect(() => {
+    allChecked ? setIsChecked(true) : setIsChecked(false);
+  }, [allChecked])
+  // 체크 박스 선택 시 rownum 저장
+  useEffect(() => {
+    if(isChecked) {
+      setCheckListItem((prevList) => [...prevList, {rownum: item.rownum}])
+    } else {
+      setCheckListItem(prevList => prevList.filter(rownum => rownum.rownum !== item.rownum));
+    }
+  }, [isChecked])
 
   // 무상 구분
   const [freeChecked, setFreeChecked] = useState(false);
   const [freeText, setFreeText] = useState("");
 
+  // 무상 체크 관려
   const handleChange = () => {
     setFreeChecked(!freeChecked);
   };
-
   useEffect(() => {
     if (freeChecked) {
       setJournal({
@@ -198,6 +215,7 @@ const ProductInfo = ({item, journal, setJournal}) => {
     }
   }, [freeChecked, freeText])
 
+  // 기본 수량 추가
   useEffect(() => {
     setJournal({
       ...journal,
@@ -212,7 +230,11 @@ const ProductInfo = ({item, journal, setJournal}) => {
   return (
     <ProductInfoWrap>
       <div className="product-info">
-        <input type="checkbox" />
+        <input 
+          type="checkbox" 
+          checked={isChecked}
+          onChange={handleCheckedChange}
+        />
         <div className="product-name">
           <h5>{item?.품명}</h5>
           <span>5.5KW / 220V / 380V겸용</span>
