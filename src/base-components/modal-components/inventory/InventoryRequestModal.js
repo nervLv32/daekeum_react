@@ -127,7 +127,7 @@ const Choice = styled.div`
   }
 `
 
-const InventoryRequestModal = ({item}) => {
+const InventoryRequestModal = ({detail}) => {
   const {closeModal} = useModal()
   const observeTargetRef = useRef(null)
   const [isCalendar, setCalendar] = useState(false)
@@ -238,10 +238,17 @@ const InventoryRequestModal = ({item}) => {
   }, [isLoading, list])
 
   useEffect(() => {
-    if(item && item.length > 0) {
+    if(detail && detail.length > 0) {
+      const temp = detail.map(it => ({...it, 재고: it.수량}))
+      console.log(temp[0])
+      setBody({
+        ...body,
+        입고요청일: temp[0].입고요청일,
+        창고코드: temp[0].수신부서창고코드
+      })
       setList({
         ...list,
-        요청리스트: [...item]
+        요청리스트: [...temp]
       })
     }
   }, [])

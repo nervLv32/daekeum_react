@@ -242,7 +242,7 @@ const InventoryRequestListModal = ({ item }) => {
     </div>
     <div className="modal-btm">
       <button className="primary-btn" onClick={() => {
-        openModal({ ...modalData, content: <InventoryRequestModal item={detail} /> })
+        openModal({ ...modalData, content: <InventoryRequestModal detail={detail} item={item} /> })
       }}>요청</button>
       <button className="del-btn" onClick={() => {
         openModal({ ...modalData, content: <ConfirmAlert client={item.요청일련번호 + '요청을'} text={'삭제'} submit={deleteItem} cancel={closeModal} /> })
