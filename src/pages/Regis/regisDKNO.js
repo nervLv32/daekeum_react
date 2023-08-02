@@ -150,12 +150,6 @@ const RegisDKNO = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-  useEffect(() => {
-    if(selectRegis.client.code === '' || selectRegis.site.code === '' || selectRegis.equipment.code === '') {
-      navigate('/regis')
-    }
-  }, [])
-
   return <RegisDKNOWrap>
     <RegisTapWrap title="DKNO" />
     <RegisTabSearch>
