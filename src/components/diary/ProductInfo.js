@@ -190,6 +190,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
   const handleChange = () => {
     setFreeChecked(!freeChecked);
   };
+
   useEffect(() => {
     if (!freeChecked) {
       setJournal({
@@ -203,6 +204,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
     }
   }, [freeChecked])
 
+  // 유무상구분 셀렉트박스 상태변경
   const handleFreeCheck = (v) => {
     setJournal({
       ...journal,
@@ -253,11 +255,11 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
           <input type="checkbox" checked={freeChecked} onChange={handleChange} />
           무상
           <select
-            defaultValue={item.유뮤상구분}
+            value={item.유뮤상구분}
             onChange={(e) => handleFreeCheck(e.target.value)}
             disabled={!freeChecked}
           >
-            <option value="" selected={freeChecked}>항목을 선택해주세요.</option>
+            <option value="">항목을 선택해주세요.</option>
             {
               typeList?.length > 0 && typeList.map((it, idx) => <option value={it.관리내역명} key={idx}>{it.관리내역명}</option>)
             }

@@ -9,6 +9,8 @@ import journalAtom from "../../../recoil/journalAtom";
 import OptionSelectedMemo from "../../../components/optionSelector/OptionSelectorMemo";
 import fetchService from "../../../util/fetchService";
 import { CommaPrice } from "../../../util/commaPrice";
+import moment from "moment";
+import SingleDate from "../../../components/calander/SingleDate";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -225,11 +227,24 @@ const ModalWrap = styled.div`
         dd {
           select {
             width: 8rem;
+            min-height: 2rem;
             border: 0.1rem solid #8885CB;
             border-radius: 0.3rem;
             font-size: 1.1rem;
             font-weight: 500;
             color: #555;
+            padding: 0 0.5rem;
+          }
+          button {
+            width: 12rem;
+            min-height: 2rem;
+            border: 0.1rem solid #8885CB;
+            border-radius: 0.3rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #555;
+            padding: 0 0.5rem;
+            text-align: center;
           }
         }
       }
@@ -281,6 +296,20 @@ const DStep04Modal = () => {
   // 체크된 리스트 정보 저장
   const [checkListItem, setCheckListItem] = useState([]);
 
+  // 캘린더
+  const [isCalendar, setCalendar] = useState(false);
+  const [type, setType] = useState("");
+  const close = () => {
+    setCalendar(false)
+  };
+  const updateCalendar = (key, value) => {
+    setJournal({
+      ...journal,
+      [key]: moment(value).format('YYYY-MM-DD')
+    })
+    close()
+  }
+
   // 삭제 기능 추가
   const [deleteStatus, setDeleteStatus] = useState(false);
   const handleDelete = () => {
@@ -323,6 +352,13 @@ const DStep04Modal = () => {
 
     setFreePrice(price01)
     setTotalPrice(price02)
+
+    setJournal({
+      ...journal,
+      합계: price02,
+      청구금액: price02 - price01,
+      네고: price01
+    })
   }, [journal?.품목리스트])
 
   // 품목무상 리스트 가져오기
@@ -337,127 +373,154 @@ const DStep04Modal = () => {
 
   console.log(journal)
 
+  const saveTodaily = () => {
+    fetchService('/approval/comboPayment', 'post', journal)
+    .then((res) => {
+      console.log(res)
+      closeModal()
+    })
+  };
+
   return (
-    <ModalWrap>
-      <div className="title">
-        <h3>일지작성</h3>
-      </div>
-      <div className="step-list">
-        <ul>
-          <li>
-            <span>1</span>
-          </li>
-          <li>
-            <span>2</span>
-          </li>
-          <li>
-            <span>3</span>
-          </li>
-          <li>
-            <span className="on">4</span>
-          </li>
-        </ul>
-      </div>
-      <div className="modal-body">
-        <div className="product-list-wrap">
-          <div className="add-ons">
-            <label className="all-check">
-              <input 
-                type="checkbox" 
-                checked={allChecked}
-                onChange={() => setAllChecked(!allChecked)}
-              />
-              <span>전체선택</span>
-            </label>
-            <div className="btn-wrap">
-              <button type="button" className="btn-outline-gray" onClick={handleDelete}>선택삭제</button>
-              <button 
-                type="button" 
-                className="btn-blue"
-                onClick={() => {
-                  openModal({ ...modalData, content: <DStep05Modal /> })
-                }}
-              >품목추가</button>
+    <>
+      <ModalWrap>
+        <div className="title">
+          <h3>일지작성</h3>
+        </div>
+        <div className="step-list">
+          <ul>
+            <li>
+              <span>1</span>
+            </li>
+            <li>
+              <span>2</span>
+            </li>
+            <li>
+              <span>3</span>
+            </li>
+            <li>
+              <span className="on">4</span>
+            </li>
+          </ul>
+        </div>
+        <div className="modal-body">
+          <div className="product-list-wrap">
+            <div className="add-ons">
+              <label className="all-check">
+                <input 
+                  type="checkbox" 
+                  checked={allChecked}
+                  onChange={() => setAllChecked(!allChecked)}
+                />
+                <span>전체선택</span>
+              </label>
+              <div className="btn-wrap">
+                <button type="button" className="btn-outline-gray" onClick={handleDelete}>선택삭제</button>
+                <button 
+                  type="button" 
+                  className="btn-blue"
+                  onClick={() => {
+                    openModal({ ...modalData, content: <DStep05Modal /> })
+                  }}
+                >품목추가</button>
+              </div>
             </div>
-          </div>
-          <div className="list-wrap">
-            <ul>
-              {
-                journal?.품목리스트?.length > 0 ? journal.품목리스트.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <ProductInfo 
-                        item={item} 
-                        journal={journal} 
-                        setJournal={setJournal}
-                        allChecked={allChecked}
-                        setCheckListItem={setCheckListItem}
-                        deleteStatus={deleteStatus}
-                        typeList={typeList}
-                      />  
+            <div className="list-wrap">
+              <ul>
+                {
+                  journal?.품목리스트?.length > 0 ? journal.품목리스트.map((item, index) => {
+                    return (
+                      <li key={index}>
+                        <ProductInfo 
+                          item={item} 
+                          journal={journal} 
+                          setJournal={setJournal}
+                          allChecked={allChecked}
+                          setCheckListItem={setCheckListItem}
+                          deleteStatus={deleteStatus}
+                          typeList={typeList}
+                        />  
+                      </li>
+                    )
+                  }) : (
+                    <li className="empty">
+                      추가된 품목이 없습니다.
                     </li>
                   )
-                }) : (
-                  <li className="empty">
-                    추가된 품목이 없습니다.
-                  </li>
-                )
-              }
-            </ul>
+                }
+              </ul>
+            </div>
+          </div>
+          <div className="total-price-info">
+            <dl>
+              <dt>청구금액</dt>
+              <dd><strong>{CommaPrice(totalPrice - freePrice)}</strong> 원(VAT별도)</dd>
+            </dl>
+            <dl>
+              <dt>합계금액</dt>
+              <dd>{CommaPrice(totalPrice)}</dd>
+            </dl>
+            <dl>
+              <dt>네고금액</dt>
+              <dd>{CommaPrice(freePrice)}</dd>
+            </dl>
+            <dl>
+              <dt>계산서발행일</dt>
+              <dd onClick={() => {
+                setCalendar(true);
+                setType("계산서발행일");
+              }}>
+                <button type="button">
+                  {journal?.계산서발행일 ? journal?.계산서발행일 : '날짜를 선택해주세요'}
+                </button>
+              </dd>
+            </dl>
+            <dl>
+              <dt>결제예정일</dt>
+              <dd onClick={() => {
+                setCalendar(true);
+                setType("결제예정일");
+              }}>
+                <button type="button">
+                  {journal?.결제예정일 ? journal?.결제예정일 : '날짜를 선택해주세요'}
+                </button>
+              </dd>
+            </dl>
+            <dl>
+              <dt>결제방식</dt>
+              <dd>
+                <OptionSelectedMemo
+                  list={options || []}
+                  updateValue={updateValue}
+                  body={journal}
+                  depth1={'결제방식'}
+                />
+              </dd>
+            </dl>
           </div>
         </div>
-        <div className="total-price-info">
-          <dl>
-            <dt>청구금액</dt>
-            <dd><strong>{CommaPrice(totalPrice - freePrice)}</strong> 원(VAT별도)</dd>
-          </dl>
-          <dl>
-            <dt>합계금액</dt>
-            <dd>{CommaPrice(totalPrice)}</dd>
-          </dl>
-          <dl>
-            <dt>네고금액</dt>
-            <dd>{CommaPrice(freePrice)}</dd>
-          </dl>
-          <dl>
-            <dt>계산서발행일</dt>
-            <dd>2023-03-13</dd>
-          </dl>
-          <dl>
-            <dt>결제예정일</dt>
-            <dd>2023-03-13</dd>
-          </dl>
-          <dl>
-            <dt>결제방식</dt>
-            <dd>
-              <OptionSelectedMemo
-                list={options || []}
-                updateValue={updateValue}
-                body={journal}
-                depth1={'결제방식'}
-              />
-            </dd>
-          </dl>
-        </div>
-      </div>
-      <BtnWrap>
-        <button 
-          type="button" 
-          className="btn-outline-gray"
-          onClick={() => {
-            closeModal()
-            openModal({ ...modalData, content: <DStep03Modal /> })
-          }}
-        >이전</button>
-        <button 
-          type="button" 
-          className="btn-blue"
-          onClick={() => {
-            closeModal()
-          }}
-        >다음</button>
-      </BtnWrap>
-    </ModalWrap>
+        <BtnWrap>
+          <button 
+            type="button" 
+            className="btn-outline-gray"
+            onClick={() => {
+              closeModal()
+              openModal({ ...modalData, content: <DStep03Modal /> })
+            }}
+          >이전</button>
+          <button 
+            type="button" 
+            className="btn-blue"
+            onClick={() => saveTodaily()}
+          >다음</button>
+        </BtnWrap>
+      </ModalWrap>
+      {
+        isCalendar && (
+          <SingleDate submit={updateCalendar} close={close} type={type} />
+        )
+      }
+    </>
   )
 }
 
