@@ -216,6 +216,8 @@ const DStep05Modal = () => {
     const modifiedCheckItemList = checkItemList.map(item => ({
       ...item,
       수량: 1,
+      유무상구분: "",
+      무상체크: false
     }));
     setJournal({
       ...journal,

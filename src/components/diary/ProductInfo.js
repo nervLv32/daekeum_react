@@ -115,7 +115,7 @@ const ProductInfoWrap = styled.div`
         }
       }
     }
-    input[type="text"] {
+    input[type="text"], select {
       width: calc(100% - 5.1rem);
       height: 2rem;
       background: #fff;
@@ -163,7 +163,7 @@ const ProductInfoWrap = styled.div`
   }
 `
 
-const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) => {
+const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, deleteStatus, typeList}) => {
 
   // Count State
   const [count, setCount] = useState(1);
@@ -187,23 +187,11 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) 
 
   // 무상 구분
   const [freeChecked, setFreeChecked] = useState(false);
-  const [freeText, setFreeText] = useState("");
-
-  // 무상 체크 관려
   const handleChange = () => {
     setFreeChecked(!freeChecked);
   };
   useEffect(() => {
-    if (freeChecked) {
-      setJournal({
-        ...journal,
-        품목리스트: [
-          ...journal.품목리스트.map((it) =>
-            it.rownum === item.rownum ? { ...it, 유무상구분: freeText, 무상체크: true } : it
-          ),
-        ],
-      });
-    } else {
+    if (!freeChecked) {
       setJournal({
         ...journal,
         품목리스트: [
@@ -213,7 +201,18 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) 
         ],
       });
     }
-  }, [freeChecked, freeText])
+  }, [freeChecked])
+
+  const handleFreeCheck = (v) => {
+    setJournal({
+      ...journal,
+      품목리스트: [
+        ...journal.품목리스트.map((it) =>
+          it.rownum === item.rownum ? { ...it, 유무상구분: v, 무상체크: true } : it
+        ),
+      ],
+    });
+  };
 
   // 기본 수량 추가
   useEffect(() => {
@@ -226,6 +225,11 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) 
       ],
     });
   }, [count])
+
+  // 삭제시 체크박스 상태변화
+  useEffect(() => {
+    setIsChecked(false);
+  }, [deleteStatus])
 
   return (
     <ProductInfoWrap>
@@ -248,11 +252,16 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem}) 
         <label>
           <input type="checkbox" checked={freeChecked} onChange={handleChange} />
           무상
-          <input 
-            type="text" 
-            value={freeText} 
-            onChange={(e) => setFreeText(e.target.value)} 
-          />
+          <select
+            defaultValue={item.유뮤상구분}
+            onChange={(e) => handleFreeCheck(e.target.value)}
+            disabled={!freeChecked}
+          >
+            <option value="" selected={freeChecked}>항목을 선택해주세요.</option>
+            {
+              typeList?.length > 0 && typeList.map((it, idx) => <option value={it.관리내역명} key={idx}>{it.관리내역명}</option>)
+            }
+          </select>
         </label>
         <div className="price-wrap">
           <div className="price-count">  

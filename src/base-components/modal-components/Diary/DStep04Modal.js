@@ -282,6 +282,7 @@ const DStep04Modal = () => {
   const [checkListItem, setCheckListItem] = useState([]);
 
   // 삭제 기능 추가
+  const [deleteStatus, setDeleteStatus] = useState(false);
   const handleDelete = () => {
     const resultArray = journal.품목리스트.filter(item1 => !checkListItem.some(item2 => item2.rownum === item1.rownum));
     setJournal({
@@ -289,6 +290,7 @@ const DStep04Modal = () => {
       품목리스트: resultArray
     });
     setCheckListItem([]);
+    setDeleteStatus(!deleteStatus);
   };
 
   // 결제방식
@@ -322,6 +324,18 @@ const DStep04Modal = () => {
     setFreePrice(price01)
     setTotalPrice(price02)
   }, [journal?.품목리스트])
+
+  // 품목무상 리스트 가져오기
+  const [typeList, setTypeList] = useState([]);
+  useEffect(() => {
+    fetchService('/enroll/diaryCombo', 'get', {
+      type: "품목무상"
+    }).then((res) => {
+      setTypeList(res.data)
+    })
+  }, [])
+
+  console.log(journal)
 
   return (
     <ModalWrap>
@@ -378,6 +392,8 @@ const DStep04Modal = () => {
                         setJournal={setJournal}
                         allChecked={allChecked}
                         setCheckListItem={setCheckListItem}
+                        deleteStatus={deleteStatus}
+                        typeList={typeList}
                       />  
                     </li>
                   )
