@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import {useRecoilState} from "recoil";
+import journalAtom from "../../../recoil/journalAtom";
+import moment from "moment";
 
 const PdfWrap = styled.div`
   width: 100%;
@@ -133,6 +136,28 @@ const PdfWrap = styled.div`
           &.bd-l {
             border-left: 1px solid #222 !important;
           }
+          &.vat {
+            vertical-align: top;
+          }
+          .mt5 {
+            display: block;
+            margin-top: 0.5rem;
+          }
+          .active {
+            position: relative;
+            &::after {
+              content: '';
+              display: block;
+              width: 3rem;
+              height: 3rem;
+              border: 0.1rem solid #222;
+              border-radius: 50%;
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
         }
         &:not(:first-child) {
           td {
@@ -249,6 +274,18 @@ const PdfWrap = styled.div`
 
 const Pdf = () => {
 
+  // 일지작성 recoil
+  const [journal, setJournal] = useRecoilState(journalAtom);
+
+  const handleItemList = (text) => {
+    console.log(1)
+    journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+      return (
+        <span key={index} className="mt5">{item[text]}</span>
+      )
+    })
+  };
+
   return (
     <PdfWrap>
       <div className="info-wrap">
@@ -301,19 +338,17 @@ const Pdf = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>
-                      DK-
-                    </td>
+                    <td>{journal.step01.DKNO}</td>
                     <td></td>
                     <td></td>
                     <td>
                       DK-
                     </td>
-                    <td className="tac">220V</td>
-                    <td className="tac">380V</td>
-                    <td className="tac">440V</td>
-                    <td className="tac">정</td>
-                    <td className="tac">역</td>
+                    <td className="tac"><span className={journal.step01.전압 === '220' ? "active" : ""}>220V</span></td>
+                    <td className="tac"><span className={journal.step01.전압 === '380' ? "active" : ""}>380V</span></td>
+                    <td className="tac"><span className={journal.step01.전압 === '440' ? "active" : ""}>440V</span></td>
+                    <td className="tac"><span className={journal.step01.방향 === '정방향' ? "active" : ""}>정</span></td>
+                    <td className="tac"><span className={journal.step01.방향 === '역방향' ? "active" : ""}>역</span></td>
                     <td className="tac">자</td>
                     <td className="tac">타</td>
                   </tr>
@@ -329,8 +364,8 @@ const Pdf = () => {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <td>업 체 명 :</td>
-                    <td colSpan={2}>현 장 명 :</td>
+                    <td>업 체 명 : {journal.step02.업체명}</td>
+                    <td colSpan={2}>현 장 명 : {journal.step02.현장명}</td>
                   </tr>
                   <tr>
                     <td>담 당 :</td>
@@ -360,14 +395,23 @@ const Pdf = () => {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <td>※요청사항</td>
-                    <td rowSpan={3}>※업무내용</td>
+                    <td className="vat">
+                      ※ 요청사항
+                      <span className="mt5">{journal.step03.업무내용}</span>
+                    </td>
+                    <td rowSpan={3} className="vat">
+                      ※ 업무내용
+                      <span className="mt5">{journal.step03.업무내용}</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td>※원인(점검요원소견)</td>
+                    <td className="vat">
+                      ※ 원인(점검요원소견)
+                      <span className="mt5">{journal.step03.원인}</span>
+                    </td>
                   </tr>
                   <tr>
-                    <td>※다음순회점검 예정일 ( 년 월 일)</td>
+                    <td>※다음순회점검 예정일 ({moment(journal.step03.다음순회점검예정일).format('YYYY 년 MM 월 DD 일')})</td>
                   </tr>
                 </tbody>
               </table>
@@ -383,10 +427,42 @@ const Pdf = () => {
                     <td className="tac">비 고</td>
                   </tr>
                   <tr>
-                    <td className="tac" style={{height: '15rem'}}></td>
-                    <td className="tac"></td>
-                    <td className="tac"></td>
-                    <td className="tac"></td>
+                    <td className="tac" style={{height: '15rem'}}>
+                      {
+                        journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                          return (
+                            <span key={index} className="mt5">{item.품명} / {item.규격}</span>
+                          )
+                        })
+                      }
+                    </td>
+                    <td className="tac">
+                      {
+                        journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                          return (
+                            <span key={index} className="mt5">{item.수량}</span>
+                          )
+                        })
+                      }
+                    </td>
+                    <td className="tac">
+                      {
+                        journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                          return (
+                            <span key={index} className="mt5">{item.단가}</span>
+                          )
+                        })
+                      }
+                    </td>
+                    <td className="tac">
+                      {
+                        journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
+                          return (
+                            <span key={index} className="mt5">{item.단가 * item.수량}</span>
+                          )
+                        })
+                      }
+                    </td>
                     <td className="tac"></td>
                   </tr>
                   <tr>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import DStep03Modal from './DStep03Modal'
@@ -11,6 +11,10 @@ import fetchService from "../../../util/fetchService";
 import { CommaPrice } from "../../../util/commaPrice";
 import moment from "moment";
 import SingleDate from "../../../components/calander/SingleDate";
+// PDF FILE
+import Pdf from "../../../base-components/modal-components/Diary/Pdf";
+import html2canvas from "html2canvas";
+import jsPdf from "jspdf";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -305,7 +309,10 @@ const DStep04Modal = () => {
   const updateCalendar = (key, value) => {
     setJournal({
       ...journal,
-      [key]: moment(value).format('YYYY-MM-DD')
+      step04: {
+        ...journal.step04,
+        [key]: moment(value).format('YYYY-MM-DD')
+      }
     })
     close()
   }
@@ -327,7 +334,10 @@ const DStep04Modal = () => {
   const updateValue = (key, value) => {
     setJournal({
       ...journal,
-      [key]: value
+      step04: {
+        ...journal.step04,
+        [key]: value
+      }
     })
   }
 
@@ -350,14 +360,16 @@ const DStep04Modal = () => {
     const price02 = journal.품목리스트.map(item => item.단가 * item.수량)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-    setFreePrice(price01)
-    setTotalPrice(price02)
-
     setJournal({
       ...journal,
-      합계: price02,
-      청구금액: price02 - price01,
-      네고: price01
+      step04: {
+        ...journal.step04,
+        네고금액: price01,
+        네고: price01,
+        합계금액: price02,
+        합계: price02,
+        청구금액: price02 - price01
+      }
     })
   }, [journal?.품목리스트])
 
@@ -371,19 +383,95 @@ const DStep04Modal = () => {
     })
   }, [])
 
-  console.log(journal)
+  // PDF FILE
+  const reportTemplateRef = useRef(null);
+  const [pdfBlob, setPdfBlob] = useState();
+  const printPDF = () => {
+    html2canvas(reportTemplateRef.current).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPdf();
+      pdf.addImage(imgData, "JPEG", 0, 0);
+      pdf.save(`test-sample.pdf`);
+      const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'});
+      setPdfBlob(blobPDF)
+      // const blobUrl = URL.createObjectURL(blobPDF); 
+      // window.open(blobUrl)
+      // console.log(blobPDF)
+    });
+  };
 
-  const saveTodaily = () => {
-    fetchService('/approval/comboPayment', 'post', journal)
+  const [params, setParams] = useState({
+    사업부코드: "", // 확인되지 않음
+    접수시간: "", // 접수일시?
+    접수내용: "", // 확인되지 않음
+    처리일: "", // 처리일시?
+    처리시간: "", // 처리일시?
+    합계금액: "",
+    네고금액: "",
+    청구일: "",
+    분할청구: "",
+    한글이름: "",
+    등록일: "",
+    마감여부: "",
+    마감일: "",
+    직위: "",
+    전화번호: "",
+    청구금액확인: "",
+    청구금액확인자: "",
+    청구금액확인자코드: "",
+    청구금액확인일: "",
+    일지체크: "",
+    모델명: "", // 모델?
+    수조: "",
+    박스: "",
+    사용전압: "",
+    설치방향: "", // 설치방향?
+    침전제: "",
+    연락처: "", // 현장연락처?
+    원인: "",
+    합계: "",
+    청구금액: "",
+    네고: "",
+    계산서발행일: "",
+    결제예정일: "",
+    결제방식: "",
+  });
+  const submit = () => {
+    fetchService('/enroll/saveToDaily', 'post', params)
     .then((res) => {
       console.log(res)
-      closeModal()
+      // closeModal()
     })
   };
+  const sendEmail = () => {
+    fetchService('/enroll/send-pdf-mail', 'post', {
+      id: "",
+      emial: "",
+      file: ""
+    }).then((res) => {
+      console.log(res)
+      // closeModal()
+    })
+  };
+
+  useEffect(() => {
+    setParams({
+      ...params,
+      ...journal.step01,
+      ...journal.step02,
+      ...journal.step03,
+      ...journal.step04,
+      품목리스트: [...journal.품목리스트]
+    })
+  }, [journal])
 
   return (
     <>
       <ModalWrap>
+        <div onClick={printPDF}>PDF Test  Download</div>
+        <div ref={reportTemplateRef}>
+          <Pdf />
+        </div>
         <div className="title">
           <h3>일지작성</h3>
         </div>
@@ -454,15 +542,15 @@ const DStep04Modal = () => {
           <div className="total-price-info">
             <dl>
               <dt>청구금액</dt>
-              <dd><strong>{CommaPrice(totalPrice - freePrice)}</strong> 원(VAT별도)</dd>
+              <dd><strong>{CommaPrice(journal.step04.청구금액)}</strong> 원(VAT별도)</dd>
             </dl>
             <dl>
               <dt>합계금액</dt>
-              <dd>{CommaPrice(totalPrice)}</dd>
+              <dd>{CommaPrice(journal.step04.합계금액)}</dd>
             </dl>
             <dl>
               <dt>네고금액</dt>
-              <dd>{CommaPrice(freePrice)}</dd>
+              <dd>{CommaPrice(journal.step04.네고금액)}</dd>
             </dl>
             <dl>
               <dt>계산서발행일</dt>
@@ -471,7 +559,7 @@ const DStep04Modal = () => {
                 setType("계산서발행일");
               }}>
                 <button type="button">
-                  {journal?.계산서발행일 ? journal?.계산서발행일 : '날짜를 선택해주세요'}
+                  {journal?.step04.계산서발행일 ? journal?.step04.계산서발행일 : '날짜를 선택해주세요'}
                 </button>
               </dd>
             </dl>
@@ -482,7 +570,7 @@ const DStep04Modal = () => {
                 setType("결제예정일");
               }}>
                 <button type="button">
-                  {journal?.결제예정일 ? journal?.결제예정일 : '날짜를 선택해주세요'}
+                  {journal?.step04.결제예정일 ? journal?.step04.결제예정일 : '날짜를 선택해주세요'}
                 </button>
               </dd>
             </dl>
@@ -493,7 +581,8 @@ const DStep04Modal = () => {
                   list={options || []}
                   updateValue={updateValue}
                   body={journal}
-                  depth1={'결제방식'}
+                  depth1={'step04'}
+                  depth2={'결제방식'}
                 />
               </dd>
             </dl>
@@ -511,7 +600,7 @@ const DStep04Modal = () => {
           <button 
             type="button" 
             className="btn-blue"
-            onClick={() => saveTodaily()}
+            onClick={() => submit()}
           >다음</button>
         </BtnWrap>
       </ModalWrap>

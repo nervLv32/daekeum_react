@@ -14,15 +14,7 @@ import {newReceiptParamAtom, receiptAtom} from "../../recoil/receipt";
 import Year from "../../components/calander/Year";
 import Month from "../../components/calander/Month";
 import Daily from "../../components/calander/Daily";
-import Pdf from "../../base-components/modal-components/Diary/Pdf";
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
-import PdfFile from "../../base-components/modal-components/Diary/PdfFile";
-import _fonts from "./Font";
-import html2canvas from "html2canvas";
-import jsPdf from "jspdf";
-
-
-
 
 const ReceiptWrap = styled.div`
   padding: 28px 30px 0; 
@@ -180,23 +172,6 @@ const Receipt = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-
-  const reportTemplateRef = useRef(null);
-
-  const printPDF = () => {
-    const domElement = document.getElementById("test");
-    html2canvas(domElement, {
-      onclone: document => {
-        // document.getElementById("print").style.visibility = "hidden";
-      }
-    }).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPdf();
-      pdf.addImage(imgData, "JPEG", 0, 0);
-      pdf.save(`test-sample.pdf`);
-    });
-  };
-
   return (
     <>
       <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
@@ -240,7 +215,6 @@ const Receipt = () => {
           </TopSearchMenu>
         )
       }
-      <div onClick={printPDF}>PDF Test  Download</div>
       <ReceiptWrap>
         {
           receipts.map((item, key) => {
@@ -341,9 +315,6 @@ const Receipt = () => {
             isFDep3.daily ? <Daily  modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> : null
       }
       <div ref={observeTargetRef}/>
-      <div id="test" ref={reportTemplateRef}>
-        <Pdf />
-      </div>
     </>
   )
 }
