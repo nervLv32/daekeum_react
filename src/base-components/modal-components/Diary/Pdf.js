@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import styled from "styled-components";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
 import moment from "moment";
+import html2canvas from "html2canvas";
+import jsPdf from "jspdf";
 
 const PdfWrap = styled.div`
   width: 100%;
@@ -10,6 +12,9 @@ const PdfWrap = styled.div`
   max-width: 800px;
   background-color: #fff;
   font-family: 'SpoqaHanSans',sans-serif;
+  position: absolute;
+  left: -99999999px;
+  top: -99999999px;
   .info-wrap {
     width: 100%;
     height: auto;
@@ -272,22 +277,32 @@ const PdfWrap = styled.div`
   }
 `
 
-const Pdf = () => {
+const Pdf = ({setPdfBlob}) => {
 
+  // PDF Ref
+  const reportTemplateRef = useRef(null);
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
 
-  const handleItemList = (text) => {
-    console.log(1)
-    journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
-      return (
-        <span key={index} className="mt5">{item[text]}</span>
-      )
-    })
+  const printPDF = () => {
+    html2canvas(reportTemplateRef.current).then(canvas => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPdf('p', 'px', 'a4');
+      pdf.addImage(imgData, "PNG", 0, 0);
+      // pdf.save(`test-sample.pdf`);
+      const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'});
+      setPdfBlob(blobPDF)
+      const blobUrl = URL.createObjectURL(blobPDF); 
+      window.open(blobUrl)
+    });
   };
+  
+  useEffect(() => {
+    printPDF()
+  }, [journal])
 
   return (
-    <PdfWrap>
+    <PdfWrap ref={reportTemplateRef}>
       <div className="info-wrap">
           <span>Innovation on the move</span>
           <p>세륜기·축중기·싸이클린·오탁수처리설비비점오염저감설·비터널식천막설비</p>

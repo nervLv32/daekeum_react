@@ -11,10 +11,7 @@ import fetchService from "../../../util/fetchService";
 import { CommaPrice } from "../../../util/commaPrice";
 import moment from "moment";
 import SingleDate from "../../../components/calander/SingleDate";
-// PDF FILE
 import Pdf from "../../../base-components/modal-components/Diary/Pdf";
-import html2canvas from "html2canvas";
-import jsPdf from "jspdf";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -24,6 +21,8 @@ const ModalWrap = styled.div`
   background-color: #fff;
   box-shadow: 1rem -0.4rem 1rem rgba(0, 0, 0, 0.1);
   border-radius: 2rem 2rem 0px 0px;
+  .pdf-file {
+  }
   .title {
     padding: 1.5rem 0;
     text-align: center;
@@ -383,25 +382,8 @@ const DStep04Modal = () => {
     })
   }, [])
 
-  // PDF FILE
-  const reportTemplateRef = useRef(null);
+  // PDF Blob
   const [pdfBlob, setPdfBlob] = useState();
-  const printPDF = () => {
-    html2canvas(reportTemplateRef.current).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPdf();
-      pdf.addImage(imgData, "JPEG", 0, 0);
-      pdf.save(`test-sample.pdf`);
-      const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'});
-      setPdfBlob(blobPDF)
-      // const blobUrl = URL.createObjectURL(blobPDF); 
-      // window.open(blobUrl)
-      // console.log(blobPDF)
-    });
-  };
-  useEffect(() => {
-    printPDF()
-  }, [params])
 
   const [params, setParams] = useState({
     사업부코드: "", // 확인되지 않음
@@ -471,9 +453,7 @@ const DStep04Modal = () => {
   return (
     <>
       <ModalWrap>
-        <div ref={reportTemplateRef}>
-          <Pdf />
-        </div>
+        <Pdf setPdfBlob={setPdfBlob} />
         <div className="title">
           <h3>일지작성</h3>
         </div>
