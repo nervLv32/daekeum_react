@@ -399,6 +399,9 @@ const DStep04Modal = () => {
       // console.log(blobPDF)
     });
   };
+  useEffect(() => {
+    printPDF()
+  }, [params])
 
   const [params, setParams] = useState({
     사업부코드: "", // 확인되지 않음
@@ -440,14 +443,14 @@ const DStep04Modal = () => {
     fetchService('/enroll/saveToDaily', 'post', params)
     .then((res) => {
       console.log(res)
-      // closeModal()
+      sendEmail()
     })
   };
   const sendEmail = () => {
     fetchService('/enroll/send-pdf-mail', 'post', {
       id: "",
-      emial: "",
-      file: ""
+      emial: journal.step02.현장담당자메일주소,
+      file: pdfBlob
     }).then((res) => {
       console.log(res)
       // closeModal()
@@ -468,7 +471,6 @@ const DStep04Modal = () => {
   return (
     <>
       <ModalWrap>
-        <div onClick={printPDF}>PDF Test  Download</div>
         <div ref={reportTemplateRef}>
           <Pdf />
         </div>
