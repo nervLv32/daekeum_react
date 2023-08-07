@@ -228,6 +228,15 @@ const DStep02Modal = () => {
         [key]: value
       }
     })
+  };
+  const handleDateChange = (key, value) => {
+    setJournal({
+      ...journal,
+      step02: {
+        ...journal.step02,
+        [key]: moment(value).format('YYYY-MM-DD')
+      }
+    })
     close()
   };
 
@@ -242,7 +251,7 @@ const DStep02Modal = () => {
         ...journal,
         step02: {
           ...journal.step02,
-          data
+          ...data
         }
       })
     })
@@ -328,27 +337,27 @@ const DStep02Modal = () => {
               /></dd>
           </dl>
           <dl className="input-info w50">
-            <dt className="essential">접수일시</dt>
+            <dt className="essential">접수일</dt>
             <dd>
-              <input type="text" className="bg" defaultValue={moment(journal?.step02?.등록일).format('YYYY-MM-DD hh:mm:ss')} disabled />
+              <input type="text" className="bg" defaultValue={moment(journal?.step02?.등록일).format('YYYY-MM-DD')} disabled />
             </dd>
           </dl>
           <dl className="input-info w50">
-            <dt className="essential">처리일시</dt>
-            <dd onClick={() => handleType("처리일시")}>
-              <span>{journal?.step02?.처리일시 ? moment(journal?.step02?.처리일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
+            <dt className="essential">처리일</dt>
+            <dd onClick={() => handleType("처리일")}>
+              <span>{journal?.step02?.처리일 ? moment(journal?.step02?.처리일).format('YYYY-MM-DD') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
-            <dt className="essential">도착일시</dt>
-            <dd onClick={() => handleType("도착일시")}>
-              <span>{journal?.step02?.도착일시 ? moment(journal?.step02?.도착일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
+            <dt className="essential">도착일</dt>
+            <dd onClick={() => handleType("도착일")}>
+              <span>{journal?.step02?.도착일 ? moment(journal?.step02?.도착일).format('YYYY-MM-DD') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
-            <dt className="essential">종료일시</dt>
-            <dd onClick={() => handleType("종료일시")}>
-              <span>{journal?.step02?.종료일시 ? moment(journal?.step02?.종료일시).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
+            <dt className="essential">종료일</dt>
+            <dd onClick={() => handleType("종료일")}>
+              <span>{journal?.step02?.종료일 ? moment(journal?.step02?.종료일).format('YYYY-MM-DD') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
           <dl className="input-info w50">
@@ -395,7 +404,7 @@ const DStep02Modal = () => {
       </ModalWrap>
       {
         isCalendar && (
-          <SingleDate submit={handleChange} close={close} type={type} />
+          <SingleDate submit={handleDateChange} close={close} type={type} />
         )
       }
     </>

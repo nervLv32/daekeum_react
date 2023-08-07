@@ -175,6 +175,7 @@ const ModalWrap = styled.div`
           top: 100%;
           width: 100%;
           height: auto;
+          z-index: 99;
           ul {
             width: 100%;
             height: auto;
@@ -236,9 +237,46 @@ const ModalWrap = styled.div`
           color: #555;
         }
         dd {
+          display: flex;
+          align-items: center;
           width: calc(100% - 9rem);
           min-height: 1.2rem;
           border-bottom: 0.1rem solid #9DA2AE;
+          label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            &:not(:last-child) {
+              margin-right: 1rem;
+            }
+            input {
+              width: 1.2rem;
+              height: 1.2rem;
+              border-radius: 50%;
+              border: 0.1rem solid rgb(136, 133, 203);
+              margin: 0;
+              position: relative;
+              cursor: pointer;
+              &:checked {
+                &::after {
+                  content: '';
+                  display: block;
+                  width: 0.8rem;
+                  height: 0.8rem;
+                  border-radius: 50%;
+                  background-color: rgb(90, 85, 202);
+                  position: absolute;
+                  left: 50%;
+                  top: 50%;
+                  transform: translate(-50%, -50%);
+                }
+              }
+            }
+            span {
+              display: block;
+              margin-left: 0.3rem;
+            }
+          }
         }
       }
     }
@@ -268,7 +306,6 @@ const DStep01Modal = () => {
 
   // 업체정보 Recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
-  console.log(journal)
 
   const modalData = {
     title: 'DStep01Modal Modal',
@@ -347,6 +384,17 @@ const DStep01Modal = () => {
   useEffect(() => {
     receiptDetail();
   }, []);
+
+
+  const handleRadioChange = (k, v) => {
+    setJournal({
+      ...journal,
+      step01: {
+        ...journal.step01,
+        [k]: v
+      }
+    })
+  };
 
   return (
     <ModalWrap>
@@ -435,15 +483,65 @@ const DStep01Modal = () => {
           </dl>
           <dl>
             <dt>수조</dt>
-            <dd></dd>
+            <dd>
+              <label htmlFor="existence01">
+                <input 
+                  type="radio" 
+                  name="radio-box01" 
+                  id="existence01" 
+                  value={"Y"}
+                  onChange={(e) => {
+                    handleRadioChange('수조', e.target.value)
+                  }}
+                />
+                <span>유</span>
+              </label>
+              <label htmlFor="nonexistence01">
+                <input 
+                  type="radio" 
+                  name="radio-box01" 
+                  id="nonexistence01" 
+                  value={"N"}
+                  onChange={(e) => {
+                    handleRadioChange('수조', e.target.value)
+                  }}
+                />
+                <span>무</span>
+              </label>
+            </dd>
           </dl>
           <dl>
             <dt>박스</dt>
-            <dd></dd>
+            <dd>
+              <label htmlFor="existence02">
+                <input 
+                  type="radio" 
+                  name="radio-box02" 
+                  id="existence02"
+                  value={"Y"}
+                  onChange={(e) => {
+                    handleRadioChange('박스', e.target.value)
+                  }}
+                />
+                <span>유</span>
+              </label>
+              <label htmlFor="nonexistence02">
+                <input 
+                  type="radio" 
+                  name="radio-box02" 
+                  id="nonexistence02"
+                  value={"N"}
+                  onChange={(e) => {
+                    handleRadioChange('박스', e.target.value)
+                  }}
+                />
+                <span>무</span>
+              </label>
+            </dd>
           </dl>
           <dl>
             <dt>MFG-NO</dt>
-            <dd></dd>
+            <dd>{journal.step01?.DKNO}</dd>
           </dl>
           <dl>
             <dt>사용전압</dt>
@@ -455,7 +553,32 @@ const DStep01Modal = () => {
           </dl>
           <dl>
             <dt>침전제</dt>
-            <dd>{journal.step01?.장비구분}</dd>
+            <dd>
+              <label htmlFor="existence03">
+                <input 
+                  type="radio" 
+                  name="radio-box03" 
+                  id="existence03" 
+                  value={"자사"}
+                  onChange={(e) => {
+                    handleRadioChange('침전제', e.target.value)
+                  }}
+                />
+                <span>자사</span>
+              </label>
+              <label htmlFor="nonexistence03">
+                <input 
+                  type="radio" 
+                  name="radio-box03" 
+                  id="nonexistence03" 
+                  value={"타사"}
+                  onChange={(e) => {
+                    handleRadioChange('침전제', e.target.value)
+                  }}
+                />
+                <span>타사</span>
+              </label>
+            </dd>
           </dl>
         </div>
       </div>

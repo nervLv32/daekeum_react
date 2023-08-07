@@ -6,6 +6,7 @@ import DStep05Modal from './DStep05Modal'
 import ProductInfo from "../../../components/diary/ProductInfo";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+import userAtom from "../../../recoil/userAtom";
 import OptionSelectedMemo from "../../../components/optionSelector/OptionSelectorMemo";
 import fetchService from "../../../util/fetchService";
 import { CommaPrice } from "../../../util/commaPrice";
@@ -292,6 +293,8 @@ const DStep04Modal = () => {
 
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
+  // 유저 recoil
+  const [user, setUser] = useRecoilState(userAtom);
 
   // 체크박스
   const [allChecked, setAllChecked] = useState(false);
@@ -383,59 +386,82 @@ const DStep04Modal = () => {
   }, [])
 
   const [params, setParams] = useState({
-    사업부코드: "", // 확인되지 않음
-    접수시간: "", // 접수일시?
-    접수내용: "", // 확인되지 않음
-    처리일: "", // 처리일시?
-    처리시간: "", // 처리일시?
-    합계금액: "",
-    네고금액: "",
-    청구일: "",
-    분할청구: "",
-    한글이름: "",
-    등록일: "",
-    마감여부: "",
-    마감일: "",
-    직위: "",
-    전화번호: "",
-    청구금액확인: "",
-    청구금액확인자: "",
-    청구금액확인자코드: "",
-    청구금액확인일: "",
-    일지체크: "",
-    모델명: "", // 모델?
-    수조: "",
-    박스: "",
-    사용전압: "",
-    설치방향: "", // 설치방향?
-    침전제: "",
-    연락처: "", // 현장연락처?
-    원인: "",
-    합계: "",
-    청구금액: "",
-    네고: "",
-    계산서발행일: "",
-    결제예정일: "",
-    결제방식: "",
+    사업부코드: journal.step01.사업장코드, // 확인되지 않음
+    접수시간: null, // 접수일시?
+    접수내용: null, // 확인되지 않음
+    처리일: null, // 처리일시?
+    처리시간: null, // 처리일시?
+    청구일: null,
+    분할청구: 0,
+    한글이름: user.auth.한글이름,
+    등록일: null,
+    마감여부: null,
+    마감일: null,
+    직위: user.auth.직위,
+    전화번호: null,
+    청구금액확인: null,
+    청구금액확인자: null,
+    청구금액확인자코드: null,
+    청구금액확인일: null,
+    일지체크: null,
+    모델명: journal.step01.모델, // 모델?
+    사용전압: journal.step01.전압,
+    설치방향: journal.step01.방향, // 설치방향?
+    연락처: null, // 현장연락처?
+    자사담당: null,
+    자사담당자연락처: null,
+    날짜: moment().format('YYYY-MM-DD'),
+    마감여부: "N",
   });
-  const submit = () => {
-    openModal({ ...modalData, content: <Pdf /> })
-    // fetchService('/enroll/saveToDaily', 'post', params)
-    // .then((res) => {
-    //   console.log(res)
-    //   sendEmail()
-    // })
+
+  // 데이터 가공 함수: 빈 문자열("")을 null로 변경
+  const processEmptyStrings = (data) => {
+    const processedData = { ...data };
+    // 모든 객체들에 대해서 처리
+    for (const key in processedData) {
+      if (processedData[key] === "") {
+        processedData[key] = null;
+      }
+    }
+    // 품목리스트 배열 안의 객체들도 처리
+    if (processedData?.품목리스트?.length > 0) {
+      processedData.품목리스트 = processedData.품목리스트.map(item => {
+        const processedItem = { ...item };
+        for (const key in processedItem) {
+          if (processedItem[key] === "") {
+            processedItem[key] = null;
+          }
+        }
+        return processedItem;
+      });
+    }
+    return processedData;
   };
 
+  // 전송
+  const submit = () => {
+    fetchService('/enroll/saveToDaily', 'post', params)
+    .then((res) => {
+      console.log(res)
+      openModal({ ...modalData, content: <Pdf /> })
+    })
+  };
+  console.log(journal)
+
   useEffect(() => {
-    setParams({
+    const processedData = processEmptyStrings({
       ...params,
       ...journal.step01,
       ...journal.step02,
       ...journal.step03,
       ...journal.step04,
-      품목리스트: [...journal.품목리스트]
-    })
+      품목리스트: [...journal.품목리스트],
+      설치일: moment(journal.step01.설치일).format('YYYY-MM-DD'),
+      완료일: moment(journal.step01.완료일).format('YYYY-MM-DD'),
+      출고일: moment(journal.step01.출고일).format('YYYY-MM-DD'),
+      접수일: moment().format('YYYY-MM-DD')
+    });
+    setParams(processedData)
   }, [journal])
 
   return (

@@ -238,6 +238,15 @@ const DStep03Modal = () => {
         [k]: v
       }
     })
+  };
+  const handleDateChange = (k, v) => {
+    setJournal({
+      ...journal,
+      step03: {
+        ...journal.step03,
+        [k]: moment(v).format('YYYY-MM-DD')
+      }
+    })
     close()
   };
 
@@ -349,7 +358,7 @@ const DStep03Modal = () => {
       </ModalWrap>
       {
         isCalendar && (
-          <SingleDate submit={handleChange} close={close} type={'다음순회점검예정일'} />
+          <SingleDate submit={handleDateChange} close={close} type={'다음순회점검예정일'} />
         )
       }
     </>
