@@ -1,10 +1,12 @@
-import React, {useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import styled from "styled-components";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
 import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPdf from "jspdf";
+import { useModal } from "../../../hooks/useModal";
+import fetchService from "../../../util/fetchService";
 
 const PdfWrap = styled.div`
   width: 100%;
@@ -12,9 +14,6 @@ const PdfWrap = styled.div`
   max-width: 800px;
   background-color: #fff;
   font-family: 'SpoqaHanSans',sans-serif;
-  position: absolute;
-  left: -99999999px;
-  top: -99999999px;
   .info-wrap {
     width: 100%;
     height: auto;
@@ -277,13 +276,23 @@ const PdfWrap = styled.div`
   }
 `
 
-const Pdf = ({setPdfBlob}) => {
+const Pdf = () => {
+
+  // 모달관련
+  const { openModal, closeModal } = useModal();
+  const modalData = {
+    title: 'Pdf',
+    callback: () => alert('Modal Callback()'),
+  };
 
   // PDF Ref
   const reportTemplateRef = useRef(null);
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
 
+
+  // PDF Blob
+  const [pdfBlob, setPdfBlob] = useState();
   const printPDF = () => {
     html2canvas(reportTemplateRef.current).then(canvas => {
       const imgData = canvas.toDataURL("image/png");
@@ -293,8 +302,21 @@ const Pdf = ({setPdfBlob}) => {
       const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'});
       setPdfBlob(blobPDF)
       const blobUrl = URL.createObjectURL(blobPDF); 
-      window.open(blobUrl)
+      closeModal()
+      // window.open(blobUrl)
     });
+  };
+
+
+  const sendEmail = () => {
+    fetchService('/enroll/send-pdf-mail', 'post', {
+      id: "",
+      emial: journal.step02.현장담당자메일주소,
+      file: pdfBlob
+    }).then((res) => {
+      console.log(res)
+      // closeModal()
+    })
   };
   
   useEffect(() => {

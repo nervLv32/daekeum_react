@@ -382,9 +382,6 @@ const DStep04Modal = () => {
     })
   }, [])
 
-  // PDF Blob
-  const [pdfBlob, setPdfBlob] = useState();
-
   const [params, setParams] = useState({
     사업부코드: "", // 확인되지 않음
     접수시간: "", // 접수일시?
@@ -422,21 +419,12 @@ const DStep04Modal = () => {
     결제방식: "",
   });
   const submit = () => {
-    fetchService('/enroll/saveToDaily', 'post', params)
-    .then((res) => {
-      console.log(res)
-      sendEmail()
-    })
-  };
-  const sendEmail = () => {
-    fetchService('/enroll/send-pdf-mail', 'post', {
-      id: "",
-      emial: journal.step02.현장담당자메일주소,
-      file: pdfBlob
-    }).then((res) => {
-      console.log(res)
-      // closeModal()
-    })
+    openModal({ ...modalData, content: <Pdf /> })
+    // fetchService('/enroll/saveToDaily', 'post', params)
+    // .then((res) => {
+    //   console.log(res)
+    //   sendEmail()
+    // })
   };
 
   useEffect(() => {
@@ -453,7 +441,7 @@ const DStep04Modal = () => {
   return (
     <>
       <ModalWrap>
-        <Pdf setPdfBlob={setPdfBlob} />
+        {/* <Pdf setPdfBlob={setPdfBlob} /> */}
         <div className="title">
           <h3>일지작성</h3>
         </div>
