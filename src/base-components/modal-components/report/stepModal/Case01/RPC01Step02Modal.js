@@ -376,7 +376,7 @@ const RPC01Step02Modal = () => {
     if (!copy.business.length) {
       copy = {
         ...copy,
-        business: await callData('comboBizType', {type: '세륜축중'}), // [1] 사업구분 아이템 조회
+        business: await callData('comboBizType', {type: body.신규사업여부 ? '신사업' : '세륜축중'}), // [1] 사업구분 아이템 조회
         sale: await callData('comboSalesType', {type: '세륜축중'}), // [2] 매출타입 아이템 조회
         equip: await callData('comboEquipType', {type: '세륜'}), // [3] 장비구분 아이템 조회
         volt: await callData('comboVolt', {}), // [6] 전압 아이템 조회
@@ -391,6 +391,7 @@ const RPC01Step02Modal = () => {
         eqName: await callData('comboEquipName', {bizVal: body.계약사항[selectIndex].사업구분}), // [4] 기종명 아이템 조회
         detail: await callData('comboEtcDetail', {bizVal: body.계약사항[selectIndex].사업구분}), // [5] 세부사항 아이템 조회
       }
+      console.log(body.계약사항)
     }
     return copy
   }
