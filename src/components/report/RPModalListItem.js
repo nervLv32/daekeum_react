@@ -204,7 +204,7 @@ const RPModalListItem = ({ item, type, changeParam }) => {
             changeParam(isSelected, item)
             setIsSelected(prev => !prev)
           }}>
-          <div className="dep1">{item.dkno}</div>
+          <div className="dep1">{item.매출타입}</div>
           <div className="dep2">{item.dkno}</div>
           <div className="dep3">{item.mcno}</div>
           <div className="dep4">{item.기종}</div>
