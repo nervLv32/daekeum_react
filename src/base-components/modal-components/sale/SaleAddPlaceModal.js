@@ -146,8 +146,8 @@ const ModalBtm = styled.div`
 
 const SaleAddPlaceModal = ({item}) => {
   const 거래처코드 = item.거래처코드
-  const 현장코드 = item.현장코드 
-  
+  const 현장코드 = item.현장코드
+
 
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
   const [siteList, setSiteList] = useRecoilState(siteListAtom)
@@ -155,7 +155,7 @@ const SaleAddPlaceModal = ({item}) => {
 
   const { closeModal } = useModal();
   const navigate = useNavigate();
-  
+
   const detail = (거래처코드,현장코드) => {
     return axios(
       process.env.REACT_APP_API_URL + '/enroll/siteDetail',
@@ -163,7 +163,7 @@ const SaleAddPlaceModal = ({item}) => {
         method: 'post',
         data: {
           거래처코드: 거래처코드,
-          현장코드: 현장코드 
+          현장코드: 현장코드
         }
         // ,headers: {
         //   'authorization': `${auth.auth.token}`
@@ -174,7 +174,7 @@ const SaleAddPlaceModal = ({item}) => {
         const { data } = res.data
         //console.log(data[0])
         setSiteDetail(data[0])
-        
+
       },
       error => {
         console.log(error)
@@ -183,22 +183,22 @@ const SaleAddPlaceModal = ({item}) => {
   }
 
   const setValue = e =>{
-    let val = e.target.value 
+    let val = e.target.value
     let key = e.target.id
     //console.log('key:',key ,'val:',val)
     setSiteDetail(oldData =>{
       return {
         ...oldData,
-        [key] : val      
+        [key] : val
       }
     })
   }
 
   const setSite = () => {
-    
+
     let url = '/enroll/siteAdd'
     if(현장코드) url = '/enroll/siteUpdate'
-    
+
     return axios(
       process.env.REACT_APP_API_URL + url,
       {
@@ -216,7 +216,7 @@ const SaleAddPlaceModal = ({item}) => {
       res => {
         console.log(res)
         const { data } = res.data
-        
+
         if(!현장코드){
           setSiteList((oldSiteList) => [
             data[0],
@@ -226,11 +226,11 @@ const SaleAddPlaceModal = ({item}) => {
         closeModal()
       },
       error => {
-        // todo 어떻게 처리 ? 
+        // todo 어떻게 처리 ?
         console.log(error)
       }
     )
-  
+
   }
 
   useEffect(() => {
@@ -243,15 +243,17 @@ const SaleAddPlaceModal = ({item}) => {
   return (
     <SaleAddPlaceModalWrap>
       <div className="modal-top">
-        <h6 className="title">신규현장등록</h6>
+        <h6 className="title">{item ? '현장수정' : '신규현장등록'}</h6>
       </div>
       <div className="modal-body">
         <InputList>
-          <li className="full required">
-            <p>현장코드</p>
-            <input type="text"  readOnly  value={siteDetail.현장코드} />
-          </li>
-          
+          {
+            item ? <li className="full required">
+              <p>현장코드</p>
+              <input type="text"  readOnly  value={siteDetail.현장코드} />
+            </li> : null
+          }
+
           <li className="full">
             <p className="red-point">현장명</p>
             <input type="text"  placeholder="현장명을 입력하세요" id="현장명" value={siteDetail.현장명 || ''} onChange={setValue} />
@@ -316,14 +318,14 @@ const SaleAddPlaceModal = ({item}) => {
             <p>담당센터</p>
             <input type="text"  placeholder="담당센터를 입력하세요" id="담당부서명" value={siteDetail.담당부서명 || ''} onChange={setValue} />
           </li>
-          
+
         </InputList>
       </div>
 
       <ModalBtm>
         <button className="primary-btn" onClick={() => {
           setSite()
-          
+
           // openModal({ ...modalData, content: <RPC01Step03Modal /> })
         }}>저장</button>
         <button className="del-btn" onClick={() => {

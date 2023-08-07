@@ -195,7 +195,8 @@ const Sale = () => {
       <Floating onClick={() =>{
         setCompanyDetail({})
         closeModal()
-        openModal({ ...modalData, content: <SaleSubmitModal item={''} /> })
+        // openModal({ ...modalData, content: <SaleSubmitModal item={''} /> })
+        openModal({ ...modalData, content: <SaleAddNewModal item={''} /> })
       }}>
         <i className="default-icon"></i>
       </Floating>

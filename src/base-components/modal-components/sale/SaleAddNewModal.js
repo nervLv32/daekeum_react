@@ -246,14 +246,16 @@ const SaleAddNewModal = ({item}) => {
   return (
     <SaleAddNewModalWrap>
       <div className="modal-top">
-        <h6 className="title">업체수정</h6>
+        <h6 className="title">{item ? '업체수정' : '신규업체등록'}</h6>
       </div>
       <div className="modal-body">
         <InputList>
-          <li className="full required">
-            <p>거래처코드</p>
-            <input type="text" readOnly value={companyDetail.거래처코드}/>
-          </li>
+          {
+            item ? <li className="full required">
+              <p>거래처코드</p>
+              <input type="text" readOnly value={companyDetail.거래처코드}/>
+            </li> : null
+          }
           <li>
             <p className="red-point">업체명</p>
             <input type="text"  placeholder="업체명을 입력하세요" id="업체명" value={companyDetail.업체명 || ''} onChange={setValue} />
