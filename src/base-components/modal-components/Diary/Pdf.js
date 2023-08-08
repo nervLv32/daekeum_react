@@ -466,7 +466,7 @@ const Pdf = () => {
               </tr>
               <tr>
                 <td>점검요원 : {journal.step02.점검요원}</td>
-                <td colSpan={2}>( H.P : )</td>
+                <td colSpan={2}>( H.P : {journal.step02.사용자연락처})</td>
               </tr>
               </tbody>
             </table>
