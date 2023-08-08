@@ -443,6 +443,10 @@ const DStep04Modal = () => {
     fetchService('/enroll/saveToDaily', 'post', params)
     .then((res) => {
       console.log(res)
+      setJournal({
+        ...journal,
+        diaryCode: res.data.diaryCode
+      })
       openModal({ ...modalData, content: <Pdf /> })
     })
   };

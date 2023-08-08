@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas'
 import jsPdf from 'jspdf'
 import {useModal} from '../../../hooks/useModal'
 import fetchService from '../../../util/fetchService'
+import { CommaPrice } from '../../../util/commaPrice'
 
 const PdfWrap = styled.div`
   width: 100%;
@@ -339,7 +340,6 @@ const Pdf = () => {
   // 유저 recoil
   const [user, setUser] = useRecoilState(userAtom)
 
-
   // PDF Blob
   const printPDF = () => {
     html2canvas(reportTemplateRef.current).then(canvas => {
@@ -348,28 +348,24 @@ const Pdf = () => {
       pdf.addImage(imgData, 'PNG', 0, 0, 0 ,undefined , 'FAST')
       // pdf.save(`test-sample.pdf`);
       const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'})
-      const blobUrl = URL.createObjectURL(blobPDF)
+      // const blobUrl = URL.createObjectURL(blobPDF)
       console.log(blobPDF)
       // closeModal()
-      window.open(blobUrl)
+      // window.open(blobUrl)
       sendEmail(blobPDF)
     })
   }
 
   const sendEmail = async (blobPDF) => {
-    // const reader = new FileReader()
-    console.log(blobPDF)
-
-    const test = new FormData()
-    test.append('id', 'soseo')
-    // test.append('email', journal.step02.현장담당자메일주소);
-    test.append('email', 'vpdls1511@gmail.com')
-    test.append('file', new File([blobPDF], 'file.pdf'))
-    fetchService('/enroll/send-pdf-mail', 'post', test)
-      .then(res1 => {
-        console.log(res1)
+    const formData = new FormData()
+    formData.append('id', 'soseo')
+    formData.append('email', journal.step02.현장담당자메일주소);
+    formData.append('file', new File([blobPDF], 'file.pdf'))
+    fetchService('/enroll/send-pdf-mail', 'post', formData)
+      .then(res => {
+        console.log(res)
+        // closeModal()
       })
-    // closeModal()
   }
 
   useEffect(() => {
@@ -411,7 +407,7 @@ const Pdf = () => {
         </div>
         <div className='pdf-body'>
           <div className='no'>
-            <span>No.</span>
+            <span>No. {journal.diaryCode}</span>
           </div>
           <div className='table-wrap'>
             <table>
@@ -428,19 +424,17 @@ const Pdf = () => {
               </thead>
               <tbody>
               <tr>
-                <td>{journal.step01.DKNO}</td>
-                <td></td>
-                <td></td>
-                <td>
-                  DK-
-                </td>
+                <td className='tac'>{journal.step01.모델}</td>
+                <td className='tac'>{journal.step01.수조}</td>
+                <td className='tac'>{journal.step01.박스}</td>
+                <td className='tac'>{journal.step01.DKNO}</td>
                 <td className='tac'><span className={journal.step01.전압 === '220' ? 'active' : ''}>220V</span></td>
                 <td className='tac'><span className={journal.step01.전압 === '380' ? 'active' : ''}>380V</span></td>
                 <td className='tac'><span className={journal.step01.전압 === '440' ? 'active' : ''}>440V</span></td>
                 <td className='tac'><span className={journal.step01.방향 === '정방향' ? 'active' : ''}>정</span></td>
                 <td className='tac'><span className={journal.step01.방향 === '역방향' ? 'active' : ''}>역</span></td>
-                <td className='tac'>자</td>
-                <td className='tac'>타</td>
+                <td className='tac'><span className={journal.step01.침전제 === '자사' ? 'active' : ''}>자</span></td>
+                <td className='tac'><span className={journal.step01.침전제 === '타사' ? 'active' : ''}>타</span></td>
               </tr>
               </tbody>
             </table>
@@ -454,24 +448,24 @@ const Pdf = () => {
               </colgroup>
               <tbody>
               <tr>
-                <td>업 체 명 : {journal.step02.업체명}</td>
+                <td>업 체 명 : {journal?.companyInfo?.거래처명}</td>
                 <td colSpan={2}>현 장 명 : {journal.step02.현장명}</td>
               </tr>
               <tr>
-                <td>담 당 :</td>
-                <td>T E L :</td>
-                <td>H.P :</td>
+                <td>담 당 : {journal.step02.현장담당자}</td>
+                <td>T E L : {journal.step02.현장연락처}</td>
+                <td>H.P : {journal.step02.현장담당자연락처}</td>
               </tr>
               <tr>
-                <td rowSpan={2}>접수일시 : 년 월 일</td>
-                <td rowSpan={2}>처리일시 : 년 월 일</td>
-                <td>도착 : 시 분</td>
+                <td rowSpan={2}>접수일시 : {journal?.step02?.접수일}</td>
+                <td rowSpan={2}>처리일시 : {journal?.step02?.처리일}</td>
+                <td>도착 : {journal.step02.도착일}</td>
               </tr>
               <tr>
-                <td className='bd-l'>종료 : 시 분</td>
+                <td className='bd-l'>종료 : {journal.step02.종료일}</td>
               </tr>
               <tr>
-                <td>점검요원 :</td>
+                <td>점검요원 : {journal.step02.점검요원}</td>
                 <td colSpan={2}>( H.P : )</td>
               </tr>
               </tbody>
@@ -553,15 +547,17 @@ const Pdf = () => {
                     })
                   }
                 </td>
-                <td className='tac'></td>
+                <td className='tac'>
+                  {journal.step01.비고}
+                </td>
               </tr>
               <tr>
-                <td colSpan={3} rowSpan={2} style={{width: '60%'}}>합 계 (VAT별도)</td>
-                <td>계산서발행일 :</td>
+                <td colSpan={3} rowSpan={2} style={{width: '60%'}}>합 계 (VAT별도) {CommaPrice(journal.step04.합계)}원</td>
+                <td>계산서발행일 : {journal.step04.계산서발행일}</td>
                 <td>No</td>
               </tr>
               <tr>
-                <td colSpan={2} className='bd-l'>결제예정일 : 일</td>
+                <td colSpan={2} className='bd-l'>결제예정일 : {journal.step04.결제예정일}</td>
               </tr>
               </tbody>
             </table>
@@ -572,7 +568,7 @@ const Pdf = () => {
               <table>
                 <tbody>
                 <tr>
-                  <td>결 제 방 식 : 현금결제 ()</td>
+                  <td>결 제 방 식 : {journal.step04.결제방식}</td>
                 </tr>
                 </tbody>
               </table>
@@ -584,7 +580,7 @@ const Pdf = () => {
                   수집목적 : 해피콜, 마케팅, 이벤트, 민원처리
                 </span>
               <div className='date'>
-                년 월 일
+                {moment().format('YYYY년 MM월 DD일')}
               </div>
             </div>
             <div className='info03'>

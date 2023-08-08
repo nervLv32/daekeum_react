@@ -251,7 +251,8 @@ const DStep02Modal = () => {
         ...journal,
         step02: {
           ...journal.step02,
-          ...data
+          ...data,
+          접수일: moment().format('YYYY-MM-DD')
         }
       })
     })
@@ -339,7 +340,7 @@ const DStep02Modal = () => {
           <dl className="input-info w50">
             <dt className="essential">접수일</dt>
             <dd>
-              <input type="text" className="bg" defaultValue={moment(journal?.step02?.등록일).format('YYYY-MM-DD')} disabled />
+              <input type="text" className="bg" defaultValue={journal?.step02?.접수일} disabled />
             </dd>
           </dl>
           <dl className="input-info w50">
