@@ -309,16 +309,34 @@ const Pdf = () => {
     });
   };
 
-
-  const sendEmail = (blobPDF) => {
-    fetchService('/enroll/send-pdf-mail', 'post', {
-      id: user.auth.userid,
-      emial: journal.step02.현장담당자메일주소,
-      file: blobPDF
-    }).then((res) => {
-      console.log(res)
-      closeModal()
-    })
+  const sendEmail = async (blobPDF) => {
+    try {
+      const fileReader = new FileReader();
+  
+      const filePromise = new Promise((resolve, reject) => {
+        fileReader.onloadend = () => {
+          resolve(fileReader.result);
+        };
+        fileReader.onerror = () => {
+          reject(new Error('File reading error.'));
+        };
+      });
+  
+      fileReader.readAsBinaryString(blobPDF);
+      const fileResult = await filePromise;
+  
+      const test = new FormData();
+      test.append('id', 'seseo');
+      // test.append('email', journal.step02.현장담당자메일주소);
+      test.append('email', 'wtcw27@naver.com');
+      test.append('file', fileResult);
+  
+      const res = await fetchService('/enroll/send-pdf-mail', 'post', test);
+      console.log(res);
+      closeModal();
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
   };
   
   useEffect(() => {

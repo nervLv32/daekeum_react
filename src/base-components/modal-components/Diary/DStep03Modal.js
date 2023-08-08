@@ -333,7 +333,7 @@ const DStep03Modal = () => {
           <dl className="input-info">
             <dt>다음순회점검 예정일</dt>
             <dd onClick={() => setCalendar(true)}>
-              <span>{journal?.step03?.다음순회점검예정일 ? moment(journal?.step03?.다음순회점검예정일).format('YYYY-MM-DD hh:mm:ss') : '날짜를 선택해주세요'}</span>
+              <span>{journal?.step03?.다음순회점검예정일 ? moment(journal?.step03?.다음순회점검예정일).format('YYYY-MM-DD') : '날짜를 선택해주세요'}</span>
             </dd>
           </dl>
         </div>

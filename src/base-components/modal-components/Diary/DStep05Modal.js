@@ -229,6 +229,8 @@ const DStep05Modal = () => {
       매출타입: "", // 없음,
       처리일: "", // 없음
       출고공장명: "", // 없음
+      시작일: item.시작일.split('T')[0],
+      종료일: item.종료일.split('T')[0],
     }));
     setJournal({
       ...journal,
