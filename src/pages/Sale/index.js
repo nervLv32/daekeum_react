@@ -117,7 +117,7 @@ const Sale = () => {
         data: {
           searchword: keyword.company,
           pageSize: paging.size,
-          currentPage: paging.company
+          currentPage: paging.currentPage
         }
         // ,headers: {
         //   'authorization': `${auth.auth.token}`
