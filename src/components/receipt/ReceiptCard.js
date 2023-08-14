@@ -189,7 +189,7 @@ const ReceiptCard = ({
         </dl>
         <dl>
           <dt>지역</dt>
-          <dd>{regionFirst}-{regionSecond}</dd>
+          <dd>{regionSecond}</dd>
         </dl>
         <i className="view-more" onClick={onClick}>
           <img src="../icons/receipt-viewmore-icon.png" alt="view-more btn" />
@@ -198,7 +198,7 @@ const ReceiptCard = ({
       <div className="body-wrap">
         <dl>
           <dt>현장명</dt>
-          <dd>{site}</dd>
+          <dd>{regionFirst}</dd>
         </dl>
       </div>
       {manager && (

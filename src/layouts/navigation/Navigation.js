@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useRecoilState, useResetRecoilState} from 'recoil'
 import userAtom from "../../recoil/userAtom";
 import menuAtom from "../../recoil/menuAtom";
+import ProfileImage from '../../assets/dummyImage/profile.jpg'
 import { NavLink } from "react-router-dom";
 
 const NavigationWrapper = styled.div`
@@ -61,6 +62,7 @@ const NavigationWrap = styled.div`
         background-position: center center;
         background-size: cover;
         border-radius: 20px;
+        overflow: hidden;
         box-shadow: 3px 3px 15px #0C1D87;
         border: 1px solid #9da2ae;
       }
@@ -174,13 +176,13 @@ const Navigation = () => {
         <div className="side-menu">
           <div className="user-info-wrap">
             <div className="img-wrap">
-              <img src='' />
+              <img src={ProfileImage} />
             </div>
             <div className="text-wrap">
               <p>
                 {user.auth.한글이름}
               </p>
-              <span>경영지원실 전산팀</span>
+              <span>{user.auth.부서명}</span>
             </div>
           </div>
           <ul className="side-menu-list">

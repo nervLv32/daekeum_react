@@ -4,6 +4,9 @@ import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import {receiptAtom} from "../../../recoil/receipt";
 import {useRecoilState} from "recoil";
 import fetchService from "../../../util/fetchService";
+import ConfirmAlert from '../ConfirmAlert'
+import {useModal} from '../../../hooks/useModal'
+import NewRegisModal from '../../../components/global/NewRegisModal'
 
 const ReceiptListModalWrap = styled.div`
   background-color: #fff;
@@ -196,13 +199,30 @@ const ReceiptListModalWrap = styled.div`
     }
   }
 `
+const AlertOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999999999999999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,.5);
+`
 
 const ReceiptListModal = ({ item }) => {
+  const modalData = {
+    title: 'ConfirmAlert',
+    callback: () => alert('Modal Callback()'),
+  }
 
+  const {openModal} = useModal()
   const [changeStateWrap, setChangeStateWrap] = useState(false);
   const [receipt, setReceipt] = useRecoilState(receiptAtom);
+  const [alertState, setAlertState] = useState({
+    state: false,
+    type: '',
+  })
 
-  console.log(changeStateWrap)
   const changeState = () => setChangeStateWrap(prev => !prev);
 
   const updateState = (value) => {
@@ -216,6 +236,49 @@ const ReceiptListModal = ({ item }) => {
         setReceipt(tempReceipt)
         setChangeStateWrap(false)
       })
+  }
+
+  const alertSubmit = () => {
+    switch (alertState.type){
+      case '수정' :
+        openModal({
+          ...modalData,
+          content: <NewRegisModal item={item}/>
+        })
+        break
+      case '전화' :
+        fetchService('/receipt/detail', 'post', {일련번호: item.no})
+          .then(res => {
+            if(res.data[0].연락처){
+              window.location.href = `tel:${res.data[0].연락처}`
+            }else{
+              alert('전화번호가 없습니다.')
+            }
+          })
+        break
+      case '삭제' :
+        fetchService('/receipt/delete', 'post', {일련번호 : item.no})
+          .then((res) => {
+            console.log(res)
+            window.location.reload()
+          })
+        break
+      default :
+        break
+    }
+    alertCancel()
+  }
+  const alertCancel = () => {
+    setAlertState({
+      state: false,
+      type: ''
+    })
+  }
+  const updateAlert = (type) => {
+    setAlertState({
+      state: true,
+      type: type
+    })
   }
 
   return (
@@ -232,7 +295,7 @@ const ReceiptListModal = ({ item }) => {
           </dl>
         </div>
         <div className="state-wrap">
-          <OrderStateBtn state={receipt.filter(it => it.no === item.no)[0].state} />
+          <OrderStateBtn state={item.state} />
         </div>
       </div>
       <ul className="modal-body">
@@ -249,7 +312,7 @@ const ReceiptListModal = ({ item }) => {
         <li>
           <dl>
             <dt>현 장 명</dt>
-            <dd className="oneLine">{item.site}</dd>
+            <dd className="oneLine">{item.regionFirst}</dd>
           </dl>
         </li>
         {
@@ -305,14 +368,26 @@ const ReceiptListModal = ({ item }) => {
             </ul>)
           }
         </div>
-        <button className="modify-btn">수정</button>
-        <button className="call-btn">
+        <button className="modify-btn" onClick={() => updateAlert('수정')}>수정</button>
+        <button className="call-btn" onClick={() => updateAlert('전화')}>
           <img src="../icons/modal-call-icon.png" alt="call icon" />
         </button>
-        <button className="del-btn">
+        <button className="del-btn" onClick={() => updateAlert('삭제')}>
           <img src="../icons/modal-del-icon.png" alt="del icon" />
         </button>
       </div>
+      {
+        alertState.state && <AlertOverlay onClick={() => {
+          alertCancel()
+        }}>
+          <ConfirmAlert
+            client={item.company}
+            site={item.regionFirst}
+            text={alertState.type}
+            submit={alertSubmit}
+            cancel={alertCancel}/>
+        </AlertOverlay>
+      }
     </ReceiptListModalWrap>
   )
 }

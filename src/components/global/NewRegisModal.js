@@ -7,6 +7,7 @@ import ReceiptListModal from "../../base-components/modal-components/receipt/Rec
 import SearchModal from '../searchModal/index'
 import {useRecoilState} from "recoil";
 import {newReceiptAtom} from "../../recoil/receipt";
+import receipt from '../../pages/Receipt'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -160,7 +161,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = () => {
+const NewRegisModal = ({item}) => {
   /* ****** 신규접수모달 ****** */
   const {closeModal, openModal} = useModal();
   const now = new Date();
@@ -177,7 +178,8 @@ const NewRegisModal = () => {
   })
 
   const updateReceipt = () => {
-    fetchService('/receipt/add', 'post', newReceipt)
+    const url = item ? '/receipt/update' : '/receipt/add'
+    fetchService(url, 'post', newReceipt)
       .then((res) => {
         console.log(res)
         window.location.reload()
@@ -197,20 +199,38 @@ const NewRegisModal = () => {
     return await fetchService(searchModal.url, 'post', searchParam)
   }
 
+  useEffect(() => {
+    console.log(item)
+    if(item){
+      fetchService('/receipt/detail', 'post', {일련번호: item.no})
+        .then(res => {
+          setNewReceipt({
+            ...res.data[0]
+          })
+        })
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log(newReceipt)
+  }, [newReceipt])
+
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
-        <h6 className="title">신규접수</h6>
+        <h6 className="title">{item ? '수정' : '신규접수'}</h6>
       </div>
       <div className="modal-body">
         <InputList>
-          <li className="required">
-            <p>접수번호</p>
-            <input ref={e => bodyRef.current[0] = e} type="text" placeholder="접수번호를 입력하세요" disabled={true}/>
-          </li>
+          {
+            item && <li className="required">
+              <p>접수번호</p>
+              <input ref={e => bodyRef.current[0] = e} value={item.no} type="text" placeholder="접수번호를 입력하세요" disabled={true} readOnly={true}/>
+            </li>
+          }
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(newReceipt.날짜)} placeholder="접수일을 입력하세요"
+            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(new Date(newReceipt.날짜))} placeholder="접수일을 입력하세요"
                    disabled={true} readOnly={true}/>
           </li>
           <li>

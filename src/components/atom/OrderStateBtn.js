@@ -42,7 +42,7 @@ const OrderStateBtnComponent = styled.button`
 const OrderStateBtn = ({ state }) => {
   return <OrderStateBtnComponent className={getOrderState(state)}>
     <i></i>
-    <span>{getOrderStyle(state)}</span>
+    <span>{state}</span>
   </OrderStateBtnComponent>
 }
 

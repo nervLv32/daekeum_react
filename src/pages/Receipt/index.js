@@ -111,6 +111,7 @@ const Receipt = () => {
   const mappingItem = (res) => {
     return res.data ? res.data.map(it => {
       return {
+        ...it,
         no: it.NO,
         date: it.날짜,
         state: it.처리상태,
@@ -142,6 +143,7 @@ const Receipt = () => {
         const temp = mappingItem(res)
         const data = [...list, ...temp]
         setReceipts( data )
+        console.log(data)
         if(temp.length > 9) {
           setTimeout(() => {
             setLoading(false)

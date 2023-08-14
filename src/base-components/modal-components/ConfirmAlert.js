@@ -46,7 +46,9 @@ const ConfirmBtn = styled.div`
 `
 
 const ConfirmAlert = ({client, site, text, submit, cancel}) => {
-  return <ModalBody>
+  return <ModalBody onClick={(e) => {
+    e.stopPropagation()
+  }}>
     <p> {client} { site && '/' + site} </p>
     <p> <b>{text}</b>하시겠습니까? </p>
     <ConfirmBtn>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 //DummyImage
-import ProfileImage from '../../../assets/dummyImage/profile.jpeg'
+import ProfileImage from '../../../assets/dummyImage/profile.jpg'
 import Typo from "../../atom/Typo";
 import {useEffect} from "react";
 import {useRecoilState} from "recoil";
