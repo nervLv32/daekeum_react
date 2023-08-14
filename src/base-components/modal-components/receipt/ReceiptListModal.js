@@ -7,6 +7,7 @@ import fetchService from "../../../util/fetchService";
 import ConfirmAlert from '../ConfirmAlert'
 import {useModal} from '../../../hooks/useModal'
 import NewRegisModal from '../../../components/global/NewRegisModal'
+import moment from 'moment'
 
 const ReceiptListModalWrap = styled.div`
   background-color: #fff;
@@ -291,7 +292,7 @@ const ReceiptListModal = ({ item }) => {
           </dl>
           <dl>
             <dt>Date.</dt>
-            <dd>{item.date}</dd>
+            <dd>{moment(item.date).format('YYYY-MM-DD')}</dd>
           </dl>
         </div>
         <div className="state-wrap">

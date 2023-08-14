@@ -8,6 +8,8 @@ import DStep01Modal from "../../base-components/modal-components/Diary/DStep01Mo
 import moment from "moment";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../recoil/journalAtom";
+import ReceiptConfirm from './ReceiptConfirm'
+import NewRegisModal from '../global/NewRegisModal'
 
 const ReceiptCardComponent = styled.li`
   &:not(:last-child) {
@@ -162,7 +164,9 @@ const ReceiptCard = ({
               if(state === '접수완료') {
                 openModal({ ...modalData, content: <DStep01Modal /> })
               } else if(state === '접수대기'){
-                openModal({ ...modalData, content: <DStep01Modal /> })
+                openModal({ ...modalData, content: <NewRegisModal item={{no: no}} confirm={true}/> })
+              } else if(state === '처리완료') {
+                openModal({ ...modalData, content: <ReceiptConfirm /> })
               }
               setJournal({
                 ...journal,

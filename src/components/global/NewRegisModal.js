@@ -161,7 +161,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = ({item}) => {
+const NewRegisModal = ({item, confirm}) => {
   /* ****** 신규접수모달 ****** */
   const {closeModal, openModal} = useModal();
   const now = new Date();
@@ -218,7 +218,7 @@ const NewRegisModal = ({item}) => {
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
-        <h6 className="title">{item ? '수정' : '신규접수'}</h6>
+        <h6 className="title">{item ? confirm ? '접수확인등록' : '수정' : '신규접수'}</h6>
       </div>
       <div className="modal-body">
         <InputList>
