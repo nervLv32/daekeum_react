@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import SearchModal from '../../../components/searchModal'
 import fetchService from '../../../util/fetchService'
 import userAtom from '../../../recoil/userAtom'
+import SingleDate from "../../../components/calander/SingleDate";
+import moment from "moment";
 
 const SaleSubmitModalWrap = styled.div`
   max-height: 70vh;
@@ -73,6 +75,30 @@ const InputList = styled.ul`
       &.readonly{
         background: var(--sky, #EFF2FF);
       }
+    }
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 0 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
+    }
+    span {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 0 15px;
+      height: 35px;
+      line-height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
     }
     textarea {
       width: 100%;
@@ -146,6 +172,8 @@ const SaleSubmitModal = ({item}) => {
   const [salesState, setSalesState] = useRecoilState(salesStateAtom);
   const [isLoadState, setLoadState] = useState(false)
   const user = useRecoilValue(userAtom)
+
+  console.log(visitDetail)
 
   const modalData = {
     title: 'Modal',
@@ -288,93 +316,139 @@ const SaleSubmitModal = ({item}) => {
     })
   }, [])
 
+  // 방문목적가져오기
+  const [typeList, setTypeList] = useState([]);
+  useEffect(() => {
+    fetchService('/enroll/diaryCombo', 'get', {
+      type: "방문목적"
+    }).then((res) => {
+      setTypeList(res.data)
+    })
+  }, [])
+  
+  // 캘린더
+  const [type, setType] = useState("");
+  const [isCalendar, setCalendar] = useState(false);
+  const handleType = (t) => {
+    setType(t)
+    setCalendar(true)
+  };
+  const close = () => {
+    setCalendar(false)
+  };
+
+  const handleDateChange = (key, value) => {
+    setVisitDetail({
+      ...visitDetail,
+      [key]: moment(value).format('YYYY-MM-DD')
+    })
+    close()
+  };
+
   return (
-    <SaleSubmitModalWrap>
-      <div className="modal-top">
-        <h6 className="title">영업등록 </h6>
-      </div>
-      <div className="modal-body">
-        <InputList>
-          <li className="full required">
-            <p>거래처코드</p>
-            {/*<input type="text"  readOnly id="거래처코드" value={visitDetail.거래처코드 || ''} onChange={setValue} />*/}
-            <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/clientlist')}>
-              {visitDetail.거래처코드 ? visitDetail.거래처코드 : '거래처검색'}
-            </div>
-          </li>
-          <li className="full required">
-            <p>현장코드</p>
-            <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/sitelist')}>
-              {visitDetail.현장코드 ? visitDetail.현장코드 : '현장코드검색'}
-            </div>
-          </li>
-          <li>
-            <p>부서명</p>
-            <input type="text"  placeholder="부서명를 입력하세요" id="부서명" value={visitDetail.부서명  || ''} readOnly/>
-          </li>
-          <li>
-            <p>부서코드</p>
-            <input type="text"  placeholder="부서코드를 입력하세요" id="부서코드" value={visitDetail.부서코드 || ''} readOnly/>
-          </li>
-          <li>
-            <p>영업담당자</p>
-            <input type="text"  placeholder="영업담당자를 입력하세요" id="영업담당자명" value={visitDetail.영업담당자명 || ''} readOnly/>
-          </li>
-          <li>
-            <p>영업담당자코드</p>
-            <input type="text"  placeholder="영업담당자코드를 입력하세요" id="영업담당자코드" value={visitDetail.사원코드 || ''} readOnly/>
-          </li>
-          { isLoadState && <>
-            <li>
-              <p>방문번호</p>
-              <input type='text' readOnly id='방문번호' value={visitDetail.방문번호 || ''} readOnly/>
-              <li>
-                <p>일지번호</p>
-                <input type='text' readOnly id='일지번호' value={visitDetail.일지번호 || ''} readOnly/>
-              </li>
+    <>
+      <SaleSubmitModalWrap>
+        <div className="modal-top">
+          <h6 className="title">영업등록 </h6>
+        </div>
+        <div className="modal-body">
+          <InputList>
+            <li className="full required">
+              <p>거래처코드</p>
+              {/*<input type="text"  readOnly id="거래처코드" value={visitDetail.거래처코드 || ''} onChange={setValue} />*/}
+              <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/clientlist')}>
+                {visitDetail.거래처코드 ? visitDetail.거래처코드 : '거래처검색'}
+              </div>
             </li>
-          </>}
-          <li>
-            <p>방문일</p>
-            <input type="text"  placeholder="방문일을 입력하세요" id="방문일" value={visitDetail.방문일 || ''} onChange={setValue}/>
-          </li>
-          <li>
-            <p>업체담당자</p>
-            <input type="text"  placeholder="업체담당자를 입력하세요" id="업체담당자" value={visitDetail.업체담당자 || ''} onChange={setValue}/>
-          </li>
-          <li>
-            <p>직책</p>
-            <input type="text"  placeholder="직책을 입력하세요" id="직책" value={visitDetail.직책 || ''} onChange={setValue}/>
-          </li>
+            <li className="full required">
+              <p>현장코드</p>
+              <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/sitelist')}>
+                {visitDetail.현장코드 ? visitDetail.현장코드 : '현장코드검색'}
+              </div>
+            </li>
+            <li>
+              <p>부서명</p>
+              <input type="text"  placeholder="부서명를 입력하세요" id="부서명" value={visitDetail.부서명  || ''} readOnly/>
+            </li>
+            <li>
+              <p>부서코드</p>
+              <input type="text"  placeholder="부서코드를 입력하세요" id="부서코드" value={visitDetail.부서코드 || ''} readOnly/>
+            </li>
+            <li>
+              <p>영업담당자</p>
+              <input type="text"  placeholder="영업담당자를 입력하세요" id="영업담당자명" value={visitDetail.영업담당자명 || ''} readOnly/>
+            </li>
+            <li>
+              <p>영업담당자코드</p>
+              <input type="text"  placeholder="영업담당자코드를 입력하세요" id="영업담당자코드" value={visitDetail.사원코드 || ''} readOnly/>
+            </li>
+            { isLoadState && <>
+              <li>
+                <p>방문번호</p>
+                <input type='text' readOnly id='방문번호' value={visitDetail.방문번호 || ''}/>
+                <li>
+                  <p>일지번호</p>
+                  <input type='text' readOnly id='일지번호' value={visitDetail.일지번호 || ''}/>
+                </li>
+              </li>
+            </>}
+            <li>
+              <p>방문일</p>
+              <span onClick={() => handleType("방문일")}>{visitDetail.방문일 ? visitDetail.방문일 : '방문일을 선택해주세요'}</span>
+            </li>
+            <li>
+              <p>업체담당자</p>
+              <input type="text"  placeholder="업체담당자를 입력하세요" id="업체담당자" value={visitDetail.업체담당자 || ''} onChange={setValue}/>
+            </li>
+            <li>
+              <p>직책</p>
+              <input type="text"  placeholder="직책을 입력하세요" id="직책" value={visitDetail.직책 || ''} onChange={setValue}/>
+            </li>
 
-          <li>
-            <p>회사코드</p>
-            <input type="text"  placeholder="회사코드를 입력하세요" id="회사코드" value={visitDetail.회사코드 || ''} readOnly/>
-          </li>
-          <li className="full">
-            <p>방문목적</p>
-            <input type="text"  placeholder="방문목적을 입력하세요" id="방문목적" value={visitDetail.방문목적 || ''} onChange={setValue}/>
-          </li>
-          <li className="full">
-            <p>상담내역</p>
-            <textarea  placeholder="주소를 입력하세요." id="상담내역" value={visitDetail.상담내역 || ''} onChange={setValue} />
-          </li>
-        </InputList>
-        {searchModal.flag && <SearchModal dataAtom={visitDetailAtom} data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
-      </div>
+            <li>
+              <p>회사코드</p>
+              <input type="text"  placeholder="회사코드를 입력하세요" id="회사코드" value={visitDetail.회사코드 || ''} readOnly/>
+            </li>
+            <li className="full">
+              <p>방문목적</p>
+              <select
+                id="방문목적"
+                value={visitDetail.방문목적 || ''}
+                onChange={setValue}
+              >
+                <option value="">방문목적을 선택해주세요.</option>
+                {
+                  typeList?.length > 0 && typeList.map((it, idx) => <option value={it.value} key={idx}>{it.value}</option>)
+                }
+              </select>
+            </li>
+            <li className="full">
+              <p>상담내역</p>
+              <textarea  placeholder="주소를 입력하세요." id="상담내역" value={visitDetail.상담내역 || ''} onChange={setValue} />
+            </li>
+          </InputList>
+          {searchModal.flag && <SearchModal dataAtom={visitDetailAtom} data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
+        </div>
 
-      <ModalBtm>
-        <button className="primary-btn" onClick={() => {
-        setVisitHistory()
-        // closeModal()
-        // openModal({ ...modalData, content: <RPC01Step03Modal /> })
-      }}>저장</button>
-       <button className="del-btn" onClick={() => {
-        closeModal()
-        // openModal({ ...modalData, content: <RPC01Step01Modal /> })
-      }}>취소</button>
-      </ModalBtm>
-    </SaleSubmitModalWrap>
+        <ModalBtm>
+          <button className="primary-btn" onClick={() => {
+          setVisitHistory()
+          // closeModal()
+          // openModal({ ...modalData, content: <RPC01Step03Modal /> })
+        }}>저장</button>
+        <button className="del-btn" onClick={() => {
+          closeModal()
+          // openModal({ ...modalData, content: <RPC01Step01Modal /> })
+        }}>취소</button>
+        </ModalBtm>
+      </SaleSubmitModalWrap>
+
+      {
+        isCalendar && (
+          <SingleDate submit={handleDateChange} close={close} type={type} />
+        )
+      }
+    </>
   )
 }
 

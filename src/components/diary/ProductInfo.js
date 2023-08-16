@@ -261,7 +261,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
           >
             <option value="">항목을 선택해주세요.</option>
             {
-              typeList?.length > 0 && typeList.map((it, idx) => <option value={it.관리내역명} key={idx}>{it.관리내역명}</option>)
+              typeList?.length > 0 && typeList.map((it, idx) => <option value={it.value} key={idx}>{it.value}</option>)
             }
           </select>
         </label>
