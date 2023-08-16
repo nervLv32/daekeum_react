@@ -163,7 +163,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const RegisAddNewModal = ({no}) => {
+const RegisAddNewModal = ({no , remember}) => {
   const {closeModal, openModal} = useModal()
 
   const modalData = {
@@ -203,14 +203,14 @@ const RegisAddNewModal = ({no}) => {
     let flag = true
     return true
     Object.entries(edit).map(([key, value]) => {
-      if(key === '전화번호1') {
+      if (key === '전화번호1') {
         setEdit({
           ...edit,
-          '전화번호': value
+          '전화번호': value,
         })
       }
-      if (key !== '결제구분' && !value){
-        console.log(key,value)
+      if (key !== '결제구분' && !value) {
+        console.log(key, value)
         flag = false
       }
     })
@@ -218,16 +218,24 @@ const RegisAddNewModal = ({no}) => {
   }
 
   const updateRegis = async () => {
-    if(no === -1){
+    if (no === -1) {
       const res = await fetchService('/enroll/clientCheck', 'post', {사업자번호: edit.사업자번호})
-      console.log(res)
+      const result = JSON.parse(res.data[0].result)
+
+      if (result) {
+        fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post', edit)
+          .then((res) => {
+            console.log(res.data)
+            closeModal()
+            // window.location.reload()
+          })
+      } else {
+        alert('이미 존재하는 사업자 번호입니다.')
+        openModal({
+          ...modalData, content: <RegisAddNewModal remember={edit} no={no}/>
+        })
+      }
     }
-    /*fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post', edit)
-      .then((res) => {
-        console.log(res.data)
-        closeModal()
-        // window.location.reload()
-      })*/
   }
 
   useEffect(() => {
@@ -238,6 +246,14 @@ const RegisAddNewModal = ({no}) => {
       })
     }
   }, [])
+
+  useEffect(() => {
+    if(remember){
+      setEdit({
+        ...remember
+      })
+    }
+  }, [remember])
 
   return (
     <RegisAddNewModalWrap>
@@ -359,15 +375,17 @@ const RegisAddNewModal = ({no}) => {
         <button className='primary-btn' onClick={() => {
           // updateRegis()
           // closeModal()
-          if(checkEdit()){
-            openModal({ ...modalData, content: <ConfirmAlert
+          if (checkEdit()) {
+            openModal({
+              ...modalData, content: <ConfirmAlert
                 client={edit.업체명}
                 site={''}
                 text={no !== -1 ? '수정' : '등록'}
                 submit={updateRegis}
                 cancel={closeModal}
-              /> })
-          }else {
+              />,
+            })
+          } else {
             alert('비어있는 항목이 존재합니다.')
           }
         }}>저장
