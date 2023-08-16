@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {siteDetailAtom, siteListAtom, salesStateAtom} from '../../../recoil/salesAtom'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import fetchService from '../../../util/fetchService'
 import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
 import CheckValidate from '../../../util/checkValidate'
+import userAtom from "../../../recoil/userAtom";
+import SingleDate from "../../../components/calander/SingleDate";
+import moment from "moment";
 const SaleAddPlaceModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -85,6 +88,18 @@ const InputList = styled.ul`
       &::placeholder {
         color: #9DA2AE;
       }
+    }
+    span {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 10px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
     }
     select{
       width: 100%;
@@ -163,9 +178,14 @@ const ModalBtm = styled.div`
 `
 
 const SaleAddPlaceModal = ({item}) => {
+
+  // 유저정보 가져오기
+  const {auth} = useRecoilValue(userAtom)
+
   const 거래처코드 = item.거래처코드
   const 현장코드 = item.현장코드
 
+  console.log(현장코드)
 
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
   const [siteList, setSiteList] = useRecoilState(siteListAtom)
@@ -230,8 +250,15 @@ const SaleAddPlaceModal = ({item}) => {
           method: 'post',
           data: {
             ...siteDetail,
-            EmpNo: 1111,
-            EmpNm: '강민아'
+            UserInfo: {
+              DeptCd: auth.부서코드,
+              DeptNm: auth.부서명 || null,
+              EmpNm: auth.한글이름,
+              EmpNo: auth.사원코드,
+              회사코드: auth.회사코드,
+              DIV_CD: auth.DIV_CD,
+              usergwid: auth.usergwid,
+            }
           }
           // ,headers: {
           //   'authorization': `${auth.auth.token}`
@@ -239,7 +266,6 @@ const SaleAddPlaceModal = ({item}) => {
         }
       ).then(
         res => {
-          console.log(res)
           const { data } = res.data
 
           if(!현장코드){
@@ -258,7 +284,6 @@ const SaleAddPlaceModal = ({item}) => {
     }else{
       alert("비어있는 항목이 존재합니다.")
     }
-
   }
 
   useEffect(() => {
@@ -275,7 +300,8 @@ const SaleAddPlaceModal = ({item}) => {
     fetchList()
       .then(() => {
         if(현장코드) detail(거래처코드, 현장코드)
-        else {setSiteDetail({ 거래처코드: 거래처코드,
+        else {setSiteDetail({ 
+          거래처코드: 거래처코드,
           현장명: null,
           담당자: null,
           직위: null,
@@ -286,7 +312,7 @@ const SaleAddPlaceModal = ({item}) => {
           주소: null,
           종료예정일: null,
           설치예정일: null,
-          접속시알림: null,
+          알림: null,
           고객분류: null,
           지역분류: null,
           현장분류: null,
@@ -296,129 +322,158 @@ const SaleAddPlaceModal = ({item}) => {
       })
   }, [])
 
+  // 캘린더
+  const [type, setType] = useState("");
+  const [isCalendar, setCalendar] = useState(false);
+  const handleType = (t) => {
+    setType(t)
+    setCalendar(true)
+  };
+  const close = () => {
+    setCalendar(false)
+  };
+  const handleDateChange = (key, value) => {
+    setSiteDetail({
+      ...siteDetail,
+      [key]: moment(value).format('YYYY-MM-DD')
+    })
+    close()
+  };
+
   return (
-    <SaleAddPlaceModalWrap>
-      <div className="modal-top">
-        <h6 className="title">{현장코드 ? '현장수정' : '신규현장등록'}</h6>
-      </div>
-      <div className="modal-body">
-        <InputList>
-          {
-            현장코드 ? <li className="full required">
-              <p>현장코드</p>
-              <input type="text"  readOnly  value={siteDetail.현장코드} />
-            </li> : null
-          }
+    <>
+      <SaleAddPlaceModalWrap>
+        <div className="modal-top">
+          <h6 className="title">{현장코드 ? '현장수정' : '신규현장등록'}</h6>
+        </div>
+        <div className="modal-body">
+          <InputList>
+            {
+              현장코드 ? <li className="full required">
+                <p>현장코드</p>
+                <input type="text"  readOnly  value={siteDetail.현장코드} />
+              </li> : null
+            }
 
-          <li className="full">
-            <p className="red-point">현장명</p>
-            <input type="text"  placeholder="현장명을 입력하세요" id="현장명" value={siteDetail.현장명 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>담당자</p>
-            <input type="text"  placeholder="담당자를 입력하세요" id="담당자" value={siteDetail.담당자 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>직위</p>
-            <input type="text"  placeholder="직위를 입력하세요" id="직위" value={siteDetail.직위 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>휴대폰</p>
-            <input type="text"  placeholder="휴대폰을 입력하세요" id="휴대폰" value={siteDetail.휴대폰 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>이메일</p>
-            <input type="text"  placeholder="이메일을 입력하세요" id="이메일" value={siteDetail.이메일 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>전화번호</p>
-            <input type="text"  placeholder="전화번호를 입력하세요" id="전화번호" value={siteDetail.전화번호 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>팩스번호</p>
-            <input type="text"  placeholder="팩스번호를 입력하세요" id="팩스번호" value={siteDetail.팩스번호 || ''} onChange={setValue} />
-          </li>
-          <li className="full">
-            <p>주소</p>
-            <input type="text"  placeholder="주소를 입력하세요" id="주소" value={siteDetail.주소 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>종료예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요" id="종료예정일" value={siteDetail.종료예정일 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>설치예정일</p>
-            <input type="text"  placeholder="날짜를 입력하세요" id="설치예정일" value={siteDetail.설치예정일 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>알림</p>
-            <input type="text"  placeholder="알림을 입력하세요" id="접속시알림" value={siteDetail.접속시알림 || ''} onChange={setValue} />
-          </li>
-          <li>
-            <p>고객분류</p>
-            {/*<input type="text"  placeholder="고객분류를 입력하세요" id="고객분류" value={siteDetail.고객분류 || ''} onChange={setValue} />*/}
-            <OptionSelectedMemo
-              list={list.고객분류 || []}
-              updateValue={setValue}
-              body={siteDetail}
-              depth1={'고객분류'}
-              id={true}
-            />
-          </li>
-          <li>
-            <p className="red-point">지역분류</p>
-            {/*<input type="text"  placeholder="지역분류를 입력하세요" id="지역분류" value={siteDetail.지역분류 || ''} onChange={setValue} />*/}
-            <OptionSelectedMemo
-              list={list.지역분류 || []}
-              updateValue={setValue}
-              body={siteDetail}
-              depth1={'지역분류'}
-              id={true}
-            />
-          </li>
-          <li>
-            <p className="red-point">현장분류</p>
-            {/*<input type="text"  placeholder="현장분류를 입력하세요" id="현장분류" value={siteDetail.현장분류 || ''} onChange={setValue} />*/}
-            <OptionSelectedMemo
-              list={list.현장분류 || []}
-              updateValue={setValue}
-              body={siteDetail}
-              depth1={'현장분류'}
-              id={true}
-            />
-          </li>
-          <li>
-            <p>고객접점</p>
-            {/*<input type="text"  placeholder="고객접점을 입력하세요" id="고객접점" value={siteDetail.고객접점 || ''} onChange={setValue} />*/}
-            <OptionSelectedMemo
-              list={list.고객접점 || []}
-              updateValue={setValue}
-              body={siteDetail}
-              depth1={'고객접점'}
-              id={true}
-            />
-          </li>
-          <li>
-            <p>담당센터</p>
-            <input type="text"  placeholder="담당센터를 입력하세요" id="담당부서명" value={siteDetail.담당부서명 || ''} onChange={setValue} />
-          </li>
+            <li className="full">
+              <p className="red-point">현장명</p>
+              <input type="text"  placeholder="현장명을 입력하세요" id="현장명" value={siteDetail.현장명 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>담당자</p>
+              <input type="text"  placeholder="담당자를 입력하세요" id="담당자" value={siteDetail.담당자 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>직위</p>
+              <input type="text"  placeholder="직위를 입력하세요" id="직위" value={siteDetail.직위 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>휴대폰</p>
+              <input type="text"  placeholder="휴대폰을 입력하세요" id="휴대폰" value={siteDetail.휴대폰 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>이메일</p>
+              <input type="text"  placeholder="이메일을 입력하세요" id="이메일" value={siteDetail.이메일 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>전화번호</p>
+              <input type="text"  placeholder="전화번호를 입력하세요" id="전화번호" value={siteDetail.전화번호 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>팩스번호</p>
+              <input type="text"  placeholder="팩스번호를 입력하세요" id="팩스번호" value={siteDetail.팩스번호 || ''} onChange={setValue} />
+            </li>
+            <li className="full">
+              <p>주소</p>
+              <input type="text"  placeholder="주소를 입력하세요" id="주소" value={siteDetail.주소 || ''} onChange={setValue} />
+            </li>
+            <li>
+              <p>종료예정일</p>
+              <span onClick={() => handleType("종료예정일")}>{siteDetail.종료예정일 ? siteDetail.종료예정일 : '종료예정일을 선택해주세요'}</span>
+            </li>
+            <li>
+              <p>설치예정일</p>
+              <span onClick={() => handleType("설치예정일")}>{siteDetail.설치예정일 ? siteDetail.설치예정일 : '설치예정일을 선택해주세요'}</span>
+            </li>
+            <li>
+              <p>알림</p>
+              <select id="알림" onChange={setValue}>
+                <option value="">알림을 선택해주세요</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </li>
+            <li>
+              <p>고객분류</p>
+              {/*<input type="text"  placeholder="고객분류를 입력하세요" id="고객분류" value={siteDetail.고객분류 || ''} onChange={setValue} />*/}
+              <OptionSelectedMemo
+                list={list.고객분류 || []}
+                updateValue={setValue}
+                body={siteDetail}
+                depth1={'고객분류'}
+                id={true}
+              />
+            </li>
+            <li>
+              <p className="red-point">지역분류</p>
+              {/*<input type="text"  placeholder="지역분류를 입력하세요" id="지역분류" value={siteDetail.지역분류 || ''} onChange={setValue} />*/}
+              <OptionSelectedMemo
+                list={list.지역분류 || []}
+                updateValue={setValue}
+                body={siteDetail}
+                depth1={'지역분류'}
+                id={true}
+              />
+            </li>
+            <li>
+              <p className="red-point">현장분류</p>
+              {/*<input type="text"  placeholder="현장분류를 입력하세요" id="현장분류" value={siteDetail.현장분류 || ''} onChange={setValue} />*/}
+              <OptionSelectedMemo
+                list={list.현장분류 || []}
+                updateValue={setValue}
+                body={siteDetail}
+                depth1={'현장분류'}
+                id={true}
+              />
+            </li>
+            <li>
+              <p>고객접점</p>
+              {/*<input type="text"  placeholder="고객접점을 입력하세요" id="고객접점" value={siteDetail.고객접점 || ''} onChange={setValue} />*/}
+              <OptionSelectedMemo
+                list={list.고객접점 || []}
+                updateValue={setValue}
+                body={siteDetail}
+                depth1={'고객접점'}
+                id={true}
+              />
+            </li>
+            <li>
+              <p>담당센터</p>
+              <input type="text"  placeholder="담당센터를 입력하세요" id="담당부서명" value={siteDetail.담당부서명 || ''} onChange={setValue} />
+            </li>
 
-        </InputList>
-      </div>
+          </InputList>
+        </div>
 
-      <ModalBtm>
-        <button className="primary-btn" onClick={() => {
-          setSite()
+        <ModalBtm>
+          <button className="primary-btn" onClick={() => {
+            setSite()
 
-          // openModal({ ...modalData, content: <RPC01Step03Modal /> })
-        }}>저장</button>
-        <button className="del-btn" onClick={() => {
-          setSiteDetail({})
-          closeModal()
-          // openModal({ ...modalData, content: <RPC01Step01Modal /> })
-        }}>취소</button>
-      </ModalBtm>
-    </SaleAddPlaceModalWrap>
+            // openModal({ ...modalData, content: <RPC01Step03Modal /> })
+          }}>저장</button>
+          <button className="del-btn" onClick={() => {
+            setSiteDetail({})
+            closeModal()
+            // openModal({ ...modalData, content: <RPC01Step01Modal /> })
+          }}>취소</button>
+        </ModalBtm>
+      </SaleAddPlaceModalWrap>
+      {
+        isCalendar && (
+          <SingleDate submit={handleDateChange} close={close} type={type} />
+        )
+      }
+    </>
   )
 }
 
