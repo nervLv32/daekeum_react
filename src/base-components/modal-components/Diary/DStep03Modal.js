@@ -255,11 +255,7 @@ const DStep03Modal = () => {
     fetchService('/enroll/diaryCombo', 'get', {
       type: "처리구분"
     }).then((res) => {
-      const list = res.data.map(item => ({
-        ...item,
-        value: item.관리내역명,
-      }));
-      setTypeList(list)
+      setTypeList(res.data)
     })
   }, [])
 
