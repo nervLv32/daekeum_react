@@ -97,6 +97,22 @@ const InputList = styled.ul`
         color: #9DA2AE;
       }
     }
+    
+    select{
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 5px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
+
+      &::placeholder {
+        color: #9DA2AE;
+      }
+    }
 
     textarea {
       width: 100%;
@@ -206,7 +222,6 @@ const RegisAddNewModal = ({no, remember}) => {
 
   const checkEdit = () => {
     let flag = true
-    return true
     Object.entries(edit).map(([key, value]) => {
       if (key === '전화번호1') {
         setEdit({
