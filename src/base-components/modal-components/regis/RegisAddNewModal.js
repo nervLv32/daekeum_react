@@ -6,6 +6,7 @@ import {regisAtom} from '../../../recoil/regisAtom'
 import userAtom from '../../../recoil/userAtom'
 import fetchService from '../../../util/fetchService'
 import ConfirmAlert from '../ConfirmAlert'
+import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
 
 const RegisAddNewModalWrap = styled.div`
   max-height: 70vh;
@@ -163,7 +164,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const RegisAddNewModal = ({no , remember}) => {
+const RegisAddNewModal = ({no, remember}) => {
   const {closeModal, openModal} = useModal()
 
   const modalData = {
@@ -173,6 +174,10 @@ const RegisAddNewModal = ({no , remember}) => {
 
   const [regis, setRegis] = useRecoilState(regisAtom)
   const [user, setUser] = useRecoilState(userAtom)
+  const [list, setList] = useState({
+    거래처분류: [],
+    고객분류: [],
+  })
   const [edit, setEdit] = useState({
     업체명: '',
     대표자성명: '',
@@ -232,25 +237,37 @@ const RegisAddNewModal = ({no , remember}) => {
       } else {
         alert('이미 존재하는 사업자 번호입니다.')
         openModal({
-          ...modalData, content: <RegisAddNewModal remember={edit} no={no}/>
+          ...modalData, content: <RegisAddNewModal remember={edit} no={no}/>,
         })
       }
     }
   }
 
   useEffect(() => {
-    if (no !== -1) {
-      setEdit({
-        ...edit,
-        ...regis.filter(it => it.rownum === no)[0],
+
+    const fetchList = async () => {
+      setList({
+        거래처분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'거래처분류'})).data],
+        고객분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'고객분류'})).data],
       })
     }
+
+    fetchList()
+      .then(() => {
+        console.log(list)
+        if (no !== -1) {
+          setEdit({
+            ...edit,
+            ...regis.filter(it => it.rownum === no)[0],
+          })
+        }
+      })
   }, [])
 
   useEffect(() => {
-    if(remember){
+    if (remember) {
       setEdit({
-        ...remember
+        ...remember,
       })
     }
   }, [remember])
@@ -358,15 +375,21 @@ const RegisAddNewModal = ({no , remember}) => {
           </li>
           <li>
             <p>고객분류</p>
-            <input type='text' placeholder='고객분류를 입력하세요'
-                   value={edit.고객분류 ? edit.고객분류 : ''}
-                   onChange={(e) => updateEdit('고객분류', e.target.value)}/>
+            <OptionSelectedMemo
+              list={list.고객분류 || []}
+              updateValue={updateEdit}
+              body={edit}
+              depth1={'고객분류'}
+            />
           </li>
           <li>
             <p>거래처분류</p>
-            <input type='text' placeholder='거래처분류를 입력하세요'
-                   value={edit.거래처분류 ? edit.거래처분류 : ''}
-                   onChange={(e) => updateEdit('거래처분류', e.target.value)}/>
+            <OptionSelectedMemo
+              list={list.거래처분류 || []}
+              updateValue={updateEdit}
+              body={edit}
+              depth1={'거래처분류'}
+            />
           </li>
         </InputList>
       </div>

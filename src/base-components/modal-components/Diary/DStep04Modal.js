@@ -395,7 +395,7 @@ const DStep04Modal = () => {
     분할청구: 0,
     한글이름: user.auth.한글이름,
     등록일: null,
-    마감여부: null,
+    마감여부: "N",
     마감일: null,
     직위: user.auth.직위,
     전화번호: null,
@@ -411,7 +411,6 @@ const DStep04Modal = () => {
     자사담당: null,
     자사담당자연락처: null,
     날짜: moment().format('YYYY-MM-DD'),
-    마감여부: "N",
   });
 
   // 데이터 가공 함수: 빈 문자열("")을 null로 변경
@@ -495,8 +494,8 @@ const DStep04Modal = () => {
           <div className="product-list-wrap">
             <div className="add-ons">
               <label className="all-check">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={allChecked}
                   onChange={() => setAllChecked(!allChecked)}
                 />
@@ -504,8 +503,8 @@ const DStep04Modal = () => {
               </label>
               <div className="btn-wrap">
                 <button type="button" className="btn-outline-gray" onClick={handleDelete}>선택삭제</button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn-blue"
                   onClick={() => {
                     openModal({ ...modalData, content: <DStep05Modal /> })
@@ -519,15 +518,15 @@ const DStep04Modal = () => {
                   journal?.품목리스트?.length > 0 ? journal.품목리스트.map((item, index) => {
                     return (
                       <li key={index}>
-                        <ProductInfo 
-                          item={item} 
-                          journal={journal} 
+                        <ProductInfo
+                          item={item}
+                          journal={journal}
                           setJournal={setJournal}
                           allChecked={allChecked}
                           setCheckListItem={setCheckListItem}
                           deleteStatus={deleteStatus}
                           typeList={typeList}
-                        />  
+                        />
                       </li>
                     )
                   }) : (
@@ -589,16 +588,16 @@ const DStep04Modal = () => {
           </div>
         </div>
         <BtnWrap>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn-outline-gray"
             onClick={() => {
               closeModal()
               openModal({ ...modalData, content: <DStep03Modal /> })
             }}
           >이전</button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn-blue"
             onClick={() => submit()}
           >다음</button>
