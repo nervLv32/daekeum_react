@@ -154,8 +154,6 @@ const InventoryRequestModal = ({detail}) => {
   const [isLoading, setLoading] = useState(false)
   const [list, setList] = useRecoilState(itemAndRequestList)
 
-  //TODO - 이제 기능 붙혀보자
-
   const submit = (key, value) => {
     updateBody(key, value)
     close()

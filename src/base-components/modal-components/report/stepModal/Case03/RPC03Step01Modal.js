@@ -189,31 +189,30 @@ const RPC03Step01Modal = () => {
   };
 
   useEffect(() => {
-    fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
-      .then((res) => {
-        setClientCurrent(res.data[0]);
-      });
-    fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})
-      .then((res)=>{
-        setClientDetail(res.data);
+    const fetchData = async () => {
+      setBody({
+        ...body,
+        UserInfo: {
+          DeptCd: auth.부서코드,
+          DeptNm: auth.부서명,
+          EmpNm: auth.한글이름,
+          EmpNo: auth.사원코드,
+          회사코드: auth.회사코드,
+          DIV_CD: auth.DIV_CD,
+          usergwid: auth.usergwid
+        },
+        거래처현황: {
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})).data[0]
+        },
+        거래처세부: {
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})).data
+        }
       })
-      const fetchData = async () => {
-        setBody({
-          ...body,
-          거래처현황: clientCurrent,
-          UserInfo: {
-            DeptCd: auth.부서코드,
-            DeptNm: auth.부서명,
-            EmpNm: auth.한글이름,
-            EmpNo: auth.사원코드,
-            회사코드: auth.회사코드,
-            DIV_CD: auth.DIV_CD,
-            usergwid: auth.usergwid
-          },
-          거래처세부: clientDetail
-        })
-      }
-      fetchData()
+    }
+
+    fetchData()
+
+    console.log(exportDoc)
   }, []);
 
   /******* 입고요청서 케이스의 첫번째 *******/
