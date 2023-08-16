@@ -6,6 +6,8 @@ import { useRecoilState } from "recoil";
 import { companyDetailAtom, companyListAtom, salesStateAtom } from "../../../recoil/salesAtom"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import fetchService from '../../../util/fetchService'
+import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
 
 const SaleAddNewModalWrap = styled.div`
   max-height: 70vh;
@@ -84,6 +86,21 @@ const InputList = styled.ul`
         color: #9DA2AE;
       }
     }
+    select{
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 5px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
+
+      &::placeholder {
+        color: #9DA2AE;
+      }
+    }
     textarea {
       width: 100%;
       box-sizing: border-box;
@@ -151,6 +168,10 @@ const SaleAddNewModal = ({item}) => {
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
   const [companyList, setCompanyList] = useRecoilState(companyListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+  const [list, setList] = useState({
+    거래처분류: [],
+    고객분류: [],
+  })
 
   const { closeModal } = useModal();
   const navigate = useNavigate();
@@ -235,12 +256,18 @@ const SaleAddNewModal = ({item}) => {
   }
 
   useEffect(() => {
-    if(거래처코드) {
-      detail(거래처코드)
+    const fetchList = async () => {
+      setList({
+        거래처분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'거래처분류'})).data],
+        고객분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'고객분류'})).data],
+      })
     }
-    else {
-      setCompanyDetail({})
-    }
+
+    fetchList()
+      .then(() => {
+        if(거래처코드) detail(거래처코드)
+        else setCompanyDetail({})
+      })
   }, [])
 
   return (
@@ -310,11 +337,25 @@ const SaleAddNewModal = ({item}) => {
           </li>
           <li>
             <p>고객분류</p>
-            <input type="text"  placeholder="고객분류를 입력하세요" id="고객분류"  onChange={setValue} value={companyDetail.고객분류 || ''}/>
+            {/*<input type="text"  placeholder="고객분류를 입력하세요" id="고객분류"  onChange={setValue} value={companyDetail.고객분류 || ''}/>*/}
+            <OptionSelectedMemo
+              list={list.고객분류 || []}
+              updateValue={setValue}
+              body={companyDetail}
+              depth1={'고객분류'}
+              id={true}
+            />
           </li>
           <li>
             <p>거래처분류</p>
-            <input type="text"  placeholder="거래처분류를 입력하세요" id="거래처분류"  onChange={setValue} value={companyDetail.거래처분류 || ''}/>
+            {/*<input type="text"  placeholder="거래처분류를 입력하세요" id="거래처분류"  onChange={setValue} value={companyDetail.거래처분류 || ''}/>*/}
+            <OptionSelectedMemo
+              list={list.거래처분류 || []}
+              updateValue={setValue}
+              body={companyDetail}
+              depth1={'거래처분류'}
+              id={true}
+            />
           </li>
         </InputList>
       </div>

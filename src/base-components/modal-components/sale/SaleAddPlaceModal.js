@@ -6,6 +6,8 @@ import { useRecoilState } from "recoil";
 import {siteDetailAtom, siteListAtom, salesStateAtom} from '../../../recoil/salesAtom'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import fetchService from '../../../util/fetchService'
+import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
 const SaleAddPlaceModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -83,6 +85,21 @@ const InputList = styled.ul`
         color: #9DA2AE;
       }
     }
+    select{
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 5px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
+
+      &::placeholder {
+        color: #9DA2AE;
+      }
+    }
     textarea {
       width: 100%;
       box-sizing: border-box;
@@ -152,6 +169,12 @@ const SaleAddPlaceModal = ({item}) => {
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
   const [siteList, setSiteList] = useRecoilState(siteListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+  const [list, setList] = useState({
+    고객분류: [],
+    지역분류: [],
+    현장분류: [],
+    고객접점: [],
+  })
 
   const { closeModal } = useModal();
   const navigate = useNavigate();
@@ -234,10 +257,21 @@ const SaleAddPlaceModal = ({item}) => {
   }
 
   useEffect(() => {
-    if(현장코드) detail(거래처코드, 현장코드)
-    else {
-      setSiteDetail({ 거래처코드: 거래처코드 })
+
+    const fetchList = async () => {
+      setList({
+        고객분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'고객분류'})).data],
+        지역분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'지역분류'})).data],
+        현장분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'현장분류'})).data],
+        고객접점: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'고객접점'})).data],
+      })
     }
+
+    fetchList()
+      .then(() => {
+        if(현장코드) detail(거래처코드, 현장코드)
+        else {setSiteDetail({ 거래처코드: 거래처코드 })}
+      })
   }, [])
 
   return (
@@ -300,19 +334,47 @@ const SaleAddPlaceModal = ({item}) => {
           </li>
           <li>
             <p>고객분류</p>
-            <input type="text"  placeholder="고객분류를 입력하세요" id="고객분류" value={siteDetail.고객분류 || ''} onChange={setValue} />
+            {/*<input type="text"  placeholder="고객분류를 입력하세요" id="고객분류" value={siteDetail.고객분류 || ''} onChange={setValue} />*/}
+            <OptionSelectedMemo
+              list={list.고객분류 || []}
+              updateValue={setValue}
+              body={siteDetail}
+              depth1={'고객분류'}
+              id={true}
+            />
           </li>
           <li>
             <p className="red-point">지역분류</p>
-            <input type="text"  placeholder="지역분류를 입력하세요" id="지역분류" value={siteDetail.지역분류 || ''} onChange={setValue} />
+            {/*<input type="text"  placeholder="지역분류를 입력하세요" id="지역분류" value={siteDetail.지역분류 || ''} onChange={setValue} />*/}
+            <OptionSelectedMemo
+              list={list.지역분류 || []}
+              updateValue={setValue}
+              body={siteDetail}
+              depth1={'지역분류'}
+              id={true}
+            />
           </li>
           <li>
             <p className="red-point">현장분류</p>
-            <input type="text"  placeholder="현장분류를 입력하세요" id="현장분류" value={siteDetail.현장분류 || ''} onChange={setValue} />
+            {/*<input type="text"  placeholder="현장분류를 입력하세요" id="현장분류" value={siteDetail.현장분류 || ''} onChange={setValue} />*/}
+            <OptionSelectedMemo
+              list={list.현장분류 || []}
+              updateValue={setValue}
+              body={siteDetail}
+              depth1={'현장분류'}
+              id={true}
+            />
           </li>
           <li>
             <p>고객접점</p>
-            <input type="text"  placeholder="고객접점을 입력하세요" id="고객접점" value={siteDetail.고객접점 || ''} onChange={setValue} />
+            {/*<input type="text"  placeholder="고객접점을 입력하세요" id="고객접점" value={siteDetail.고객접점 || ''} onChange={setValue} />*/}
+            <OptionSelectedMemo
+              list={list.고객접점 || []}
+              updateValue={setValue}
+              body={siteDetail}
+              depth1={'고객접점'}
+              id={true}
+            />
           </li>
           <li>
             <p>담당센터</p>
