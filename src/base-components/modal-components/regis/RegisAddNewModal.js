@@ -201,6 +201,7 @@ const RegisAddNewModal = ({no}) => {
 
   const checkEdit = () => {
     let flag = true
+    return true
     Object.entries(edit).map(([key, value]) => {
       if(key === '전화번호1') {
         setEdit({
@@ -216,13 +217,17 @@ const RegisAddNewModal = ({no}) => {
     return flag
   }
 
-  const updateRegis = () => {
-    fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post', edit)
+  const updateRegis = async () => {
+    if(no === -1){
+      const res = await fetchService('/enroll/clientCheck', 'post', {사업자번호: edit.사업자번호})
+      console.log(res)
+    }
+    /*fetchService(`/enroll/${no === -1 ? 'clientAdd' : 'clientUpdate'}`, 'post', edit)
       .then((res) => {
         console.log(res.data)
         closeModal()
         // window.location.reload()
-      })
+      })*/
   }
 
   useEffect(() => {
@@ -237,7 +242,7 @@ const RegisAddNewModal = ({no}) => {
   return (
     <RegisAddNewModalWrap>
       <div className='modal-top'>
-        <h6 className='title'>{no !== -1 ? '업체수정' : '신규업체등록'}</h6>
+        <h6 className='title'>{no === -1 ? '신규업체등록' : '업체수정'}</h6>
       </div>
       <div className='modal-body'>
         <InputList>

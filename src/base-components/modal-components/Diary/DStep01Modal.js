@@ -330,15 +330,16 @@ const DStep01Modal = () => {
   const [equipList, setEquipList] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchStatus, setSearchStatus] = useState(false);
+  console.log(companyInfo)
   const getEquipList = () => {
     fetchService('/enroll/equipList', 'post', {
       searchword: searchKeyword,
       pageSize: 500,
       currentPage: 1,
-      // 거래처코드: companyInfo.businessCode,
-      거래처코드: "10957",
-      // 현장코드: companyInfo.siteCode
-      현장코드: "2"
+      거래처코드: companyInfo.거래처코드,
+      // 거래처코드: "10957",
+      현장코드: companyInfo.현장코드
+      // 현장코드: "2"
     }).then((res) => {
       setEquipList(res?.data)
     })
@@ -485,10 +486,10 @@ const DStep01Modal = () => {
             <dt>수조</dt>
             <dd>
               <label htmlFor="existence01">
-                <input 
-                  type="radio" 
-                  name="radio-box01" 
-                  id="existence01" 
+                <input
+                  type="radio"
+                  name="radio-box01"
+                  id="existence01"
                   value={"Y"}
                   onChange={(e) => {
                     handleRadioChange('수조', e.target.value)
@@ -497,10 +498,10 @@ const DStep01Modal = () => {
                 <span>유</span>
               </label>
               <label htmlFor="nonexistence01">
-                <input 
-                  type="radio" 
-                  name="radio-box01" 
-                  id="nonexistence01" 
+                <input
+                  type="radio"
+                  name="radio-box01"
+                  id="nonexistence01"
                   value={"N"}
                   onChange={(e) => {
                     handleRadioChange('수조', e.target.value)
@@ -514,9 +515,9 @@ const DStep01Modal = () => {
             <dt>박스</dt>
             <dd>
               <label htmlFor="existence02">
-                <input 
-                  type="radio" 
-                  name="radio-box02" 
+                <input
+                  type="radio"
+                  name="radio-box02"
                   id="existence02"
                   value={"Y"}
                   onChange={(e) => {
@@ -526,9 +527,9 @@ const DStep01Modal = () => {
                 <span>유</span>
               </label>
               <label htmlFor="nonexistence02">
-                <input 
-                  type="radio" 
-                  name="radio-box02" 
+                <input
+                  type="radio"
+                  name="radio-box02"
                   id="nonexistence02"
                   value={"N"}
                   onChange={(e) => {
@@ -555,10 +556,10 @@ const DStep01Modal = () => {
             <dt>침전제</dt>
             <dd>
               <label htmlFor="existence03">
-                <input 
-                  type="radio" 
-                  name="radio-box03" 
-                  id="existence03" 
+                <input
+                  type="radio"
+                  name="radio-box03"
+                  id="existence03"
                   value={"자사"}
                   onChange={(e) => {
                     handleRadioChange('침전제', e.target.value)
@@ -567,10 +568,10 @@ const DStep01Modal = () => {
                 <span>자사</span>
               </label>
               <label htmlFor="nonexistence03">
-                <input 
-                  type="radio" 
-                  name="radio-box03" 
-                  id="nonexistence03" 
+                <input
+                  type="radio"
+                  name="radio-box03"
+                  id="nonexistence03"
                   value={"타사"}
                   onChange={(e) => {
                     handleRadioChange('침전제', e.target.value)
