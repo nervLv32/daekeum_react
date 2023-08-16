@@ -148,7 +148,7 @@ const InventoryRequest = () => {
                 item={item}
                 state={item.문서상태}
                 no={item.요청일련번호}
-                requestDate={item.요청일}
+                requestDate={item.작성일}
                 writeDate={item.작성일}
                 requester ={item.요청자}
                 requesterCode={item.요청자코드}

@@ -217,6 +217,8 @@ const InventoryRequestModal = ({detail}) => {
       reqItems: [...list.요청리스트],
     }
 
+    console.log(reqParams)
+
     fetchService('/inventory/addMaterialRequestItems', 'post', reqParams)
       .then((res) => {
         alert(res.msg)
