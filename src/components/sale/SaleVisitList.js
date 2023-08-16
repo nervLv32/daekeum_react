@@ -1,3 +1,4 @@
+import moment from "moment";
 import React from "react";
 import styled from "styled-components";
 
@@ -79,7 +80,7 @@ const SaleVisitList = ({
       </dl>
       <dl>
         <dt>방문일</dt>
-        <dd>{date}</dd>
+        <dd>{moment(date).format('YYYY-MM-DD')}</dd>
       </dl>
       <button className="viewmore-btn" onClick={onClick} />
     </div>
