@@ -165,13 +165,7 @@ const RegisDKNO = () => {
         dknoList.map((item, idx) => {
           return (<RegisDKNOList
             key={idx}
-            installCate={item.구분}
-            date={item.날짜}
-            model={item.모델명}
-            type={item.매출타입}
-            mcno={item.MCNO}
-            bolt={item.전압}
-            direction={item.방향}
+            item={item}
             onClick={() => openModal({ ...modalData, content: <RegisDKNOListModal item={item} /> })}
           />
           )

@@ -65,45 +65,44 @@ const RegisDKNOListComponent = styled.li`
 
 const RegisDKNOList = ({
   installCate,
-  date,
-  model,
-  type,
-  mcno,
-  bolt,
-  direction,
+  item,
   onClick
 }) => {
+
+  console.log(item)
+
   return <RegisDKNOListComponent>
     <div className="list-top">
       <dl>
         <dt>DKNO</dt>
-        <dd>{installCate}</dd>
+        <dd>{item.DKNO}</dd>
       </dl>
       <button className="viewmore-btn" onClick={onClick} />
     </div>
     <div className="list-body">
       <div>
         <dl>
-          <dt>모델</dt>
-          <dd>{model}</dd>
+          <dt>구분</dt>
+          <dd>{item.구분}</dd>
         </dl>
         <dl>
-          <dt>매출타입</dt>
-          <dd>{type}</dd>
+          <dt>위치</dt>
+          <dd>{item.위치}</dd>
+        </dl>
+
+        <dl>
+          <dt>모델명</dt>
+          <dd>{item.모델명}</dd>
         </dl>
       </div>
       <div>
         <dl>
-          <dt>MCNO</dt>
-          <dd>{mcno}</dd>
+          <dt>거래처명</dt>
+          <dd>{item.거래처명}</dd>
         </dl>
         <dl>
-          <dt>전압</dt>
-          <dd>{bolt}</dd>
-        </dl>
-        <dl>
-          <dt>방향</dt>
-          <dd>{direction}</dd>
+          <dt>현장명</dt>
+          <dd>{item.현장명}</dd>
         </dl>
       </div>
     </div>

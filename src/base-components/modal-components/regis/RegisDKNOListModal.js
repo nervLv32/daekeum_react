@@ -119,7 +119,7 @@ const RegisDKNOListModalWrap = styled.div`
 `
 
 const RegisDKNOListModal = ({ item }) => {
-  
+
   const { closeModal } = useModal();
   return (
     <RegisDKNOListModalWrap>
@@ -134,52 +134,60 @@ const RegisDKNOListModal = ({ item }) => {
       <ul className="modal-body">
         <li>
           <dl>
-            <dt className="justify">모 델</dt>
-            <dd>{item.model}</dd>
+            <dt className="justify">구 분</dt>
+            <dd>{item.구분}</dd>
           </dl>
           <dl>
-            <dt>매 출 타 입</dt>
-            <dd>{item.type}</dd>
-          </dl>
-        </li>
-        <li className="three-item">
-          <dl>
-            <dt>MCNO</dt>
-            <dd>{item.mcno}</dd>
+            <dt>위 치</dt>
+            <dd>{item.위치}</dd>
           </dl>
           <dl>
-            <dt>전압</dt>
-            <dd>{item.bolt}</dd>
-          </dl>
-          <dl>
-            <dt>방향</dt>
-            <dd>{item.direction}</dd>
+            <dt>모델명</dt>
+            <dd>{item.모델명}</dd>
           </dl>
         </li>
         <li className="three-item">
           <dl>
-            <dt>업체명</dt>
-            <dd>{item.company}</dd>
+            <dt>거래처명</dt>
+            <dd>{item.거래처명}</dd>
           </dl>
           <dl>
-            <dt>센터명</dt>
-            <dd>{item.center}</dd>
+            <dt>현장명</dt>
+            <dd>{item.현장명}</dd>
+          </dl>
+        </li>
+        <li className="three-item">
+          <dl>
+            <dt className="justify">품  명</dt>
+            <dd>{item.품명}</dd>
           </dl>
           <dl>
-            <dt>담당자</dt>
-            <dd>{item.manager}</dd>
+            <dt className="justify">규  격</dt>
+            <dd>{item.규격}</dd>
+          </dl>
+          <dl>
+            <dt className="justify">수  량</dt>
+            <dd>{item.수량}</dd>
           </dl>
         </li>
         <li>
           <dl>
-            <dt className="justify">현 장 명</dt>
-            <dd>{item.site}</dd>
+            <dt className="justify">단 가</dt>
+            <dd>{item.단가}</dd>
+          </dl>
+          <dl>
+            <dt className="justify">금 액</dt>
+            <dd>{item.금액}</dd>
+          </dl>
+          <dl>
+            <dt className="justify">유 무 상<br/>구 분</dt>
+            <dd>{item.유무상구분}</dd>
           </dl>
         </li>
         <li>
           <dl>
-            <dt>주 소</dt>
-            <dd>{item.siteAddress}</dd>
+            <dt>비 고</dt>
+            <dd>{item.비고}</dd>
           </dl>
         </li>
       </ul>
