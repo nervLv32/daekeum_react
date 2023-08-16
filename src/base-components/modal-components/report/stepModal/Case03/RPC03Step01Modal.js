@@ -154,32 +154,6 @@ const RPC03Step01Modal = () => {
   const { openModal, closeModal } = useModal();
   const {auth} = useRecoilValue(userAtom)
   const [body, setBody] = useRecoilState(exportDocumentBody);
-  const [clientCurrent, setClientCurrent] = useState({
-    거래처코드: '',
-    업체명: '',
-    현장코드: '',
-    현장명: null,
-    고객분류: [],
-    지역분류: '',
-    미수총계: 0,
-    현장미수: 0,
-    최종거래일: '',
-    등급: null,
-    접점: '',
-  });
-  const [clientDetail, setClientDetail] = useState([
-    {
-      구분: '',
-      회사코드: 0,
-      거래처코드: 0,
-      현장코드: null,
-      전화번호1: 0,
-      담당자: null,
-      직위: null,
-      휴대전화: null,
-      주소: null
-    }
-  ]);
   const [infoType, setInfoType] = useState('현장')
   const exportDoc = useRecoilValue(firstExportDocument);
 
@@ -204,9 +178,9 @@ const RPC03Step01Modal = () => {
         거래처현황: {
           ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})).data[0]
         },
-        거래처세부: {
+        거래처세부: [
           ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.client.거래처코드, 현장코드: exportDoc.site.현장코드})).data
-        }
+        ]
       })
     }
 
@@ -236,19 +210,19 @@ const RPC03Step01Modal = () => {
           <li>
             <dl>
               <dt>거래처명</dt>
-              <dd>{clientCurrent.업체명 || ''}</dd>
+              <dd>{body.거래처현황.업체명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장명</dt>
-              <dd>{clientCurrent.현장명 || ''}</dd>
+              <dd>{body.거래처현황.현장명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>고객분류</dt>
-              <dd>{(clientCurrent.고객분류 || []).map((it, key) => `${key !== 0 && it ? ' / ' : ''}${it ? it : ''}`)}</dd>
+              <dd>{(body.거래처현황.고객분류 || []).map((it, key) => `${key !== 0 && it ? ' / ' : ''}${it ? it : ''}`)}</dd>
             </dl>
           </li>
           <li>
@@ -260,49 +234,55 @@ const RPC03Step01Modal = () => {
           <li>
             <dl>
               <dt>미수총계</dt>
-              <dd>{CommaPrice(clientCurrent.미수총계)}</dd>
+              <dd>{CommaPrice(body.거래처현황.미수총계)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장미수</dt>
-              <dd>{CommaPrice(clientCurrent.현장미수)}</dd>
+              <dd>{CommaPrice(body.거래처현황.현장미수)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>최종거래일</dt>
-              <dd>{DateFormat(new Date(clientCurrent.최종거래일)).substr(0,10)}</dd>
+              <dd>{DateFormat(new Date(body.거래처현황.최종거래일)).substr(0,10)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>접점</dt>
-              <dd>{clientCurrent.접점}</dd>
+              <dd>{body.거래처현황.접점}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>등급</dt>
-              <dd>{clientCurrent.등급}</dd>
+              <dd>{body.거래처현황.등급}</dd>
             </dl>
           </li>
         </InfoList>
       </CustomerStatusWrap>
 
       <CustomerInfoWrap>
-        <div className="title-wrap">
-          <h6 className="title-text">거래처 세부정보</h6>
-          <div className='btn-wrap'>
-            {
-              clientDetail.map((it, key) => {
-                return <button key={key} className={infoType === it.구분 ? 'active' : ''} onClick={() => setInfoType(it.구분)}> {it.구분} </button>
-              })
-            }
-          </div>
-        </div>
+        {console.log(body)}
         {
-          clientDetail[0].구분 !== '' && <ClientDetail item={clientDetail.filter(it => it.구분 === infoType)[0]} />
+          body.거래처현황.거래처코드 ?
+            <>
+              <div className="title-wrap">
+                <h6 className="title-text">거래처 세부정보</h6>
+                <div className='btn-wrap'>
+                  {
+                    body.거래처세부.map((it, key) => {
+                      return <button key={key} className={infoType === it.구분 ? 'active' : ''} onClick={() => setInfoType(it.구분)}> {it.구분} </button>
+                    })
+                  }
+                </div>
+              </div>
+              {
+                body.거래처세부[0].구분 !== '' && <ClientDetail item={body.거래처세부.filter(it => it.구분 === infoType)[0]} />
+              }
+              </>:123
         }
       </CustomerInfoWrap>
       <ModalBtm>
