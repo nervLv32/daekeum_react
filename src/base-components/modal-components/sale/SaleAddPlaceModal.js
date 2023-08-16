@@ -8,6 +8,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import fetchService from '../../../util/fetchService'
 import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
+import CheckValidate from '../../../util/checkValidate'
 const SaleAddPlaceModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -222,37 +223,41 @@ const SaleAddPlaceModal = ({item}) => {
     let url = '/enroll/siteAdd'
     if(현장코드) url = '/enroll/siteUpdate'
 
-    return axios(
-      process.env.REACT_APP_API_URL + url,
-      {
-        method: 'post',
-        data: {
-          ...siteDetail,
-          EmpNo: 1111,
-          EmpNm: '강민아'
+    if(CheckValidate(siteDetail)){
+      return axios(
+        process.env.REACT_APP_API_URL + url,
+        {
+          method: 'post',
+          data: {
+            ...siteDetail,
+            EmpNo: 1111,
+            EmpNm: '강민아'
+          }
+          // ,headers: {
+          //   'authorization': `${auth.auth.token}`
+          // }
         }
-        // ,headers: {
-        //   'authorization': `${auth.auth.token}`
-        // }
-      }
-    ).then(
-      res => {
-        console.log(res)
-        const { data } = res.data
+      ).then(
+        res => {
+          console.log(res)
+          const { data } = res.data
 
-        if(!현장코드){
-          setSiteList((oldSiteList) => [
-            data[0],
-            ...oldSiteList.slice(0,oldSiteList.length-1)
-          ])
+          if(!현장코드){
+            setSiteList((oldSiteList) => [
+              data[0],
+              ...oldSiteList.slice(0,oldSiteList.length-1)
+            ])
+          }
+          closeModal()
+        },
+        error => {
+          // todo 어떻게 처리 ?
+          console.log(error)
         }
-        closeModal()
-      },
-      error => {
-        // todo 어떻게 처리 ?
-        console.log(error)
-      }
-    )
+      )
+    }else{
+      alert("비어있는 항목이 존재합니다.")
+    }
 
   }
 
@@ -270,19 +275,36 @@ const SaleAddPlaceModal = ({item}) => {
     fetchList()
       .then(() => {
         if(현장코드) detail(거래처코드, 현장코드)
-        else {setSiteDetail({ 거래처코드: 거래처코드 })}
+        else {setSiteDetail({ 거래처코드: 거래처코드,
+          현장명: null,
+          담당자: null,
+          직위: null,
+          휴대폰: null,
+          이메일: null,
+          전화번호: null,
+          팩스번호: null,
+          주소: null,
+          종료예정일: null,
+          설치예정일: null,
+          접속시알림: null,
+          고객분류: null,
+          지역분류: null,
+          현장분류: null,
+          고객접점: null,
+          담당부서명: null,
+        })}
       })
   }, [])
 
   return (
     <SaleAddPlaceModalWrap>
       <div className="modal-top">
-        <h6 className="title">{item ? '현장수정' : '신규현장등록'}</h6>
+        <h6 className="title">{현장코드 ? '현장수정' : '신규현장등록'}</h6>
       </div>
       <div className="modal-body">
         <InputList>
           {
-            item ? <li className="full required">
+            현장코드 ? <li className="full required">
               <p>현장코드</p>
               <input type="text"  readOnly  value={siteDetail.현장코드} />
             </li> : null

@@ -8,6 +8,7 @@ import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import fetchService from '../../../util/fetchService'
 import OptionSelectedMemo from '../../../components/optionSelector/OptionSelectorMemo'
+import CheckValidate from '../../../util/checkValidate'
 
 const SaleAddNewModalWrap = styled.div`
   max-height: 70vh;
@@ -218,41 +219,33 @@ const SaleAddNewModal = ({item}) => {
     let url = '/enroll/clientAdd'
     if(거래처코드) url = '/sales/clientUpdate'
 
-    return axios(
-      process.env.REACT_APP_API_URL + url,
-      {
-        method: 'post',
-        data: companyDetail
-        // ,headers: {
-        //   'authorization': `${auth.auth.token}`
-        // }
-      }
-    ).then(
-      res => {
-        const { data } = res.data
-
-        /*
-        if(!거래처코드){
-          setCompanyList((oldCompanyList) => [
-            data[0],
-            ...oldCompanyList.slice(0,oldCompanyList.legnth-1)
-          ])
+    console.log(companyDetail)
+    if(CheckValidate(companyDetail)){
+      return axios(
+        process.env.REACT_APP_API_URL + url,
+        {
+          method: 'post',
+          data: companyDetail
         }
-        */
-        setSalesState(oldData => {
-          return {
-            ...oldData,
-            company: 1
-          }
-        })
-        navigate('/sale')
+      ).then(
+        res => {
+          const { data } = res.data
+          setSalesState(oldData => {
+            return {
+              ...oldData,
+              company: 1
+            }
+          })
+          navigate('/sale')
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    }else{
+      alert('비어있는 항목이 존재합니다.')
+    }
 
-
-      },
-      error => {
-        console.log(error)
-      }
-    )
   }
 
   useEffect(() => {
@@ -266,7 +259,21 @@ const SaleAddNewModal = ({item}) => {
     fetchList()
       .then(() => {
         if(거래처코드) detail(거래처코드)
-        else setCompanyDetail({})
+        else setCompanyDetail({업체명: null,
+          대표자성명: null,
+          업태: null,
+          종목: null,
+          사업자번호: null,
+          부서: null,
+          담당자: null,
+          직위: null,
+          휴대폰: null,
+          이메일: null,
+          전화번호1: null,
+          팩스번호: null,
+          회사코드: null,
+          고객분류: null,
+          거래처분류: null,})
       })
   }, [])
 

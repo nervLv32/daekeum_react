@@ -39,7 +39,24 @@ export const siteListAtom = atom({
 
 export const siteDetailAtom = atom({
   key: 'siteDetailAtom',
-  default: {},
+  default: {
+    현장명: null,
+    담당자: null,
+    직위: null,
+    휴대폰: null,
+    이메일: null,
+    전화번호: null,
+    팩스번호: null,
+    주소: null,
+    종료예정일: null,
+    설치예정일: null,
+    접속시알림: null,
+    고객분류: null,
+    지역분류: null,
+    현장분류: null,
+    고객접점: null,
+    담당부서명: null,
+  },
 })
 
 export const visitListAtom = atom({
