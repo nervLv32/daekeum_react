@@ -3,7 +3,7 @@ import styled from "styled-components";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import RPStepDeps from "../../../../../components/report/RPStepDeps";
 import { useModal } from "../../../../../hooks/useModal";
-import RPCase0402Modal from "../../documentModal/Case04/RPCase0402Modal"
+import RPCase0403Modal from "../../documentModal/Case04/RPCase0403Modal"
 import RPC04Step02Modal from "./RPC04Step02Modal";
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {approvalSuliReq, exportDocumentBody, firstExportDocument} from '../../../../../recoil/reportAtom'
@@ -206,15 +206,18 @@ const RPC04Step01Modal = () => {
           usergwid: auth.usergwid
         },
         거래처현황: {
-          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: equip[0].거래처코드, 현장코드: equip[0].현장코드})).data[0]
+          ...(await fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data[0]
         },
         거래처세부: {
-          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: equip[0].거래처코드, 현장코드: equip[0].현장코드})).data
+          ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
         }
       })
     }
 
     fetchData().then(() => {
+      console.log(client)
+      console.log(site)
+      console.log(equip)
       console.log(body)
     })
 
@@ -222,11 +225,11 @@ const RPC04Step01Modal = () => {
 
 
   useEffect(() => {
-    fetchService('/approval/clientCurrent', 'post', {거래처코드: exportDoc.equip[0].거래처코드, 현장코드: exportDoc.equip[0].현장코드})
+    fetchService('/approval/clientCurrent', 'post', {거래처코드: client.거래처코드, 현장코드: site.현장코드})
       .then((res) => {
         setClientCurrent(res.data[0]);
       });
-    fetchService('/approval/clientDetail', 'post',  {거래처코드: exportDoc.equip[0].거래처코드, 현장코드: exportDoc.equip[0].현장코드})
+    fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})
       .then((res)=>{
         setClientDetail(res.data);
       })
@@ -325,7 +328,7 @@ const RPC04Step01Modal = () => {
       <ModalBtm>
         <button className="del-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <RPCase0402Modal /> })
+        openModal({ ...modalData, content: <RPCase0403Modal /> })
       }}>이전</button>
         <button className="primary-btn" onClick={() => {
         closeModal()

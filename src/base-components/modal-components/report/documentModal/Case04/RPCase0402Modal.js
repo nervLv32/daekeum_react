@@ -1,130 +1,116 @@
-import React, {useEffect, useRef, useState} from 'react'
-import styled from 'styled-components'
-import RPModalBody from '../../../../../components/report/RPModalBody'
-import RPModalBottom from '../../../../../components/report/RPModalListBottom'
-import RPModalListItem from '../../../../../components/report/RPModalListItem'
-import RPModalListTop from '../../../../../components/report/RPModalListTop'
-import RPModalSearch from '../../../../../components/report/RPModalSearch'
-import RPModalTop from '../../../../../components/report/RPModalTop'
-import {useModal} from '../../../../../hooks/useModal'
+import React, { useState, useEffect, useRef } from "react"
+import styled from "styled-components";
+import RPModalBody from "../../../../../components/report/RPModalBody";
+import RPModalBottom from "../../../../../components/report/RPModalListBottom";
+import RPModalListItem from "../../../../../components/report/RPModalListItem";
+import RPModalListTop from "../../../../../components/report/RPModalListTop";
+import RPModalSearch from "../../../../../components/report/RPModalSearch";
+import RPModalTop from "../../../../../components/report/RPModalTop";
+import { useModal } from "../../../../../hooks/useModal";
 
+import fetchService from '../../../../../util/fetchService';
+import {useRecoilState} from 'recoil';
+import {firstExportDocument} from '../../../../../recoil/reportAtom';
+import RPCase0403Modal from './RPCase0403Modal'
 import RPCase0401Modal from './RPCase0401Modal'
-import RPC04Step01Modal from '../../stepModal/Case04/RPC04Step01Modal'
-import fetchService from '../../../../../util/fetchService'
-import {useRecoilState} from 'recoil'
-import {firstExportDocument} from '../../../../../recoil/reportAtom'
 
 
-const RPCase0402ModalWrap = styled.div`
+const RPCase0302ModalWrap = styled.div`
   background-color: #fff;
   border-radius: 20px 20px 0 0;
 `
-const RPCase0402Modal = () => {
 
-  const {openModal, closeModal} = useModal()
+const RPCase0302Modal = () => {
+
+  const { openModal, closeModal } = useModal();
   const [firstExport, setFirstExport] = useRecoilState(firstExportDocument)
 
   const modalData = {
     title: 'RPDoc Modal Modal',
     callback: () => alert('Modal Callback()'),
-  }
+  };
 
-
-  const observeTargetRef = useRef(null)
-  const [isLoading, setLoading] = useState(false)
-  const [sites, setSites] = useState([])
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
+  const [sites, setSites] = useState([]);
   const [params, setParams] = useState({
-    거래처코드: firstExport.client.거래처코드,
-    입출고 : firstExport.title === '수리기입고요청서' ? '입고' : '출고'
-  })
+    searchword: '',
+    currentPage: '1',
+    pageSize: '10',
+    거래처코드 : firstExport.client.거래처코드
+  });
 
   const changeParam = (key, value) => {
-    let copy = {...firstExport}
-    if (!key) {
-      copy = {...copy, equip: [...copy.equip, value]}
-    } else {
-      copy = {...copy, equip: copy.equip.filter(it => it !== value)}
-    }
-    setFirstExport(copy)
-  }
+    setParams({
+      ...params,
+      currentPage: '1',
+      [key] : value
+    })
+  };
 
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
-      setLoading(true)
+      setLoading(true);
       setParams({
         ...params,
         currentPage: parseInt(params.currentPage) + 1,
-      })
+      });
     }
-  })
+  });
 
   const fetchList = (list) => {
-    fetchService('/approval/suliRequestDetails', 'post', params)
+    fetchService('/approval/siteList', 'post', params)
       .then((res) => {
-        const data = [...list, ...res.data]
-        setSites(data)
+        const data = [...list, ...res.data];
+        setSites(data);
         if (res.data.length > 9) {
           setTimeout(() => {
-            setLoading(false)
-          }, 1000)
+            setLoading(false);
+          }, 1000);
         }
-      })
-  }
-
-  const checkValidation = () => {
-    /*Object.entries(firstExport.equip).forEach(([key,value]) => {
-      if(key !== '특기사항' && (!value || value !== '' || value !== null)) flag = true
-    })*/
-    return firstExport.equip.length > 0
-  }
+      });
+  };
 
   useEffect(() => {
-    if (parseInt(params.currentPage) > 1) {
-      fetchList(sites)
+    if(parseInt(params.currentPage) > 1) {
+      fetchList(sites);
     }
   }, [params.currentPage])
 
   useEffect(() => {
-    fetchList([])
+    fetchList([]);
     setLoading(true)
   }, [params.searchword])
 
   useEffect(() => {
-    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
-    return () => onIntersect.disconnect()
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
   }, [isLoading])
 
-  /******* 입출고 서류상신 - 수리기입고요청서 04의 두 번째 스텝 *******/
-  return <RPCase0402ModalWrap>
+  /******* 입출고 서류상신 - 입고요청서 case 03의 두 번째 스텝 *******/
+  return <RPCase0302ModalWrap>
     <RPModalTop title={firstExport.title} />
-    <RPModalSearch dep1={firstExport.client.업체명} dep2={null} dep3={null} changeParam={changeParam}/>
+    <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" changeParam={changeParam} />
     <RPModalBody>
-      <RPModalListTop type='type04' dep1='구분' dep2='DKNO' dep3='MCNO' dep4='기종' dep5='전압' dep6='방향'/>
+      <RPModalListTop type="type02" dep1="현장명" dep2="지역분류" dep3="담당센터" />
       {
-        sites.map((item, idx) => {
-          return <RPModalListItem item={item} key={idx} type='type04' changeParam={changeParam}/>
+        sites?.length > 0 && sites.map((item, idx) => {
+          return <RPModalListItem item={item} key={idx} type="type02" />
         })
       }
       <div ref={observeTargetRef}/>
-
     </RPModalBody>
     <RPModalBottom>
-      <button className='primary-btn' onClick={() => {
-        if (checkValidation()) {
-          closeModal()
-          openModal({...modalData, content: <RPC04Step01Modal/>})
-        } else {
-          alert('아이템이 선택되지 않았습니다.')
-        }
-      }}>확인
-      </button>
-      <button className='del-btn' onClick={() => {
+      <button className="primary-btn" onClick={() => {
         closeModal()
-        openModal({...modalData, content: <RPCase0401Modal/>})
-      }}>취소
-      </button>
+        openModal({ ...modalData, content: <RPCase0403Modal /> })
+      }}>장비검색</button>
+      <button className="del-btn" onClick={() => {
+        closeModal()
+        openModal({ ...modalData, content: <RPCase0401Modal />})
+      }}>취소</button>
     </RPModalBottom>
-  </RPCase0402ModalWrap>
+  </RPCase0302ModalWrap>
 }
 
-export default RPCase0402Modal
+export default RPCase0302Modal;

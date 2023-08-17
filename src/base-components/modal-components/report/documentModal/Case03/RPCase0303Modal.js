@@ -15,7 +15,7 @@ import fetchService from '../../../../../util/fetchService';
 import {useRecoilState} from 'recoil';
 import {firstExportDocument} from '../../../../../recoil/reportAtom';
 import RPC04Step01Modal from '../../stepModal/Case04/RPC04Step01Modal'
-import RPCase0402Modal from '../Case04/RPCase0402Modal'
+import RPCase0403Modal from '../Case04/RPCase0403Modal'
 
 
 const RPCase0303ModalWrap = styled.div`
@@ -135,7 +135,7 @@ const RPCase0303Modal = () => {
       }}>확인</button>
       <button className="del-btn" onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: firstExport.title === '입고요청서' ? <RPCase0302Modal /> : <RPCase0402Modal />})
+        openModal({ ...modalData, content: firstExport.title === '입고요청서' ? <RPCase0302Modal /> : <RPCase0403Modal />})
       }}>취소</button>
     </RPModalBottom>
   </RPCase0303ModalWrap>

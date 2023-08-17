@@ -8,10 +8,11 @@ import RPModalSearch from "../../../../../components/report/RPModalSearch";
 import RPModalTop from "../../../../../components/report/RPModalTop";
 import { useModal } from "../../../../../hooks/useModal";
 
-import RPCase0402Modal from "./RPCase0402Modal";
+import RPCase0403Modal from "./RPCase0403Modal";
 import fetchService from '../../../../../util/fetchService'
 import {useRecoilValue} from 'recoil'
 import {firstExportDocument} from '../../../../../recoil/reportAtom'
+import RPCase0402Modal from './RPCase0402Modal'
 
 
 const RPCase0401ModalWrap = styled.div`
@@ -37,7 +38,7 @@ const RPCase0401Modal = () => {
   ]
 
   const modalData = {
-    title: 'RPCase0402Modal',
+    title: 'RPCase0403Modal',
     callback: () => alert('Modal Callback()'),
   };
 
