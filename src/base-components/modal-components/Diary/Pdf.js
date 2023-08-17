@@ -11,9 +11,11 @@ import fetchService from '../../../util/fetchService'
 import { CommaPrice } from '../../../util/commaPrice'
 
 const PdfWrap = styled.div`
+  position: fixed;
+  bottom: 100vh;
   width: 100%;
   height: auto;
-  max-width: 800px;
+  max-width: 1000px;
   background-color: #fff;
   font-family: 'SpoqaHanSans', sans-serif;
 
@@ -353,6 +355,9 @@ const Pdf = () => {
       // closeModal()
       // window.open(blobUrl)
       sendEmail(blobPDF)
+        .then(() => {
+          window.location.reload()
+        })
     })
   }
 

@@ -8,6 +8,7 @@ import ConfirmAlert from '../ConfirmAlert'
 import {useModal} from '../../../hooks/useModal'
 import NewRegisModal from '../../../components/global/NewRegisModal'
 import moment from 'moment'
+import DStep01Modal from '../Diary/DStep01Modal'
 
 const ReceiptListModalWrap = styled.div`
   background-color: #fff;
@@ -349,19 +350,20 @@ const ReceiptListModal = ({ item }) => {
           {
             changeStateWrap && (<ul className="btn-state-wrap">
               <li>
-                <button className="add" onClick={() => updateState('접수완료')}>
-                  <i></i>
-                  <span>접수완료</span>
-                </button>
-              </li>
-              <li>
-                <button className="ready"  onClick={() => updateState('접수대기')}>
+                <button className="ready" onClick={() => updateState('접수대기')}>
                   <i></i>
                   <span>접수대기</span>
                 </button>
               </li>
               <li>
-                <button className="done" onClick={() => updateState('처리완료')}>
+                <button className="add"  onClick={() => openModal({ ...modalData, content: <NewRegisModal item={{no: item.no}} confirm={true}/> })
+                }>
+                  <i></i>
+                  <span>접수완료</span>
+                </button>
+              </li>
+              <li>
+                <button className="done" onClick={() => openModal({ ...modalData, content: <DStep01Modal /> })}>
                   <i></i>
                   <span>처리완료</span>
                 </button>

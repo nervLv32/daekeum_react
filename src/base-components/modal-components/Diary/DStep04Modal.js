@@ -13,6 +13,7 @@ import { CommaPrice } from "../../../util/commaPrice";
 import moment from "moment";
 import SingleDate from "../../../components/calander/SingleDate";
 import Pdf from "../../../base-components/modal-components/Diary/Pdf";
+import {updateReceiptState} from '../../../util/updateReceiptState'
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -441,17 +442,21 @@ const DStep04Modal = () => {
   const submit = () => {
     fetchService('/enroll/saveToDaily', 'post', params)
     .then((res) => {
-      console.log(res)
-      setJournal({
-        ...journal,
-        diaryCode: res.data.diaryCode
-      })
-      openModal({ ...modalData, content: <Pdf /> })
+      if(res.data.diaryCode){
+        console.log(journal)
+        setJournal({
+          ...journal,
+          diaryCode: res.data.diaryCode
+        })
+        updateReceiptState(journal.accountCode, '처리완료')
+          .then(() => openModal({ ...modalData, content: <Pdf /> }))
+      }
     })
   };
-  console.log(journal)
+  // console.log(journal)
 
   useEffect(() => {
+    console.log(journal)
     const processedData = processEmptyStrings({
       ...params,
       ...journal.step01,

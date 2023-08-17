@@ -8,6 +8,7 @@ import SearchModal from '../searchModal/index'
 import {useRecoilState} from "recoil";
 import {newReceiptAtom} from "../../recoil/receipt";
 import receipt from '../../pages/Receipt'
+import {updateReceiptState} from '../../util/updateReceiptState'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -180,8 +181,8 @@ const NewRegisModal = ({item, confirm}) => {
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
     fetchService(url, 'post', newReceipt)
-      .then((res) => {
-        console.log(res)
+      .then(async (res) => {
+        if(item) await updateReceiptState(item.no, '접수완료')
         window.location.reload()
       })
   }
