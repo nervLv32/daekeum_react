@@ -1,6 +1,8 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, {useEffect} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { salesStateRecoil } from "../../recoil/salesAtom";
 
 const SaleTapWrapComponent = styled.div`
   height: 30px;
@@ -56,6 +58,16 @@ const SaleTapWrapComponent = styled.div`
 `
 
 const SaleTapWrap = ({ title }) => {
+
+  const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if(salesState.거래처코드 === '' && salesState.현장코드 === '') {
+      navigate('/sale')
+    }
+  }, [])
+
   return (
     <SaleTapWrapComponent>
       <ul className="top-tab-wrap">
@@ -65,12 +77,12 @@ const SaleTapWrap = ({ title }) => {
           </NavLink>
         </li>
         <li className={title === "현장정보" ? "active" : null}>
-          <NavLink to="/sale/site">
+          <NavLink to={salesState.거래처코드 !== "" ? "/sale/site" : "/sale"}>
             현장정보
           </NavLink>
         </li>
         <li className={title === "방문이력" ? "active" : null}>
-          <NavLink to="/sale/visit">
+          <NavLink to={salesState.현장코드 !== "" ? "/sale/visit" : salesState.거래처코드 !== "" ? "/sale/site" : "/sale"}>
           방문이력
           </NavLink>
         </li>

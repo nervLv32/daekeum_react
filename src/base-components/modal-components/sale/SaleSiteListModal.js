@@ -5,7 +5,7 @@ import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
 import SaleAddPlaceModal from "./SaleAddPlaceModal";
 import { useRecoilState } from "recoil";
-import { siteDetailAtom  } from "../../../recoil/salesAtom"
+import { siteDetailAtom, salesStateRecoil } from "../../../recoil/salesAtom"
 import axios from 'axios'
 
 const SaleSiteListModalWrap = styled.div`
@@ -230,6 +230,8 @@ const SaleSiteListModal = ({ item }) => {
     detail(거래처코드 , 현장코드)
   }, [])
 
+  const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
+
 
   return (
     <SaleSiteListModalWrap>
@@ -289,12 +291,12 @@ const SaleSiteListModal = ({ item }) => {
       <div className="modal-btm">
         <button className="primary-btn" onClick={() => {
           closeModal();
-          navigate('/sale/visit',{
-            state: {
-              현장코드 : item.현장코드,
-              현장명: item.현장명
-            }
+          setSalesState({
+            ...salesState,
+            현장코드 : item.현장코드,
+            현장명: item.현장명
           })
+          navigate('/sale/visit')
           }}>방문이력조회</button>
         <button className="primary-btn" onClick={() => {
           closeModal()

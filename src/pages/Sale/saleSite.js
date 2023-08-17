@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useLocation  } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
 import SaleSiteListModal from "../../base-components/modal-components/sale/SaleSiteListModal";
 import Floating from "../../components/molecules/Floating";
 import RegisTabNavi from "../../components/regis/RegisTabNavi";
-import SaleInfoList from "../../components/sale/SaleInfoList";
 import SaleSiteList from "../../components/sale/SaleSiteList";
 import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
 import { useRecoilState } from "recoil";
-import { companyAtom, siteListAtom, keywordAtom, pagingAtom, salesStateAtom, siteDetailAtom } from "../../recoil/salesAtom"
+import { companyAtom, siteListAtom, keywordAtom, siteDetailAtom, SitePagingRecoil, salesStateRecoil } from "../../recoil/salesAtom"
 import axios from 'axios';
 import SaleAddPlaceModal from '../../base-components/modal-components/sale/SaleAddPlaceModal'
+import fetchService from "../../util/fetchService";
+
+
 const SaleWrap = styled.div`
   
 `
@@ -92,16 +93,15 @@ const FloatingWrap = styled.div`
 
 const SaleSite = () => {
 
-  const location = useLocation();
-  const 거래처코드 = location.state?.거래처코드
-  const 업체명 = location.state?.업체명
-
   const [siteList, setSiteList] = useRecoilState(siteListAtom)
   const [company, setCompany] = useRecoilState(companyAtom)
   const [keyword, setKeyword] = useRecoilState(keywordAtom)
-  const [paging, setPaging] = useRecoilState(pagingAtom)
-  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+  const [paging, setPaging] = useRecoilState(SitePagingRecoil)
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
+  const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
+
+  const 거래처코드 = salesState.거래처코드
+  const 업체명 = salesState.업체명
 
   const { openModal, closeModal } = useModal();
   const modalData = {
@@ -110,68 +110,66 @@ const SaleSite = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const search = () => {
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
 
-    return axios(
-      process.env.REACT_APP_API_URL + '/sales/siteList',
-      {
-        method: 'post',
-        data: {
-          searchword: keyword.site,
-          pageSize: paging.size,
-          currentPage: paging.currentPage,
-          거래처코드 : 거래처코드 || company.거래처코드
-        }
-        // ,headers: {
-        //   'authorization': `${auth.auth.token}`
-        // }
-      }
-    ).then(
-      res => {
-        const { data } = res.data
-
-        setSiteList(oldData => [
-          ...data
-        ])
-      },
-      error => {
-        console.log(error)
-      }
-    )
-  }
-
-  const setValue = e =>{
-    let val = e.target.value
-
-    setKeyword(oldData =>{
-      return {
-        ...oldData,
-        site : val
-      }
+  const fetchList = (list) => {
+    fetchService('/sales/siteList', 'post', {
+      ...paging,
+      거래처코드 : 거래처코드 || company.거래처코드
     })
-  }
+      .then((res) => {
+        const data = [...list, ...res.data];
+        setSiteList(data);
+        if (res.data.length > 9) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
+        }
+      });
+  };
+
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true);
+      setPaging({
+        ...paging,
+        currentPage: parseInt(paging.currentPage) + 1,
+      });
+      fetchList(siteList);
+    }
+  });
+
+  useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
+  }, [isLoading]);
+
+  const handleChange = (e) => {
+    setPaging({
+      ...paging,
+      searchword: e.target.value,
+      currentPage: '1',
+    });
+  };
 
   useEffect(() => {
     if(거래처코드) setCompany({
       거래처코드: 거래처코드,
       업체명: 업체명
     })
-    search()
-    setSalesState(oldData =>{
-      return {
-        ...oldData,
-        site: 0
-      }
-    })
-  }, [salesState.site])
+  }, [])
 
   return <SaleWrap>
     <SaleTapWrap title="현장정보" />
     <SaleTabSearch>
       <RegisTabNavi dep1={company.업체명} dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" value={keyword.site} onChange={setValue}/>
-        <button className="search-btn" onClick={search}/>
+        <input type="text" placeholder="Search" value={paging.searchword} onChange={e => handleChange(e)}/>
+        <button className="search-btn" onClick={() => {
+          fetchList([])
+          setLoading(true)
+        }}/>
       </div>
     </SaleTabSearch>
 
@@ -191,6 +189,7 @@ const SaleSite = () => {
         }
       </SaleInfoListWrap>
     </CompanyInfoWrap>
+    <div ref={observeTargetRef}/>
 
     <FloatingWrap>
       <Floating onClick={() => {

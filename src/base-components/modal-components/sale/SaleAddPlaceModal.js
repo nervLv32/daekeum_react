@@ -12,6 +12,7 @@ import CheckValidate from '../../../util/checkValidate'
 import userAtom from "../../../recoil/userAtom";
 import SingleDate from "../../../components/calander/SingleDate";
 import moment from "moment";
+import { Calendar } from "../../../assets/icon/Svg";
 const SaleAddPlaceModalWrap = styled.div`
   max-height: 70vh;
   overflow-y: scroll;
@@ -90,7 +91,9 @@ const InputList = styled.ul`
       }
     }
     span {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
       box-sizing: border-box;
       border: 1px solid #8885CB;
@@ -99,7 +102,19 @@ const InputList = styled.ul`
       height: 35px;
       border-radius: 10px;
       font-family: var(--font-mont);
-      color: #1c1b1f;
+      font-family: var(--font-mont);
+      font-size: 1.3rem;
+      color: #9DA2AE;
+      &.full {
+        color: #1c1b1f;
+      }
+      svg {
+        fill: #555555;
+        width: 1.5rem;
+        height: 1.5rem;
+        align-self: center;
+        margin-left: .5rem;
+      }
     }
     select{
       width: 100%;
@@ -389,11 +404,21 @@ const SaleAddPlaceModal = ({item}) => {
             </li>
             <li>
               <p>종료예정일</p>
-              <span onClick={() => handleType("종료예정일")}>{siteDetail.종료예정일 ? siteDetail.종료예정일 : '종료예정일을 선택해주세요'}</span>
+              <span 
+                className={siteDetail.종료예정일 ? "full" : ""}
+                onClick={() => handleType("종료예정일")}
+              > 
+              {siteDetail.종료예정일 ? siteDetail.종료예정일 : '날짜를 선택해주세요'}
+                <Calendar />
+              </span>
             </li>
             <li>
               <p>설치예정일</p>
-              <span onClick={() => handleType("설치예정일")}>{siteDetail.설치예정일 ? siteDetail.설치예정일 : '설치예정일을 선택해주세요'}</span>
+              <span 
+                className={siteDetail.설치예정일 ? "full" : ""}
+                onClick={() => handleType("설치예정일")}
+              >
+                {siteDetail.설치예정일 ? siteDetail.설치예정일 : '날짜를 선택해주세요'}<Calendar /></span>
             </li>
             <li>
               <p>알림</p>
