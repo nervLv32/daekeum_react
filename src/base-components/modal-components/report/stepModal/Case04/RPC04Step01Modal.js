@@ -190,7 +190,6 @@ const RPC04Step01Modal = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  console.log(site)
   useEffect(() => {
 
     const fetchData = async () => {
@@ -215,7 +214,9 @@ const RPC04Step01Modal = () => {
       })
     }
 
-    fetchData()
+    fetchData().then(() => {
+      console.log(body)
+    })
 
   }, [])
 
@@ -252,19 +253,19 @@ const RPC04Step01Modal = () => {
           <li>
             <dl>
               <dt>거래처명</dt>
-              <dd>{clientCurrent.업체명 || ''}</dd>
+              <dd>{clientCurrent?.업체명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장명</dt>
-              <dd>{clientCurrent.현장명 || ''}</dd>
+              <dd>{clientCurrent?.현장명 || ''}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>고객분류</dt>
-              <dd>{(clientCurrent.고객분류 || []).map((it, key) => `${key !== 0 && it ? ' / ' : ''}${it ? it : ''}`)}</dd>
+              <dd>{(clientCurrent?.고객분류 || []).map((it, key) => `${key !== 0 && it ? ' / ' : ''}${it ? it : ''}`)}</dd>
             </dl>
           </li>
           <li>
@@ -276,31 +277,31 @@ const RPC04Step01Modal = () => {
           <li>
             <dl>
               <dt>미수총계</dt>
-              <dd>{CommaPrice(clientCurrent.미수총계)}</dd>
+              <dd>{CommaPrice(clientCurrent?.미수총계)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>현장미수</dt>
-              <dd>{CommaPrice(clientCurrent.현장미수)}</dd>
+              <dd>{CommaPrice(clientCurrent?.현장미수)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>최종거래일</dt>
-              <dd>{DateFormat(new Date(clientCurrent.최종거래일)).substr(0,10)}</dd>
+              <dd>{DateFormat(new Date(clientCurrent?.최종거래일)).substr(0,10)}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>접점</dt>
-              <dd>{clientCurrent.접점}</dd>
+              <dd>{clientCurrent?.접점}</dd>
             </dl>
           </li>
           <li>
             <dl>
               <dt>등급</dt>
-              <dd>{clientCurrent.등급}</dd>
+              <dd>{clientCurrent?.등급}</dd>
             </dl>
           </li>
         </InfoList>

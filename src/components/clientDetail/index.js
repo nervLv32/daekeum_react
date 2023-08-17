@@ -31,37 +31,42 @@ const InfoList = styled.ul`
 `;
 
 const Index = ({item}) => {
+
   return<InfoList>
-    <li>
-      <dl>
-        <dt>전화번호</dt>
-        <dd>{item.전화번호1}</dd>
-      </dl>
-    </li>
-    <li>
-      <dl>
-        <dt>담당자</dt>
-        <dd>{item.담당자}</dd>
-      </dl>
-    </li>
-    <li>
-      <dl>
-        <dt>직위</dt>
-        <dd>{item.직위}</dd>
-      </dl>
-    </li>
-    <li>
-      <dl>
-        <dt>휴대전화</dt>
-        <dd>{item.휴대전화}</dd>
-      </dl>
-    </li>
-    <li>
-      <dl>
-        <dt>주소</dt>
-        <dd>{item.주소}</dd>
-      </dl>
-    </li>
+    {
+      item && <>
+        <li>
+          <dl>
+            <dt>전화번호</dt>
+            <dd>{item.전화번호1}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>담당자</dt>
+            <dd>{item.담당자}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>직위</dt>
+            <dd>{item.직위}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>휴대전화</dt>
+            <dd>{item.휴대전화}</dd>
+          </dl>
+        </li>
+        <li>
+          <dl>
+            <dt>주소</dt>
+            <dd>{item.주소}</dd>
+          </dl>
+        </li>
+      </>
+    }
   </InfoList>
 }
 
