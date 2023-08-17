@@ -13,6 +13,7 @@ import TimeSelector from '../../../../../components/timeSelector'
 import RPCMemoInput from '../../../../../components/RPCMemoInput'
 import {useRecoilState} from 'recoil'
 import {exportDocumentBody, firstExportDocuBody} from '../../../../../recoil/reportAtom'
+import moment from 'moment'
 
 const RPC01Step02ModalWrap = styled.div`
   background-color: #fff;
@@ -407,6 +408,29 @@ const RPC01Step02Modal = () => {
     updateBody('금액', '10000')
   }, [body.계약사항.length])
   /***** option 아이템 조회 종료 ****/
+
+  useEffect(() => {
+    if(body.계약사항[selectIndex]['개월'] && body.계약사항[selectIndex]['시작일']){
+      const month = body.계약사항[selectIndex]['개월']
+      const target = new Date(body.계약사항[selectIndex]['시작일'])
+      const end = new Date(body.계약사항[selectIndex]['시작일'])
+
+      let copy = [...body.계약사항]
+      copy[selectIndex] = {
+        ...copy[selectIndex],
+        납품예정일 : target,
+        종료일 : new Date(end.setMonth(end.getMonth() + parseInt(month)))
+      }
+
+      setBody({
+        ...body,
+        계약사항: [...copy]
+      })
+    }
+  }, [
+    body.계약사항[selectIndex]['개월'],
+    body.계약사항[selectIndex]['시작일'],
+  ])
 
   /******* 출고요청서(세륜, 축중) 케이스의 두번째 *******/
   return <RPC01Step02ModalWrap>
