@@ -89,3 +89,40 @@ export const pagingAtom = atom({
     visit: 0,
   },
 })
+
+export const SalePagingRecoil = atom({
+  key: 'SalePagingRecoil',
+  default: {
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  }
+})
+
+export const SitePagingRecoil = atom({
+  key: 'SitePagingRecoil',
+  default: {
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  }
+})
+
+export const VisitPagingRecoil = atom({
+  key: 'VisitPagingRecoil',
+  default: {
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  }
+})
+
+export const salesStateRecoil = atom({
+  key: 'salesStateRecoil',
+  default: {
+    거래처코드 : "",
+    업체명: "",
+    현장코드 : "",
+    현장명: ""
+  },
+})

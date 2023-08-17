@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import SaleListModal from "../../base-components/modal-components/sale/SaleListModal";
 import Floating from "../../components/molecules/Floating";
@@ -9,10 +8,9 @@ import SaleTapWrap from "../../components/sale/SaleTapWrap";
 
 import { useModal } from "../../hooks/useModal";
 import { useRecoilState } from "recoil";
-import { companyListAtom, keywordAtom, pagingAtom, salesStateAtom,companyDetailAtom } from "../../recoil/salesAtom"
-import axios from 'axios';
+import { companyListAtom, companyDetailAtom, SalePagingRecoil } from "../../recoil/salesAtom"
 import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
-import SaleSubmitModal from '../../base-components/modal-components/sale/SaleSubmitModal'
+import fetchService from "../../util/fetchService";
 
 const SaleWrap = styled.div``
 
@@ -92,9 +90,7 @@ const Sale = () => {
 
   const [companyList, setCompanyList] = useRecoilState(companyListAtom);
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom);
-  const [keyword, setKeyword] = useRecoilState(keywordAtom)
-  const [paging, setPaging] = useRecoilState(pagingAtom)
-  const [salesState, setSalesState] = useRecoilState(salesStateAtom)
+  const [paging, setPaging] = useRecoilState(SalePagingRecoil)
 
   const { openModal, closeModal } = useModal();
   const modalData = {
@@ -103,74 +99,56 @@ const Sale = () => {
     callback: () => alert('Modal Callback()'),
   };
 
-  const search = () => {
-    //console.log(  {
-    //   searchword: keyword.company,
-    //   pageSize: paging.size,
-    //   currentPage: paging.company
-    // })
+  const observeTargetRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
 
-    return axios(
-      process.env.REACT_APP_API_URL + '/sales/clientList',
-      {
-        method: 'post',
-        data: {
-          searchword: keyword.company,
-          pageSize: paging.size,
-          currentPage: paging.currentPage
+  const fetchList = (list) => {
+    fetchService('/sales/clientList', 'post', paging)
+      .then((res) => {
+        const data = [...list, ...res.data];
+        setCompanyList(data);
+        if (res.data.length > 9) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
         }
-        // ,headers: {
-        //   'authorization': `${auth.auth.token}`
-        // }
-      }
-    ).then(
-      res => {
-        const { data } = res.data
-        //console.log(data)
+      });
+  };
 
-        setCompanyList(oldData => [
-         ...data
-        ])
-      },
-      error => {
-        console.log(error)
-      }
-    )
-  }
-
-
-  const setValue = e =>{
-    let val = e.target.value
-
-    //console.log('key:',key ,'val:',val)
-    setKeyword(oldData =>{
-      return {
-        ...oldData,
-        company : val
-      }
-    })
-  }
+  const onIntersect = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+      setLoading(true);
+      setPaging({
+        ...paging,
+        currentPage: parseInt(paging.currentPage) + 1,
+      });
+      fetchList(companyList);
+    }
+  });
 
   useEffect(() => {
+    !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
+    return () => onIntersect.disconnect();
+  }, [isLoading]);
 
-    search()
-
-    setSalesState(oldData =>{
-      return {
-        ...oldData,
-        company: 0
-      }
-    })
-
-  }, [salesState.company])
+  const handleChange = (e) => {
+    setPaging({
+      ...paging,
+      searchword: e.target.value,
+      currentPage: '1',
+    });
+  };
 
   return <SaleWrap>
     <SaleTapWrap title="업체정보" />
     <SaleTabSearch>
       <RegisTabNavi dep1="업체명" dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" value={keyword.company} onChange={setValue} />
-        <button className="search-btn" onClick={search} />
+        <input type="text" placeholder="Search" value={paging.searchword} onChange={e => handleChange(e)} />
+        <button className="search-btn" onClick={() => {
+          fetchList([])
+          setLoading(true)
+          }} />
       </div>
     </SaleTabSearch>
 
@@ -190,6 +168,7 @@ const Sale = () => {
         }
       </SaleInfoListWrap>
     </CompanyInfoWrap>
+    <div ref={observeTargetRef}/>
 
     <FloatingWrap>
       <Floating onClick={() =>{

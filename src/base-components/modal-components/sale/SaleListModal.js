@@ -6,6 +6,8 @@ import {useNavigate} from "react-router-dom";
 import SaleAddNewModal from "./SaleAddNewModal";
 import SaleSubmitModal from './SaleSubmitModal'
 import RegisAddNewModal from '../regis/RegisAddNewModal'
+import { useRecoilState } from "recoil";
+import { salesStateRecoil } from "../../../recoil/salesAtom"
 
 const SaleListModalWrap = styled.div`
   background-color: #fff;
@@ -222,7 +224,7 @@ const SaleListModal = ({item}) => {
     callback: () => alert('Modal Callback()'),
   };
 
-
+  const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
 
   return (
     <SaleListModalWrap>
@@ -279,12 +281,12 @@ const SaleListModal = ({item}) => {
       <div className="modal-btm">
         <button className="primary-btn" onClick={() => {
           closeModal();
-          navigate('/sale/site', {
-            state: {
-              거래처코드 : item.거래처코드,
-              업체명: item.업체명
-            }
-          } )
+          setSalesState({
+            ...salesState,
+            거래처코드 : item.거래처코드,
+            업체명: item.업체명
+          })
+          navigate('/sale/site')
         }}>현장조회</button>
         <button className="primary-btn" onClick={() => {
           closeModal()
