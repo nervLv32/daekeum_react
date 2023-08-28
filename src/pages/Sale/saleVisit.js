@@ -141,6 +141,11 @@ const SaleVisit = () => {
 
   useEffect(() => {
     fetchList([])
+    setSalesState({
+      ...salesState,
+      현장코드 : "",
+      현장명: ""
+    })
   },[])
 
   const handleChange = (e) => {

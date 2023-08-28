@@ -95,6 +95,8 @@ const SaleSite = () => {
 
   const [siteList, setSiteList] = useRecoilState(siteListAtom)
   const [company, setCompany] = useRecoilState(companyAtom)
+
+  console.log(company)
   const [keyword, setKeyword] = useRecoilState(keywordAtom)
   const [paging, setPaging] = useRecoilState(SitePagingRecoil)
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)

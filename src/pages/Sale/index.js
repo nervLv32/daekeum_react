@@ -7,8 +7,14 @@ import SaleInfoList from '../../components/sale/SaleInfoList'
 import SaleTapWrap from '../../components/sale/SaleTapWrap'
 
 import {useModal} from '../../hooks/useModal'
-import {useRecoilState} from 'recoil'
-import {companyDetailAtom, companyListAtom, SalePagingRecoil} from '../../recoil/salesAtom'
+import {useRecoilState, useResetRecoilState} from 'recoil'
+import {
+  companyAtom,
+  companyDetailAtom,
+  companyListAtom,
+  SalePagingRecoil,
+  salesStateRecoil,
+} from '../../recoil/salesAtom'
 import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
 import fetchService from '../../util/fetchService'
 
@@ -98,6 +104,8 @@ const Sale = () => {
 
   const [companyList, setCompanyList] = useRecoilState(companyListAtom)
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
+  const resetRecoilState = useResetRecoilState(salesStateRecoil)
+
   const [paging, setPaging] = useRecoilState(SalePagingRecoil)
 
   const {openModal, closeModal} = useModal()
@@ -140,6 +148,7 @@ const Sale = () => {
   }, [isLoading])
 
   useEffect(() => {
+    resetRecoilState()
     fetchList([])
   },[])
 
@@ -150,6 +159,7 @@ const Sale = () => {
       currentPage: '1',
     })
   }
+
 
   return <SaleWrap>
     <SaleTapWrap title='업체정보'/>
