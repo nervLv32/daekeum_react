@@ -94,6 +94,7 @@ const InputList = styled.ul`
       font-family: var(--font-mont);
       font-size: 1.3rem;
       color: #9DA2AE;
+
       &.full {
         color: #1c1b1f;
       }
@@ -107,6 +108,7 @@ const InputList = styled.ul`
         margin-left: .5rem;
       }
     }
+
     input {
       width: 100%;
       box-sizing: border-box;
@@ -121,7 +123,7 @@ const InputList = styled.ul`
       &::placeholder {
         color: #9DA2AE;
       }
-    }
+      
 
     textarea {
       width: 100%;
@@ -140,6 +142,22 @@ const InputList = styled.ul`
       }
     }
   }
+
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #8885CB;
+      background-color: #f6f6f6;
+      padding: 5px 15px;
+      height: 35px;
+      border-radius: 10px;
+      font-family: var(--font-mont);
+      color: #1c1b1f;
+
+      &::placeholder {
+        color: #9DA2AE;
+      }
+    }
 `
 
 const ModalBtm = styled.div`
@@ -204,7 +222,7 @@ const RegisAddPlaceModal = ({item}) => {
     주소: '',
     종료예정일: null,
     설치예정일: null,
-    알림: '',
+    접속시알림: '',
     고객분류: '',
     지역분류: '',
     현장분류: '',
@@ -221,10 +239,22 @@ const RegisAddPlaceModal = ({item}) => {
 
   const submitBody = () => {
     const url = `/enroll/${item ? 'siteUpdate' : 'siteAdd'}`
-    console.log(body)
-    fetchService(url, 'post', body).then(res => {
-      console.log(res.data)
+    let flag = true
+    const empty = []
+    Object.entries(body).map(([key, value]) => {
+      if(!value){
+        flag = false
+        empty.push(key)
+      }
     })
+
+    if(flag){
+      fetchService(url, 'post', body).then(res => {
+        closeModal()
+      })
+    }else{
+      alert(empty.toString() + ' 필드들이 비어있습니다.')
+    }
   }
 
   const [isCalendar, setCalendar] = useState({
@@ -326,24 +356,32 @@ const RegisAddPlaceModal = ({item}) => {
           </li>
           <li>
             <p>종료예정일</p>
-            <div className={body.종료예정일 ? 'full' : ''} onClick={e => setCalendar({flag: true, exit: true, build: false,})}>
-              {body.종료예정일 ? DateFormat(new Date(body.종료예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar />
+            <div className={body.종료예정일 ? 'full' : ''}
+                 onClick={e => setCalendar({flag: true, exit: true, build: false})}>
+              {body.종료예정일 ? DateFormat(new Date(body.종료예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar/>
             </div>
           </li>
           <li>
             <p>설치예정일</p>
-            <div className={body.설치예정일 ? 'full' : ''} onClick={e => setCalendar({flag: true, exit: false, build: true,})}>
-              {body.설치예정일 ? DateFormat(new Date(body.설치예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar />
+            <div className={body.설치예정일 ? 'full' : ''}
+                 onClick={e => setCalendar({flag: true, exit: false, build: true})}>
+              {body.설치예정일 ? DateFormat(new Date(body.설치예정일)).substr(0, 10) : '날짜를 선택해주세요'} <Calendar/>
             </div>
           </li>
           {
-            isCalendar.flag && <SingleDate submit={submit} close={close} type={isCalendar.exit ? '종료예정일' : '설치예정일'} />
+            isCalendar.flag && <SingleDate submit={submit} close={close} type={isCalendar.exit ? '종료예정일' : '설치예정일'}/>
           }
           <li>
             <p>알림</p>
-            <input type='text' placeholder='알림을 입력하세요'
-                   value={body.접속시알림 ? '승인' : '거부'} onChange={(e) => updateBody('접속시알림', e.target.value)}
-            />
+            {/*<input type='text' placeholder='알림을 입력하세요'
+                   value={body.접속시알림 ? '승인' : '거부'}
+                   onChange={(e) => updateBody('접속시알림', e.target.value)}
+            />*/}
+            <select onChange={(e) => updateBody('접속시알림', e.target.value)}>
+              <option value="" disabled>알림을 입력하세요</option>
+              <option value={0}> 거부 </option>
+              <option value={1}> 승인 </option>
+            </select>
           </li>
           <li>
             <p>고객분류</p>
@@ -381,7 +419,6 @@ const RegisAddPlaceModal = ({item}) => {
       <ModalBtm>
         <button className='primary-btn' onClick={() => {
           submitBody()
-          closeModal()
           // openModal({ ...modalData, content: <RPC01Step03Modal /> })
         }}>저장
         </button>
