@@ -5,7 +5,7 @@ import {Calendar} from '../../../assets/icon/Svg'
 import {DateFormat} from '../../../util/dateFormat'
 import fetchService from '../../../util/fetchService'
 import SingleDate from '../../../components/calander/SingleDate'
-import {useRecoilState, useRecoilValue} from 'recoil'
+import {useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil'
 import userAtom from '../../../recoil/userAtom'
 import {itemAndRequestList} from '../../../recoil/inventoryList'
 
@@ -153,6 +153,7 @@ const InventoryRequestModal = ({detail}) => {
   const [options, setOptions] = useState([])
   const [isLoading, setLoading] = useState(false)
   const [list, setList] = useRecoilState(itemAndRequestList)
+  const resetList = useResetRecoilState(itemAndRequestList)
 
   const submit = (key, value) => {
     updateBody(key, value)
@@ -224,6 +225,7 @@ const InventoryRequestModal = ({detail}) => {
       })
   }
   useEffect(() => {
+    resetList()
     fetchService('/inventory/shippingFactorylist', 'post', {})
       .then(res => {
         setOptions(res.data)

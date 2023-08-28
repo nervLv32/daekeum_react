@@ -160,7 +160,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const SaleSubmitModal = ({item}) => {
+const SaleSubmitModal = ({item, setLoading}) => {
   const 거래처코드 = item.거래처코드
   const 방문번호 = item.방문번호
   const 일지번호 = item.일지번호
@@ -271,13 +271,7 @@ const SaleSubmitModal = ({item}) => {
             visit: 1
           }
         })
-
-        navigate('/sale/visit',{
-          state: {
-            현장코드 : data[0].현장코드,
-            현장명: data[0].현장명
-          }
-        })
+        window.location.reload()
 
       },
       error => {
@@ -325,7 +319,7 @@ const SaleSubmitModal = ({item}) => {
       setTypeList(res.data)
     })
   }, [])
-  
+
   // 캘린더
   const [type, setType] = useState("");
   const [isCalendar, setCalendar] = useState(false);

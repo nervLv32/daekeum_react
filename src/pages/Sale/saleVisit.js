@@ -187,7 +187,7 @@ const SaleVisit = () => {
     <FloatingWrap>
       <Floating onClick={() => {
         closeModal()
-        openModal({ ...modalData, content: <SaleSubmitModal item={{거래처코드: company.거래처코드, 현장코드: 현장코드 }} /> })
+        openModal({ ...modalData, content: <SaleSubmitModal item={{거래처코드: company.거래처코드, 현장코드: 현장코드 }} setLoading={setLoading} /> })
       }}>
       <i className="default-icon"></i>
       </Floating>
