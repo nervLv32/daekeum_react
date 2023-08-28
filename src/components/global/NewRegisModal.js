@@ -213,6 +213,10 @@ const NewRegisModal = ({item, confirm}) => {
     }
   }, [])
 
+  useEffect(() => {
+    console.log(newReceipt)
+  }, [newReceipt])
+
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
@@ -248,10 +252,10 @@ const NewRegisModal = ({item, confirm}) => {
             <input
               type="text"
               placeholder="업체명을 입력하세요"
-              value={newReceipt.지역 ? newReceipt.지역 : ''}
+              value={newReceipt.지역분류 ? newReceipt.지역분류 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                지역: e.target.value
+                지역분류: e.target.value
               })}
             />
           </li>
@@ -260,10 +264,10 @@ const NewRegisModal = ({item, confirm}) => {
             <input
               type="text"
               placeholder="주소를 입력하세요"
-              value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
+              value={newReceipt.주소 ? newReceipt.주소 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                현장주소: e.target.value
+                주소: e.target.value
               })}/>
           </li>
           <li>
@@ -281,10 +285,10 @@ const NewRegisModal = ({item, confirm}) => {
           <li>
             <p>현장연락처</p>
             <input type="text" placeholder="현장연락처를 입력하세요"
-                   value={newReceipt.연락처 ? newReceipt.연락처 : ''}
+                   value={newReceipt.휴대폰 ? newReceipt.휴대폰 : ''}
                    onChange={e => setNewReceipt({
                      ...newReceipt,
-                     연락처: e.target.value
+                     휴대폰: e.target.value
                    })}
             />
           </li>
