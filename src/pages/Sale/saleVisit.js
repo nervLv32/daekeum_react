@@ -135,6 +135,8 @@ const SaleVisit = () => {
   });
 
   useEffect(() => {
+    fetchList([])
+
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
     return () => onIntersect.disconnect();
   }, [isLoading]);
@@ -156,7 +158,14 @@ const SaleVisit = () => {
     <SaleTabSearch>
       <RegisTabNavi dep1={company.업체명} dep2={site.현장명} dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search"  value={paging.searchword} onChange={e => handleChange(e)}/>
+        <input type="text" placeholder="Search"  value={paging.searchword} onChange={e => handleChange(e)}
+               onKeyPress={e => {
+                 if (e.key === 'Enter') {
+                   fetchList([])
+                   setLoading(true)
+                 }
+               }}
+        />
         <button className="search-btn" onClick={() => {
           fetchList([])
           setLoading(true)

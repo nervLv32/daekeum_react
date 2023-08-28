@@ -165,7 +165,14 @@ const SaleSite = () => {
     <SaleTabSearch>
       <RegisTabNavi dep1={company.업체명} dep2="현장명" dep3="장비정보" />
       <div className="tab-searchwrap">
-        <input type="text" placeholder="Search" value={paging.searchword} onChange={e => handleChange(e)}/>
+        <input type="text" placeholder="Search" value={paging.searchword} onChange={e => handleChange(e)}
+               onKeyPress={e => {
+                 if (e.key === 'Enter') {
+                   fetchList([])
+                   setLoading(true)
+                 }
+               }}
+        />
         <button className="search-btn" onClick={() => {
           fetchList([])
           setLoading(true)
