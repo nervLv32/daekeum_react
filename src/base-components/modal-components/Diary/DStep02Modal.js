@@ -207,7 +207,7 @@ const DStep02Modal = () => {
 
   // 일지작성 recoil
   const [journal, setJournal] = useRecoilState(journalAtom);
-  
+
   // 캘린더
   const [type, setType] = useState("");
   const [isCalendar, setCalendar] = useState(false);
@@ -301,8 +301,8 @@ const DStep02Modal = () => {
           <dl className="input-info">
             <dt>현장담당자</dt>
             <dd>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={journal?.step02?.현장담당자}
                 onChange={(e) => handleChange('현장담당자', e.target.value)}
               />
@@ -311,8 +311,8 @@ const DStep02Modal = () => {
           <dl className="input-info w50">
             <dt className="essential">현장 연락처</dt>
             <dd>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={journal?.step02?.현장연락처}
                 onChange={(e) => handleChange('현장연락처', e.target.value)}
               />
@@ -321,8 +321,8 @@ const DStep02Modal = () => {
           <dl className="input-info w50">
             <dt className="essential">현장 담당자 연락처</dt>
             <dd>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={journal?.step02?.현장담당자연락처}
                 onChange={(e) => handleChange('현장담당자연락처', e.target.value)}
               />
@@ -331,8 +331,8 @@ const DStep02Modal = () => {
           <dl className="input-info">
             <dt className="essential">현장 담당자 메일주소</dt>
             <dd>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={journal?.step02?.현장담당자메일주소}
                 onChange={(e) => handleChange('현장담당자메일주소', e.target.value)}
               /></dd>
@@ -364,37 +364,35 @@ const DStep02Modal = () => {
           <dl className="input-info w50">
             <dt className="essential">점검요원</dt>
             <dd>
-              <input 
-                type="text" 
-                className="bg" 
+              <input
+                type="text"
                 defaultValue={journal?.step02?.점검요원}
-                disabled
+                onChange={e => handleChange('점검요원',e.target.value)}
               />
             </dd>
           </dl>
           <dl className="input-info w50">
             <dt className="essential">사용자 연락처</dt>
             <dd>
-              <input 
-                type="text" 
-                className="bg" 
+              <input
+                type="text"
                 defaultValue={journal?.step02?.사용자연락처}
-                disabled
+                onChange={e => handleChange('사용자연락처',e.target.value)}
               />
             </dd>
           </dl>
         </div>
         <BtnWrap>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn-outline-gray"
             onClick={() => {
               closeModal()
               openModal({ ...modalData, content: <DStep01Modal /> })
             }}
           >이전</button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn-blue"
             onClick={() => {
               closeModal()

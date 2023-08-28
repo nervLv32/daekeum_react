@@ -205,7 +205,7 @@ const ReceiptCard = ({
           <dd>{regionFirst}</dd>
         </dl>
       </div>
-      {manager && (
+      {state === '접수완료' && (
         <div>
           <dl>
             <dt>방문예정담당자</dt>
