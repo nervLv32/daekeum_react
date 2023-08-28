@@ -135,11 +135,13 @@ const SaleVisit = () => {
   });
 
   useEffect(() => {
-    fetchList([])
-
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect();
     return () => onIntersect.disconnect();
   }, [isLoading]);
+
+  useEffect(() => {
+    fetchList([])
+  },[])
 
   const handleChange = (e) => {
     setPaging({

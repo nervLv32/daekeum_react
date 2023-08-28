@@ -139,6 +139,10 @@ const Sale = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
+  useEffect(() => {
+    fetchList([])
+  },[])
+
   const handleChange = (e) => {
     setPaging({
       ...paging,

@@ -152,6 +152,9 @@ const SaleSite = () => {
       currentPage: '1',
     });
   };
+  useEffect(() => {
+    fetchList([])
+  },[])
 
   useEffect(() => {
     if(거래처코드) setCompany({
