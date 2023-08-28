@@ -5,7 +5,7 @@ import fetchService from "../../util/fetchService";
 import {DateFormat} from "../../util/dateFormat";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 import SearchModal from '../searchModal/index'
-import {useRecoilState} from "recoil";
+import {useRecoilState, useResetRecoilState} from 'recoil'
 import {newReceiptAtom} from "../../recoil/receipt";
 import receipt from '../../pages/Receipt'
 import {updateReceiptState} from '../../util/updateReceiptState'
@@ -173,6 +173,7 @@ const NewRegisModal = ({item, confirm}) => {
     callback: () => alert('Modal Callback()'),
   };
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
+  const resetNewReceipt = useResetRecoilState(newReceiptAtom)
   const [searchModal, setSearchModal] = useState({
     flag: false,
     url: '',
@@ -201,7 +202,7 @@ const NewRegisModal = ({item, confirm}) => {
   }
 
   useEffect(() => {
-    console.log(item)
+    resetNewReceipt()
     if(item){
       fetchService('/receipt/detail', 'post', {일련번호: item.no})
         .then(res => {
@@ -211,10 +212,6 @@ const NewRegisModal = ({item, confirm}) => {
         })
     }
   }, [])
-
-  useEffect(() => {
-    console.log(newReceipt)
-  }, [newReceipt])
 
   return (
     <NewRegisModalWrap>
@@ -252,8 +249,10 @@ const NewRegisModal = ({item, confirm}) => {
               type="text"
               placeholder="업체명을 입력하세요"
               value={newReceipt.지역 ? newReceipt.지역 : ''}
-              readOnly={true}
-              disabled={true}
+              onChange={e => setNewReceipt({
+                ...newReceipt,
+                지역: e.target.value
+              })}
             />
           </li>
           <li>
@@ -262,8 +261,10 @@ const NewRegisModal = ({item, confirm}) => {
               type="text"
               placeholder="주소를 입력하세요"
               value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
-              readOnly={true}
-              disabled={true}/>
+              onChange={e => setNewReceipt({
+                ...newReceipt,
+                현장주소: e.target.value
+              })}/>
           </li>
           <li>
             <p>현장담당자</p>
@@ -271,15 +272,20 @@ const NewRegisModal = ({item, confirm}) => {
               type="text"
               placeholder="현장담당자를 입력하세요"
               value={newReceipt.담당자 ? newReceipt.담당자 : ''}
-              disabled={true}
-            readOnly={true}/>
+              onChange={e => setNewReceipt({
+                ...newReceipt,
+                담당자: e.target.value
+              })}
+            />
           </li>
           <li>
             <p>현장연락처</p>
             <input type="text" placeholder="현장연락처를 입력하세요"
                    value={newReceipt.연락처 ? newReceipt.연락처 : ''}
-                   disabled={true}
-                   readOnly={true}
+                   onChange={e => setNewReceipt({
+                     ...newReceipt,
+                     연락처: e.target.value
+                   })}
             />
           </li>
           <li>

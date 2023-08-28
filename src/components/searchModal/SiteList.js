@@ -25,7 +25,7 @@ const Li = styled.li`
   }
 `
 
-const SiteList = ({dataAtom, searchList, searchModal, setSearchModal}) => {
+const SiteList = ({dataAtom, searchList, searchModal, setSearchModal, searchWord}) => {
 
   // const setNewReceipt = useSetRecoilState(newReceiptAtom)
   const [newReceipt, setNewReceipt] = useRecoilState(dataAtom)
@@ -60,7 +60,7 @@ const SiteList = ({dataAtom, searchList, searchModal, setSearchModal}) => {
   }
   return <>
     {
-      searchList.map((it, key)=>{
+      searchList.length > 0 ? searchList.map((it, key)=>{
         return (
           <Li key={key}
               onClick={() => {
@@ -79,6 +79,9 @@ const SiteList = ({dataAtom, searchList, searchModal, setSearchModal}) => {
           </Li>
         )
       })
+        : window.location.pathname.indexOf('sale') === 1 ? null : <li onClick={() => updateValue(searchWord,0)}>
+          <p>"{searchWord}" 가 존재하지 않습니다. "{searchWord}" 등록하시겠습니까?</p>
+        </li>
     }
   </>
 }
