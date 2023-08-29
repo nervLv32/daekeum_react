@@ -300,7 +300,7 @@ const BtnWrap = styled.div`
   }
 `
 
-const DStep01Modal = () => {
+const DStep01Modal = ({no}) => {
 
   const { openModal, closeModal } = useModal();
 
@@ -321,7 +321,8 @@ const DStep01Modal = () => {
       res?.data && setCompanyInfo(res.data[0]);
       res.data && setJournal({
         ...journal,
-        companyInfo: res.data[0]
+        companyInfo: res.data[0],
+        no: no
       })
     })
   };

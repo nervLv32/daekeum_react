@@ -140,7 +140,7 @@ const InventoryRequestModal = ({detail}) => {
     EmpNo: auth.사원코드,
     EmpNm: auth.한글이름,
     비고: '',
-    요청부서명: auth.부서명,
+    요청부서명: '',
   })
 
   const [params, setParams] = useState({
@@ -165,10 +165,20 @@ const InventoryRequestModal = ({detail}) => {
   }
 
   const updateBody = (key, value) => {
-    setBody({
-      ...body,
-      [key]: value,
-    })
+    if(key === '창고코드') {
+      const temp = options.filter(it => it.창고코드 === parseInt(value))
+      setBody({
+        ...body,
+        창고코드: value,
+        요청부서명: temp,
+      })
+    }else{
+      setBody({
+        ...body,
+        [key]: value,
+      })
+    }
+
   }
   const updateValue = (value) => {
     setList({

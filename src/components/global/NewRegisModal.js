@@ -5,10 +5,11 @@ import fetchService from "../../util/fetchService";
 import {DateFormat} from "../../util/dateFormat";
 import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
 import SearchModal from '../searchModal/index'
-import {useRecoilState, useResetRecoilState} from 'recoil'
+import {useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil'
 import {newReceiptAtom} from "../../recoil/receipt";
 import receipt from '../../pages/Receipt'
 import {updateReceiptState} from '../../util/updateReceiptState'
+import userAtom from '../../recoil/userAtom'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -165,6 +166,8 @@ const ModalBtm = styled.div`
 const NewRegisModal = ({item, confirm}) => {
   /* ****** 신규접수모달 ****** */
   const {closeModal, openModal} = useModal();
+  const pageTitle = item ? confirm ? '접수확인등록' : '수정' : '신규접수'
+  const {auth} = useRecoilValue(userAtom)
   const now = new Date();
   const bodyRef = useRef([])
   const modalData = {
@@ -181,10 +184,19 @@ const NewRegisModal = ({item, confirm}) => {
 
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
+    if(pageTitle === '접수확인등록') {
+      setNewReceipt({
+        ...newReceipt,
+        방문예정담당자: auth.한글이름
+      })
+    }
+    console.log(newReceipt)
     fetchService(url, 'post', newReceipt)
       .then(async (res) => {
-        if(item) await updateReceiptState(item.no, '접수완료')
-        window.location.reload()
+        if(item) {
+          await updateReceiptState(item.no, '접수완료')
+          window.location.reload()
+        }
       })
   }
 
@@ -220,7 +232,7 @@ const NewRegisModal = ({item, confirm}) => {
   return (
     <NewRegisModalWrap>
       <div className="modal-top">
-        <h6 className="title">{item ? confirm ? '접수확인등록' : '수정' : '신규접수'}</h6>
+        <h6 className="title">   {pageTitle} </h6>
       </div>
       <div className="modal-body">
         <InputList>

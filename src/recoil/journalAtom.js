@@ -4,6 +4,7 @@ const journalAtom = atom({
   key: 'journal',
   default: {
     step01: {
+      no: '',
       DKNO: "",
       MCNO: "",
       TNO: "",
