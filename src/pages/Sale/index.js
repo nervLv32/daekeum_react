@@ -102,7 +102,7 @@ const FloatingWrap = styled.div`
 
 const Sale = () => {
 
-  const [companyList, setCompanyList] = useRecoilState(companyListAtom)
+  const [companyList, setCompanyList] = useState([])
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
   const resetRecoilState = useResetRecoilState(salesStateRecoil)
 

@@ -97,7 +97,7 @@ const SaleVisit = () => {
 
   const [company, setCompany] = useRecoilState(companyAtom)
   const [site, setSite] = useRecoilState(siteAtom)
-  const [visitList, setVisitList] = useRecoilState(visitListAtom)
+  const [visitList, setVisitList] = useState([])
   const [paging, setPaging] = useState({
     searchword: '',
     pageSize: 10,
