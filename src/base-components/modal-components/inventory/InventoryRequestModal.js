@@ -170,7 +170,7 @@ const InventoryRequestModal = ({detail}) => {
       setBody({
         ...body,
         창고코드: value,
-        요청부서명: temp,
+        요청부서명: temp[0].대표요청부서,
       })
     }else{
       setBody({
@@ -226,12 +226,11 @@ const InventoryRequestModal = ({detail}) => {
       reqItems: [...list.요청리스트],
     }
 
-    console.log(reqParams)
 
     fetchService('/inventory/addMaterialRequestItems', 'post', reqParams)
       .then((res) => {
         alert(res.msg)
-        closeModal()
+        window.location.reload()
       })
   }
   useEffect(() => {
