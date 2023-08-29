@@ -194,7 +194,7 @@ const SaleVisit = () => {
     <SaleTabSearch>
       <RegisTabNavi dep1={company.업체명} dep2={site.현장명} dep3='장비정보'/>
       <div className='tab-searchwrap'>
-        <button onClick={handleReLoad}> reload</button>
+        {/*<button onClick={handleReLoad}> reload</button>*/}
         <input type='text' placeholder='Search' value={paging.searchword} onChange={e => handleChange(e)}
                onKeyPress={e => {
                  if (e.key === 'Enter') {

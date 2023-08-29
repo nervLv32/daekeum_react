@@ -245,7 +245,7 @@ const ReceiptListModal = ({ item }) => {
       case '수정' :
         openModal({
           ...modalData,
-          content: <NewRegisModal item={item}/>
+          content: <NewRegisModal item={item} editable={true}/>
         })
         break
       case '전화' :

@@ -163,7 +163,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const NewRegisModal = ({item, confirm}) => {
+const NewRegisModal = ({item, confirm, editable}) => {
   /* ****** 신규접수모달 ****** */
   const {closeModal, openModal} = useModal();
   const pageTitle = item ? confirm ? '접수확인등록' : '수정' : '신규접수'
@@ -192,13 +192,22 @@ const NewRegisModal = ({item, confirm}) => {
         방문예정담당자: auth.한글이름
       })
     }else{
-      console.log('asdfasdfasdf')
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
           if(item){
-            await updateReceiptState(item.no, '접수완료')
+            if(!editable){
+              await updateReceiptState(item.no, '접수완료')
+            }
           }
-          window.location.reload()
+          if(res.error){
+            const err = res.error.originalError.info.message
+            if(err === 'String or binary data would be truncated.') {
+              alert('접수내용이 너무 깁니다.')
+            }
+          }else{
+            alert(`성공적으로 ${pageTitle} 되었습니다`)
+            window.location.reload()
+          }
         })
     }
 
