@@ -98,7 +98,11 @@ const SaleSite = () => {
 
   console.log(company)
   const [keyword, setKeyword] = useRecoilState(keywordAtom)
-  const [paging, setPaging] = useRecoilState(SitePagingRecoil)
+  const [paging, setPaging] = useState({
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  })
   const [siteDetail, setSiteDetail] = useRecoilState(siteDetailAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
 

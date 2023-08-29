@@ -90,7 +90,11 @@ const SaleVisit = () => {
   const [company, setCompany] = useRecoilState(companyAtom)
   const [site, setSite] = useRecoilState(siteAtom)
   const [visitList, setVisitList] = useRecoilState(visitListAtom)
-  const [paging, setPaging] = useRecoilState(VisitPagingRecoil)
+  const [paging, setPaging] = useState({
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  })
   const [salesState, setSalesState] = useRecoilState(salesStateRecoil)
 
   const 현장코드 = salesState.현장코드

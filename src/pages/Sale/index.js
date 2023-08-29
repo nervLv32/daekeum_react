@@ -106,7 +106,11 @@ const Sale = () => {
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
   const resetRecoilState = useResetRecoilState(salesStateRecoil)
 
-  const [paging, setPaging] = useRecoilState(SalePagingRecoil)
+  const [paging, setPaging] = useState({
+    searchword: '',
+    pageSize: 10,
+    currentPage: 1
+  })
 
   const {openModal, closeModal} = useModal()
   const modalData = {
@@ -156,10 +160,9 @@ const Sale = () => {
     setPaging({
       ...paging,
       searchword: e.target.value,
-      currentPage: '1',
+      currentPage: 1,
     })
   }
-
 
   return <SaleWrap>
     <SaleTapWrap title='업체정보'/>
