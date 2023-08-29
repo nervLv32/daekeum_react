@@ -160,7 +160,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const SaleSubmitModal = ({item, setLoading}) => {
+const SaleSubmitModal = ({item, handleReLoad}) => {
   const 거래처코드 = item.거래처코드
   const 방문번호 = item.방문번호
   const 일지번호 = item.일지번호
@@ -273,8 +273,7 @@ const SaleSubmitModal = ({item, setLoading}) => {
             visit: 1
           }
         })
-        window.location.reload()
-
+        handleReLoad()
       },
       error => {
         console.log(error)
@@ -431,7 +430,7 @@ const SaleSubmitModal = ({item, setLoading}) => {
             if(!isSend){
               setVisitHistory()
             }
-          // closeModal()
+          closeModal()
           // openModal({ ...modalData, content: <RPC01Step03Modal /> })
         }}>저장</button>
         <button className="del-btn" onClick={() => {
