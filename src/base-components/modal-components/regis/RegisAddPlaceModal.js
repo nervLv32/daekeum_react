@@ -208,6 +208,7 @@ const ModalBtm = styled.div`
 `
 
 const RegisAddPlaceModal = ({item}) => {
+  console.log(item)
   const {closeModal} = useModal()
   const user = useRecoilValue(userAtom)
   const [selectRegis, setSelectRegis] = useRecoilState(selectCompanyAtom)
@@ -241,8 +242,13 @@ const RegisAddPlaceModal = ({item}) => {
     const url = `/enroll/${item ? 'siteUpdate' : 'siteAdd'}`
     let flag = true
     const empty = []
+    const krCheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //한글
+
+    // const checkArr = ['현장명','담당자','직위','휴대폰','이메일','전화번호','팩스번호','주소','종료예정일','설치예정일','접속시알림','고객분류','지역분류','현장분류','고객접점','담당센터']
+    const checkArr = ['현장명','지역분류','현장분류']
     Object.entries(body).map(([key, value]) => {
-      if(!value){
+      console.log(checkArr.indexOf(key))
+      if(checkArr.indexOf(key) >= 0 && !value){
         flag = false
         empty.push(key)
       }
@@ -377,8 +383,8 @@ const RegisAddPlaceModal = ({item}) => {
                    value={body.접속시알림 ? '승인' : '거부'}
                    onChange={(e) => updateBody('접속시알림', e.target.value)}
             />*/}
-            <select onChange={(e) => updateBody('접속시알림', e.target.value)}>
-              <option value="" disabled>알림을 입력하세요</option>
+            <select value={body.접속시알림 || ''} onChange={(e) => updateBody('접속시알림', e.target.value)}>
+              <option value="" disabled>알림을 선택하세요</option>
               <option value={0}> 거부 </option>
               <option value={1}> 승인 </option>
             </select>
