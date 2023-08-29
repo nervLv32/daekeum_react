@@ -246,6 +246,7 @@ const DStep02Modal = () => {
       거래처코드: journal?.companyInfo?.거래처코드,
       현장코드: journal?.companyInfo?.현장코드
     }).then((res) => {
+      console.log(res)
       const data = res?.data && res.data[0];
       setJournal({
         ...journal,
@@ -303,8 +304,8 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                value={journal?.step02?.현장담당자}
-                onChange={(e) => handleChange('현장담당자', e.target.value)}
+                value={journal?.step02?.담당자}
+                onChange={(e) => handleChange('담당자', e.target.value)}
               />
             </dd>
           </dl>
@@ -313,8 +314,8 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                value={journal?.step02?.현장연락처}
-                onChange={(e) => handleChange('현장연락처', e.target.value)}
+                value={journal?.step02?.전화번호}
+                onChange={(e) => handleChange('전화번호', e.target.value)}
               />
             </dd>
           </dl>
@@ -323,8 +324,8 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                value={journal?.step02?.현장담당자연락처}
-                onChange={(e) => handleChange('현장담당자연락처', e.target.value)}
+                value={journal?.step02?.휴대폰}
+                onChange={(e) => handleChange('휴대폰', e.target.value)}
               />
             </dd>
           </dl>
@@ -333,8 +334,8 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                value={journal?.step02?.현장담당자메일주소}
-                onChange={(e) => handleChange('현장담당자메일주소', e.target.value)}
+                value={journal?.step02?.이메일}
+                onChange={(e) => handleChange('이메일', e.target.value)}
               /></dd>
           </dl>
           <dl className="input-info w50">

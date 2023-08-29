@@ -177,6 +177,7 @@ const NewRegisModal = ({item, confirm}) => {
   };
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
   const resetNewReceipt = useResetRecoilState(newReceiptAtom)
+  const [isSubmit, setSubmit] = useState(false)
   const [searchModal, setSearchModal] = useState({
     flag: false,
     url: '',
@@ -185,20 +186,36 @@ const NewRegisModal = ({item, confirm}) => {
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
     if(pageTitle === '접수확인등록') {
+      console.log('dadasfsdf')
       setNewReceipt({
         ...newReceipt,
         방문예정담당자: auth.한글이름
       })
-    }
-    console.log(newReceipt)
-    fetchService(url, 'post', newReceipt)
-      .then(async (res) => {
-        if(item) {
-          await updateReceiptState(item.no, '접수완료')
+    }else{
+      console.log('asdfasdfasdf')
+      fetchService(url, 'post', newReceipt)
+        .then(async (res) => {
+          if(item){
+            await updateReceiptState(item.no, '접수완료')
+          }
           window.location.reload()
-        }
-      })
+        })
+    }
+
   }
+
+  useEffect(() => {
+    if(newReceipt.방문예정담당자?.length > 0){
+      const url = item ? '/receipt/update' : '/receipt/add'
+      fetchService(url, 'post', newReceipt)
+        .then(async (res) => {
+          if(item) {
+            await updateReceiptState(item.no, '접수완료')
+            window.location.reload()
+          }
+        })
+    }
+  }, [newReceipt.방문예정담당자])
 
   const openSearchModal = (e, url) => {
     setSearchModal({
@@ -218,8 +235,9 @@ const NewRegisModal = ({item, confirm}) => {
     if(item){
       fetchService('/receipt/detail', 'post', {일련번호: item.no})
         .then(res => {
+          console.log(res.data[0])
           setNewReceipt({
-            ...res.data[0]
+            ...res.data[0],
           })
         })
     }
@@ -264,10 +282,10 @@ const NewRegisModal = ({item, confirm}) => {
             <input
               type="text"
               placeholder="업체명을 입력하세요"
-              value={newReceipt.지역분류 ? newReceipt.지역분류 : ''}
+              value={newReceipt.지역 ? newReceipt.지역 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                지역분류: e.target.value
+                지역: e.target.value
               })}
             />
           </li>
@@ -276,10 +294,10 @@ const NewRegisModal = ({item, confirm}) => {
             <input
               type="text"
               placeholder="주소를 입력하세요"
-              value={newReceipt.주소 ? newReceipt.주소 : ''}
+              value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                주소: e.target.value
+                현장주소: e.target.value
               })}/>
           </li>
           <li>
@@ -297,10 +315,10 @@ const NewRegisModal = ({item, confirm}) => {
           <li>
             <p>현장연락처</p>
             <input type="text" placeholder="현장연락처를 입력하세요"
-                   value={newReceipt.휴대폰 ? newReceipt.휴대폰 : ''}
+                   value={newReceipt.연락처 ? newReceipt.연락처 : ''}
                    onChange={e => setNewReceipt({
                      ...newReceipt,
-                     휴대폰: e.target.value
+                     연락처: e.target.value
                    })}
             />
           </li>

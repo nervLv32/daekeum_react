@@ -30,7 +30,9 @@ const SiteList = ({dataAtom, searchList, searchModal, setSearchModal, searchWord
   // const setNewReceipt = useSetRecoilState(newReceiptAtom)
   const [newReceipt, setNewReceipt] = useRecoilState(dataAtom)
 
-  const updateValue = (name, code,address1, address2, manager, phone) => {
+  console.log('teststa')
+
+  const updateValue = (name, code, address1, address2, manager, phone) => {
     setNewReceipt({
       ...newReceipt,
       현장명: name,
@@ -48,9 +50,13 @@ const SiteList = ({dataAtom, searchList, searchModal, setSearchModal, searchWord
   }
 
   const updateSale = (item) => {
+    console.log(item)
     setNewReceipt({
       ...newReceipt,
-      ...item
+      ...item,
+      지역: item.지역분류,
+      현장주소: item.주소,
+      연락처 : item.휴대폰,
     })
 
     setSearchModal({

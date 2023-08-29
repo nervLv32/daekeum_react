@@ -171,6 +171,7 @@ const SaleSubmitModal = ({item, setLoading}) => {
   const [visitList, setVisitList] = useRecoilState(visitListAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom);
   const [isLoadState, setLoadState] = useState(false)
+  const [isSend, setSend] = useState(false)
   const user = useRecoilValue(userAtom)
 
   console.log(visitDetail)
@@ -227,6 +228,7 @@ const SaleSubmitModal = ({item, setLoading}) => {
   }
 
   const setVisitHistory = () => {
+    setSend(true)
     let url = '/sales/visitHistoryInsert'
     if(방문번호 && 일지번호) url = '/sales/visitHistoryUpdate'
 
@@ -426,7 +428,9 @@ const SaleSubmitModal = ({item, setLoading}) => {
 
         <ModalBtm>
           <button className="primary-btn" onClick={() => {
-          setVisitHistory()
+            if(!isSend){
+              setVisitHistory()
+            }
           // closeModal()
           // openModal({ ...modalData, content: <RPC01Step03Modal /> })
         }}>저장</button>
