@@ -10,6 +10,7 @@ import {newReceiptAtom} from "../../recoil/receipt";
 import receipt from '../../pages/Receipt'
 import {updateReceiptState} from '../../util/updateReceiptState'
 import userAtom from '../../recoil/userAtom'
+import moment from 'moment'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -251,7 +252,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
   }, [])
 
   useEffect(() => {
-    console.log(newReceipt)
+    console.log(newReceipt.날짜)
   }, [newReceipt])
 
   return (
@@ -269,7 +270,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
           }
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={DateFormat(new Date(newReceipt.날짜))} placeholder="접수일을 입력하세요"
+            <input ref={e => bodyRef.current[1] = e} type="text" value={newReceipt.날짜.replaceAll('T',' ').replaceAll('.000Z','')} placeholder="접수일을 입력하세요"
                    disabled={true} readOnly={true}/>
           </li>
           <li>
