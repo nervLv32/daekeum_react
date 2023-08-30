@@ -3,7 +3,7 @@ import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 import {useRecoilState, useRecoilValue} from 'recoil'
-import {visitDetailAtom, visitListAtom, salesStateAtom, newSaleAtom} from '../../../recoil/salesAtom'
+import {visitDetailAtom, visitListAtom, salesStateAtom, newSaleAtom, siteAtom} from '../../../recoil/salesAtom'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import SearchModal from '../../../components/searchModal'
@@ -161,7 +161,6 @@ const ModalBtm = styled.div`
 `
 
 const SaleSubmitModal = ({item, handleReLoad}) => {
-  const 거래처코드 = item.거래처코드
   const 방문번호 = item.방문번호
   const 일지번호 = item.일지번호
 
@@ -169,12 +168,13 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
   const navigate = useNavigate();
   const [visitDetail,setVisitDetail] = useRecoilState(visitDetailAtom)
   const [visitList, setVisitList] = useRecoilState(visitListAtom)
+  const [site, setSite] = useRecoilState(siteAtom)
   const [salesState, setSalesState] = useRecoilState(salesStateAtom);
   const [isLoadState, setLoadState] = useState(false)
   const [isSend, setSend] = useState(false)
   const user = useRecoilValue(userAtom)
 
-  console.log(visitDetail)
+  console.log(site.현장코드)
 
   const modalData = {
     title: 'Modal',
@@ -307,7 +307,8 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
     }
     setVisitDetail({
       ...item,
-      ...def
+      ...def,
+      현장코드: site.현장코드
     })
   }, [])
 
