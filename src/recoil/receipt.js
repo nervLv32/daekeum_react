@@ -10,7 +10,7 @@ export const receiptAtom = atom({
 export const newReceiptAtom = atom({
   key: 'newReceiptAtom',
   default: {
-    날짜: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
+    날짜: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     회사코드: 1000,
     접수내용: ''
   }
