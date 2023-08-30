@@ -177,7 +177,6 @@ const NewRegisModal = ({item, confirm, editable}) => {
   };
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
   const resetNewReceipt = useResetRecoilState(newReceiptAtom)
-  const [isSubmit, setSubmit] = useState(false)
   const [searchModal, setSearchModal] = useState({
     flag: false,
     url: '',
@@ -186,7 +185,6 @@ const NewRegisModal = ({item, confirm, editable}) => {
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
     if(pageTitle === '접수확인등록') {
-      console.log('dadasfsdf')
       setNewReceipt({
         ...newReceipt,
         방문예정담당자: auth.한글이름

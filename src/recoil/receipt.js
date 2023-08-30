@@ -1,4 +1,5 @@
 import {atom} from "recoil";
+import moment from 'moment'
 
 export const receiptAtom = atom({
   key: 'receiptList',
@@ -9,7 +10,7 @@ export const receiptAtom = atom({
 export const newReceiptAtom = atom({
   key: 'newReceiptAtom',
   default: {
-    날짜: new Date(),
+    날짜: moment(new Date()).format('YYYY-MM-DD hh:mm:ss'),
     회사코드: 1000,
     접수내용: ''
   }
