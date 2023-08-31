@@ -109,8 +109,8 @@ const Login = () => {
 
   const [user, setUser] = useRecoilState(userAtom)
   const [userData, setUserData] = useState({
-    userId: 'jjsh2544',
-    password: 'jjshield12!',
+    userId: '',
+    password: '',
   });
 
   const updateData = (key, value) => {
