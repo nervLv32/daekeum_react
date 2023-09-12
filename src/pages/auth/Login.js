@@ -121,14 +121,21 @@ const Login = () => {
   }
 
   const submitAuth = () => {
+    if(!userData.userId || !userData.password) {
+      alert("아이디 혹은 패스워드가 비어있습니다")
+      return;
+    }
     fetchService('/auth/login', 'post', userData)
       .then((response) => {
-        console.log(response.data.recordset[0])
-        setUser({
-          isLogin: true,
-          auth: {...response.data.recordset[0]}
-        })
-        window.location.href = '/'
+        if(!response.data) {
+          alert('로그인에 실패하였습니다.')
+        }else{
+          setUser({
+            isLogin: true,
+            auth: {...response.data.recordset[0]}
+          })
+          window.location.href = '/'
+        }
       })
   };
 
