@@ -132,6 +132,7 @@ const ReceiptCard = ({
   site,
   manager,
   className,
+  item,
   onClick
 }) => {
 
@@ -166,7 +167,7 @@ const ReceiptCard = ({
               } else if(state === '접수대기'){
                 openModal({ ...modalData, content: <NewRegisModal item={{no: no}} confirm={true}/> })
               } else if(state === '처리완료') {
-                openModal({ ...modalData, content: <ReceiptConfirm /> })
+                openModal({ ...modalData, content: <ReceiptConfirm item={{no: no}} /> }) // 여기타고 가자
               }
               setJournal({
                 ...journal,

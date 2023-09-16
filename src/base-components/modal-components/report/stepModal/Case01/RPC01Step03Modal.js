@@ -192,6 +192,7 @@ const RPC01Step03Modal = () => {
   }
   const {openModal, closeModal} = useModal()
   const [body, setBody] = useRecoilState(exportDocumentBody)
+  console.log(body)
   const [options, setOptions] = useState({
     결제방법: [],
     결제처_수신: [],
@@ -242,7 +243,7 @@ const RPC01Step03Modal = () => {
           fetchService('/approval/approvalOutRequest', 'post', body)
             .then(res1 => {
               window.alert(res1.msg)
-              if(res1.msg === '정상적으로 상신 처리되었습니다'){
+              if(res1.code === 200){
                 window.location.reload()
               }
             })
@@ -462,7 +463,7 @@ const RPC01Step03Modal = () => {
         }}>이전
         </button>
         <button className='primary-btn' onClick={() => {
-          if(body.신규상버여부){
+          if(body.신규사업여부){
             closeModal()
             openModal({...modalData, content: <RPC01Step04Modal/>})
           }else{

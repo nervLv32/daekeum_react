@@ -199,8 +199,9 @@ const RPC01Step04Modal = () => {
         if(res.valid){
           fetchService('/approval/approvalOutRequest', 'post', body)
             .then(res1 => {
+              console.log(res1)
               window.alert(res1.msg)
-              if(res1.msg === '정상적으로 상신 처리되었습니다'){
+              if(res1.code === 200){
                 window.location.reload()
               }
             })

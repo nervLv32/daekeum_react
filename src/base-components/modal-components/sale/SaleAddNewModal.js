@@ -163,7 +163,7 @@ const ModalBtm = styled.div`
   }
 `
 
-const SaleAddNewModal = ({item}) => {
+const SaleAddNewModal = ({item, detailNo}) => {
   const 거래처코드 = item.거래처코드
 
   const [companyDetail, setCompanyDetail] = useRecoilState(companyDetailAtom)
@@ -249,6 +249,12 @@ const SaleAddNewModal = ({item}) => {
   }
 
   useEffect(() => {
+    let code = 거래처코드
+
+    const fetchDetailItem = async () => {
+      return await fetchService('/receipt/detail', 'post', { 일련번호 : detailNo})
+    }
+
     const fetchList = async () => {
       setList({
         거래처분류: [...(await fetchService('/enroll/diaryCombo', 'get',{type:'거래처분류'})).data],
@@ -257,8 +263,13 @@ const SaleAddNewModal = ({item}) => {
     }
 
     fetchList()
-      .then(() => {
-        if(거래처코드) detail(거래처코드)
+      .then(async () => {
+
+        if(detailNo) {
+          code = (await fetchDetailItem()).data[0].거래처코드
+        }
+
+        if(code) detail(code)
         else setCompanyDetail({업체명: null,
           대표자성명: null,
           업태: null,
@@ -275,6 +286,7 @@ const SaleAddNewModal = ({item}) => {
           고객분류: null,
           거래처분류: null,})
       })
+
   }, [])
 
   return (

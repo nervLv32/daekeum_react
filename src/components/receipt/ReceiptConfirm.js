@@ -43,7 +43,7 @@ const Button = styled.button`
 
 `
 
-const ReceiptConfirm = () => {
+const ReceiptConfirm = ({item}) => {
   const { openModal, closeModal } = useModal();
   const modalData = {
     title: 'Modal',
@@ -61,7 +61,7 @@ const ReceiptConfirm = () => {
       </div>
       <hr/>
       <div onClick={() => {
-        openModal({ ...modalData, content: <SaleAddNewModal item={''} /> })
+        openModal({ ...modalData, content: <SaleAddNewModal item={''} detailNo={item.no} /> }) // 여기타고 가자
       }}>
         <BlueCircleBag />
         <p>영업등록</p>

@@ -231,6 +231,7 @@ const Receipt = () => {
               regionSecond={item.regionSecond}
               site={item.site}
               manager={item.manager}
+              item = {item}
               onClick={() => openModal({ ...modalData, content: <ReceiptListModal item={item} /> })}
             />
           })
