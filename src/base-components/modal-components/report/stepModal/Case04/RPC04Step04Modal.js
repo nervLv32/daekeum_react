@@ -260,11 +260,15 @@ const RPC04Step04Modal = () => {
 
   const submitBody = async () => {
     // console.log(body)
+    
     const res = await fetchService('/approval/approvalSuliReq', 'post', body)
     msg = res.msg
 
-    if(res.msg === '') return true
+    console.log(res);
+    
+    if(res.code === 200 ) return true
     else return false
+
   }
 
   useEffect(() => {
@@ -479,6 +483,7 @@ const RPC04Step04Modal = () => {
           if(await submitBody()){
             alert('상신되었습니다.')
             window.location.reload()
+            
           }else{
             alert(msg)
           }

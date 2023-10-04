@@ -183,12 +183,18 @@ const RPC03Step04Modal = () => {
   }
 
   const validateInRequest = () => {
-    fetchService('/approval/approvalSuliReq', 'post', body).then((res) => {
+    fetchService('/approval/approvalInRequest', 'post', body).then((res) => {
       window.alert(res.msg)
-      if(res.msg === '동시 사용자가 있을수 있어서 종료합니다.'){
-        window.location.reload();
+      
+      if(res.code === 200){
         closeModal();
       }
+      
+      //if(res.msg === '동시 사용자가 있을수 있어서 종료합니다.'){
+      //  window.location.reload();
+      //  closeModal();
+      //}
+      
     });
   }
 
