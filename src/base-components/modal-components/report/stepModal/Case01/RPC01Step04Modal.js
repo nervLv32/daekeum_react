@@ -202,7 +202,8 @@ const RPC01Step04Modal = () => {
               console.log(res1)
               window.alert(res1.msg)
               if(res1.code === 200){
-                window.location.reload()
+                //window.location.reload()
+                closeModal()
               }
             })
         }else{

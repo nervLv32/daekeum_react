@@ -236,6 +236,7 @@ const RPC01Step03Modal = () => {
     const copy = {...body}
     delete copy.신규사업내용
     setBody(copy)
+    
 
     fetchService('/approval/validateOutRequest', 'post', body)
       .then(res => {
@@ -245,6 +246,7 @@ const RPC01Step03Modal = () => {
               window.alert(res1.msg)
               if(res1.code === 200){
                 window.location.reload()
+                closeModal();
               }
             })
         }else{
