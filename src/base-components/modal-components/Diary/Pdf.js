@@ -356,7 +356,7 @@ const Pdf = () => {
       // window.open(blobUrl)
       sendEmail(blobPDF)
         .then(() => {
-          window.location.reload()
+          // window.location.reload()
         })
     })
   }
@@ -364,7 +364,7 @@ const Pdf = () => {
   const sendEmail = async (blobPDF) => {
     const formData = new FormData()
     formData.append('id', 'soseo')
-    formData.append('email', journal.step02.현장담당자메일주소);
+    formData.append('email', journal.step02.이메일);
     formData.append('file', new File([blobPDF], 'file.pdf'))
     fetchService('/enroll/send-pdf-mail', 'post', formData)
       .then(res => {
