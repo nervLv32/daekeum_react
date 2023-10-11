@@ -357,7 +357,7 @@ const Pdf = () => {
 
   // PDF Blob
   const printPDF = () => {
-    html2canvas(reportTemplateRef.current).then(canvas => {
+    html2canvas(reportTemplateRef.current).then(async (canvas) => {
       const imgData = canvas.toDataURL('image/png')
       const pdf = new jsPdf('p', 'px', 'a4', true)
 
@@ -371,10 +371,7 @@ const Pdf = () => {
       console.log(blobPDF)
       // closeModal()
       // window.open(blobUrl)
-      sendEmail(blobPDF)
-        .then(() => {
-          window.location.reload()
-        })
+      await sendEmail(blobPDF)
     })
   }
 
@@ -387,7 +384,7 @@ const Pdf = () => {
       .then(res => {
         console.log(res)
         // closeModal()
-        // window.location.reload()
+        window.location.reload()
       })
   }
 
