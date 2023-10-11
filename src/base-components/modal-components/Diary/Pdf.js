@@ -8,16 +8,29 @@ import html2canvas from 'html2canvas'
 import jsPdf from 'jspdf'
 import {useModal} from '../../../hooks/useModal'
 import fetchService from '../../../util/fetchService'
-import { CommaPrice } from '../../../util/commaPrice'
+import {CommaPrice} from '../../../util/commaPrice'
 
 const PdfWrap = styled.div`
   position: fixed;
-  bottom: 100vh;
-  width: 100%;
+  //bottom: 100vh;
+  left: 0;
+  top: 0;
+  width: 21cm;
   height: auto;
-  max-width: 1000px;
   background-color: #fff;
   font-family: 'SpoqaHanSans', sans-serif;
+  min-height: 29.7cm;
+
+  //.page {
+  //  width: 21cm;
+  //  min-height: 29.7cm;
+  //  padding: 1.5cm 1.5cm 2cm 1.5cm;
+  //}
+  //
+  //@page {
+  //  size: A4;
+  //  margin: 0;
+  //}
 
   .info-wrap {
     width: 100%;
@@ -346,8 +359,12 @@ const Pdf = () => {
   const printPDF = () => {
     html2canvas(reportTemplateRef.current).then(canvas => {
       const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPdf('p', 'px', 'a4' , true)
-      pdf.addImage(imgData, 'PNG', 0, 0, 0 ,undefined , 'FAST')
+      const pdf = new jsPdf('p', 'px', 'a4', true)
+
+      const width = pdf.internal.pageSize.getWidth()
+      const height = pdf.internal.pageSize.getHeight()
+
+      pdf.addImage(imgData, 'PNG', 0, 0, width, height, 'FAST')
       // pdf.save(`test-sample.pdf`);
       const blobPDF = new Blob([pdf.output('blob')], {type: 'application/pdf'})
       // const blobUrl = URL.createObjectURL(blobPDF)
@@ -356,20 +373,21 @@ const Pdf = () => {
       // window.open(blobUrl)
       sendEmail(blobPDF)
         .then(() => {
-          // window.location.reload()
+          window.location.reload()
         })
     })
   }
 
   const sendEmail = async (blobPDF) => {
     const formData = new FormData()
-    formData.append('id', 'soseo')
-    formData.append('email', journal.step02.이메일);
+    formData.append('id', user.auth.userid)
+    formData.append('email', journal.step02.이메일)
     formData.append('file', new File([blobPDF], 'file.pdf'))
     fetchService('/enroll/send-pdf-mail', 'post', formData)
       .then(res => {
         console.log(res)
         // closeModal()
+        // window.location.reload()
       })
   }
 
