@@ -263,7 +263,9 @@ const RPC04Step04Modal = () => {
     const res = await fetchService('/approval/approvalSuliReq', 'post', body)
     msg = res.msg
 
-    if(res.msg === '') return true
+    console.log(res)
+
+    if(res.code === 200) return true
     else return false
   }
 
