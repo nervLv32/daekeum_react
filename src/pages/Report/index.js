@@ -117,7 +117,10 @@ const Report = () => {
             <li>
               <a onClick={() => {
                 resetBody()
-                setBody({...initDocu, 신규사업여부: false})
+                resetFirstDocument()
+                setBody(prev => {
+                  return {...prev, 신규사업여부: false}
+                })
                 openModal({...modalData, content: <RPCase0101Modal/>})
               }}>
                 <i>
@@ -129,7 +132,10 @@ const Report = () => {
             <li>
               <a onClick={() => {
                 resetBody()
-                setBody({...initDocu, 신규사업여부: true})
+                resetFirstDocument()
+                setBody(prev => {
+                  return {...prev, 신규사업여부: true}
+                })
                 openModal({...modalData, content: <RPCase0101Modal/>})
               }}>
                 <i>
@@ -171,6 +177,7 @@ const Report = () => {
             <li>
               <a onClick={() => {
                 resetBody()
+                resetFirstDocument()
                 setFirstDocument({
                   ...initDocu,
                   title: '수리기출고요청서',

@@ -406,7 +406,7 @@ const RPC01Step02Modal = () => {
   useEffect(() => {
     updateBody('일시불', '일시불')
     updateBody('금액', '')
-  }, [body.계약사항.length])
+  }, [body.계약사항?.length])
   /***** option 아이템 조회 종료 ****/
 
   useEffect(() => {
@@ -431,6 +431,8 @@ const RPC01Step02Modal = () => {
     body.계약사항[selectIndex]['개월'],
     body.계약사항[selectIndex]['시작일'],
   ])
+
+  console.log(body.계약사항)
 
   /******* 출고요청서(세륜, 축중) 케이스의 두번째 *******/
   return <RPC01Step02ModalWrap>
