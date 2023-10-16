@@ -355,6 +355,7 @@ const DStep04Modal = () => {
   // 네고 및 합계 계산
   const [freePrice, setFreePrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  let [inputName, setInputName] = useState("");
   useEffect(() => {
     const price01 = journal.품목리스트.filter(item => item.무상체크)
     .map(item => item.단가 * item.수량)
@@ -362,6 +363,9 @@ const DStep04Modal = () => {
 
     const price02 = journal.품목리스트.map(item => item.단가 * item.수량)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+
+    var price03 = inputName;
 
     setJournal({
       ...journal,
@@ -371,10 +375,37 @@ const DStep04Modal = () => {
         네고: price01,
         합계금액: price02,
         합계: price02,
-        청구금액: price02 - price01
+        청구금액: price02 - price01 - inputName,
+        무상금액: inputName
       }
     })
   }, [journal?.품목리스트])
+
+  useEffect(() => {
+    const price01 = journal.품목리스트.filter(item => item.무상체크)
+    .map(item => item.단가 * item.수량)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    const price02 = journal.품목리스트.map(item => item.단가 * item.수량)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+    var price03 = inputName;
+
+    setJournal({
+      ...journal,
+      step04: {
+        ...journal.step04,
+        네고금액: price01,
+        네고: price01,
+        합계금액: price02,
+        합계: price02,
+        청구금액: price02 - price01 - inputName,
+        무상금액: inputName
+      }
+    })
+  }, [inputName])
+
+  
 
   // 품목무상 리스트 가져오기
   const [typeList, setTypeList] = useState([]);
@@ -446,7 +477,9 @@ const DStep04Modal = () => {
         console.log(journal)
         setJournal({
           ...journal,
-          diaryCode: res.data.diaryCode
+          diaryCode: res.data.diaryCode,
+          ...journal.step04,
+          네고금액: Number(journal.step04.네고금액) + Number(inputName)
         })
         updateReceiptState(journal.accountCode, '처리완료')
           .then(() => openModal({ ...modalData, content: <Pdf /> }))
@@ -463,11 +496,16 @@ const DStep04Modal = () => {
       ...journal.step02,
       ...journal.step03,
       ...journal.step04,
+      네고금액: Number(journal.step04.네고금액) + Number(inputName),
+      무상금액: inputName,
       품목리스트: [...journal.품목리스트],
       설치일: moment(journal.step01.설치일).format('YYYY-MM-DD'),
       완료일: moment(journal.step01.완료일).format('YYYY-MM-DD'),
       출고일: moment(journal.step01.출고일).format('YYYY-MM-DD'),
-      접수일: moment().format('YYYY-MM-DD')
+      접수일: moment().format('YYYY-MM-DD'),
+      사원코드: user.auth.사원코드,
+      부서코드: user.auth.부서코드,
+      접수내용: journal.step03.업무내용
     });
     setParams(processedData)
   }, [journal])
@@ -553,8 +591,16 @@ const DStep04Modal = () => {
               <dd>{CommaPrice(journal.step04.합계금액)}</dd>
             </dl>
             <dl>
-              <dt>네고금액</dt>
+              <dt>무상금액</dt>
               <dd>{CommaPrice(journal.step04.네고금액)}</dd>
+            </dl>
+            <dl>
+            <dt>네고금액</dt>
+              <dd>
+              <input onChange={(e) => { 
+                setInputName(e.target.value);
+                }} />
+              </dd>
             </dl>
             <dl>
               <dt>계산서발행일</dt>
@@ -605,7 +651,7 @@ const DStep04Modal = () => {
             type="button"
             className="btn-blue"
             onClick={() => submit()}
-          >다음</button>
+          >저장</button>
         </BtnWrap>
       </ModalWrap>
       {

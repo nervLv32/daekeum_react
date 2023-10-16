@@ -201,11 +201,11 @@ const RPC02Step04Modal = () => {
         <button className="del-btn" onClick={() => {
         closeModal()
         openModal({ ...modalData, content: <RPC02Step03Modal /> })
-      }}>이전</button>
+      }}>이전2</button>
         <button className="primary-btn" onClick={() => {
         closeModal()
         // FIX: 서류 상신 api
-      }}>서류상신</button>
+      }}>서류상신2</button>
       </ModalBtm>
     </RPC02Step04ModalBody>
   </RPC02Step04ModalWrap>

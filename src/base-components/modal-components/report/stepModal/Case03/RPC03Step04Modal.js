@@ -183,18 +183,12 @@ const RPC03Step04Modal = () => {
   }
 
   const validateInRequest = () => {
-    fetchService('/approval/approvalInRequest', 'post', body).then((res) => {
+    fetchService('/approval/approvalSuliReq', 'post', body).then((res) => {
       window.alert(res.msg)
-      
-      if(res.code === 200){
+      if(res.msg === '동시 사용자가 있을수 있어서 종료합니다.'){
+        window.location.reload();
         closeModal();
       }
-      
-      //if(res.msg === '동시 사용자가 있을수 있어서 종료합니다.'){
-      //  window.location.reload();
-      //  closeModal();
-      //}
-      
     });
   }
 
@@ -399,11 +393,11 @@ const RPC03Step04Modal = () => {
         <button className="del-btn" onClick={() => {
         closeModal()
         openModal({ ...modalData, content: <RPC03Step03Modal /> })
-      }}>이전</button>
+      }}>이전3</button>
         <button className="primary-btn" onClick={() => {
           validateInRequest()
         // FIX 서류 상신 API
-      }}>서류상신</button>
+      }}>서류상신3</button>
       </ModalBtm>
     </RPC03Step04ModalBody>
   </RPC03Step04ModalWrap>

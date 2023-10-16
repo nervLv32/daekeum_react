@@ -202,8 +202,7 @@ const RPC01Step04Modal = () => {
               console.log(res1)
               window.alert(res1.msg)
               if(res1.code === 200){
-                //window.location.reload()
-                closeModal()
+                window.location.reload()
               }
             })
         }else{
@@ -279,13 +278,13 @@ const RPC01Step04Modal = () => {
         <button className='del-btn' onClick={() => {
           closeModal()
           openModal({...modalData, content: <RPC01Step03Modal/>})
-        }}>이전
+        }}>이전1
         </button>
         <button className='primary-btn' onClick={() => {
           submitBody()
           // closeModal()
           // FIX: 서류 상신 api
-        }}>서류상신
+        }}>서류상신1
         </button>
       </ModalBtm>
     </RPC01Step04ModalBody>

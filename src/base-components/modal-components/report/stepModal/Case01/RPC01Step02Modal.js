@@ -405,7 +405,7 @@ const RPC01Step02Modal = () => {
 
   useEffect(() => {
     updateBody('일시불', '일시불')
-    updateBody('금액', '10000')
+    updateBody('금액', '')
   }, [body.계약사항.length])
   /***** option 아이템 조회 종료 ****/
 
@@ -629,6 +629,19 @@ const RPC01Step02Modal = () => {
                   onClick={() => setOpenTime(true)}>
                   {body.계약사항[selectIndex].시간 ? body.계약사항[selectIndex].시간 : '시간선택'}
                 </p>
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>금액</dt>
+              <dd>
+                <input
+                    type={'number'}
+                    placeholder='항목입력'
+                    value={body.계약사항[selectIndex]['금액'] || ''}
+                    onChange={(e) => updateBody('금액', e.target.value)}
+                />
               </dd>
             </dl>
           </li>

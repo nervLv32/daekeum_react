@@ -182,7 +182,9 @@ const Receipt = () => {
           <TopSearchMenu>
             <TopSearchcMenuWrap>
               <li>
-                <a onClick={() => changeParam('처리상태', '')}>
+                <a onClick={() => {
+                  changeParam('처리상태', '')
+                  setTopMenu(false)}}>
                   <i>
                     <img src="../icons/icon-topmenu-list.png" alt="topmenu icon" />
                   </i>
@@ -190,7 +192,9 @@ const Receipt = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => changeParam('처리상태', '접수대기')}>
+                <a onClick={() => {
+                  changeParam('처리상태', '접수대기')
+                  setTopMenu(false)}}>
                   <i>
                     <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
                   </i>
@@ -198,7 +202,9 @@ const Receipt = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => changeParam('처리상태', '접수완료')}>
+                <a onClick={() => 
+                  {changeParam('처리상태', '접수완료')
+                  setTopMenu(false)}}>
                   <i>
                     <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
                   </i>
@@ -206,7 +212,9 @@ const Receipt = () => {
                 </a>
               </li>
               <li>
-                <a onClick={() => changeParam('처리상태', '처리완료')}>
+                <a onClick={() => {
+                  changeParam('처리상태', '처리완료')
+                  setTopMenu(false)}}>
                   <i>
                     <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
                   </i>
@@ -262,16 +270,20 @@ const Receipt = () => {
                   <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                   <span>기간별조회</span>
                 </li>
-                <li onClick={() => {
+                {/* 지역별조회 업데이트 전까지 막음 */}
+                {/* <li onClick={() => {
                     closeModal()
                     openModal({ ...modalData, content: <SearchRegionModal /> })
-                  }}>
+                  }}> */}
+                    <li>
                   <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
-                  <span>지역별조회</span>
+                  {/* <span>지역별조회</span> */}
+                  <span>업데이트중</span>
                 </li>
                 <li onClick={() => {
                     closeModal()
                     openModal({ ...modalData, content: <NewRegisModal /> })
+                    setIsFOpen(false)
                   }}>
                   <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
                   <span>신규접수</span>

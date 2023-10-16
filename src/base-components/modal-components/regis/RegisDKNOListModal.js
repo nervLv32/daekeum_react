@@ -181,7 +181,7 @@ const RegisDKNOListModal = ({ item }) => {
           </dl>
           <dl>
             <dt className="justify">유 무 상<br/>구 분</dt>
-            <dd>{item.유무상구분}</dd>
+            <dd>{item.무상구분}</dd>
           </dl>
         </li>
         <li>

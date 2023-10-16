@@ -4,8 +4,12 @@ import { useModal } from "../../../hooks/useModal";
 import ProductListItem from "../../../components/diary/ProductListItem";
 import DStep04Modal from './DStep04Modal'
 import fetchService from "../../../util/fetchService";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+
+//추가
+import userAtom from '../../../recoil/userAtom';
+
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -106,6 +110,7 @@ const ItemAddList = styled.div`
       .count {
         width: 12%;
       }
+      .input-search{width:100%}
       input[type="checkbox"] {
         width: 1.3rem;
         height: 1.3rem;
@@ -157,39 +162,67 @@ const DStep05Modal = () => {
   // 체크박스 상태
   const [allCheckStatus, setAllCheckStatus] = useState(false);
 
+    //추가
+    const user = useRecoilValue(userAtom)
+
+
   // 아이템 배열
   const [params, setParams] = useState({
-    EmpNo: '',
-    대금AS: '',
-    신규중고: '',
-    pageSize: '30',
-    currentPage: '1'
+    // EmpNo: '',
+    // 대금AS: '',
+    // 신규중고: '',
+    // pageSize: '300',
+    // currentPage: '1'
+    searchword: '',
+    pageSize: '1000',
+    currentPage: '1',
+    EmpNo: user.auth.사원코드,
   });
 
   const [itemList, setItemList] = useState([]);
   const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
 
+
+
   const onIntersect = new IntersectionObserver(([entry], observer) => {
+    // if (entry.isIntersecting) {
+    //   setLoading(true);
+    //   setParams({
+    //     ...params,
+    //     currentPage: parseInt(params.currentPage) + 1,
+    //   });
+    // }
     if (entry.isIntersecting) {
-      setLoading(true);
+      setLoading(true)
       setParams({
         ...params,
         currentPage: parseInt(params.currentPage) + 1,
-      });
+      })
+      materialRequestItemList(itemList)
     }
   });
 
 
   const materialRequestItemList = (list) => {
-    fetchService('/inventory/materialRequestItemList', 'post', params)
+    // fetchService('/inventory/materialRequestItemList', 'post', params)
+    fetchService('/inventory/inventoryList', 'post', params)
+    // .then((res) => {
+    //   const data = [...list, ...res.data];
+    //   setItemList(data);
+    //   if (res.data.length > 29) {
+    //     setTimeout(() => {
+    //       setLoading(false);
+    //     }, 1000);
+    //   }
+    // })
     .then((res) => {
-      const data = [...list, ...res.data];
-      setItemList(data);
-      if (res.data.length > 29) {
+      const data = [...list, ...res.data]
+      setItemList(data)
+      if (res.data.length > 9) {
         setTimeout(() => {
-          setLoading(false);
-        }, 1000);
+          setLoading(false)
+        }, 1000)
       }
     })
   };
@@ -218,10 +251,11 @@ const DStep05Modal = () => {
       수량: 1,
       유무상구분: "",
       무상체크: false,
+      금액: item.단가, // ? 무슨금액?
       금액: "", // ? 무슨금액?
       카운터: "", // 없음
       비고: "", // 없음,
-      처리구분: "", // 없음
+      처리구분: "일반", // 없음
       DKNO: "", // 없음
       모델: "", // 사용모델?
       전압: "", // 없음
@@ -239,11 +273,24 @@ const DStep05Modal = () => {
     closeModal()
     openModal({ ...modalData, content: <DStep04Modal /> })
   };
+  const [searchKeyword, setSearchKeyword] = useState(""); //조회 검색어
 
   return (
     <ModalWrap>
       <div className="title">
         <h3>품목등록리스트</h3>
+      </div>
+      <div className="div-wrap-searchCode">
+        <input
+            className="input-search"
+            type="text"
+            maxLength="100"
+            placeholder="품명검색"
+            onChange={(e) => {
+                setSearchKeyword(e.target.value);
+            }}
+        />
+
       </div>
       <div className="modal-body">
         <ItemAddList>
@@ -273,7 +320,15 @@ const DStep05Modal = () => {
               </div>
             </li>
             {
-              itemList?.length > 0 && itemList.map((item, index) => {
+              itemList?.length > 0 && itemList.filter(
+                (searchData) =>
+                searchKeyword === ""
+                    ? true
+                    : (searchData.품명
+                          ? searchData.품명.includes(searchKeyword)
+                          : false) ||
+                      (searchData.keyword ? searchData.keyword.includes(searchKeyword) : false)
+              ).map((item, index) => {
                 return (
                   <ProductListItem
                     key={index}

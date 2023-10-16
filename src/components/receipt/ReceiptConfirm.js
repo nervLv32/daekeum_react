@@ -4,6 +4,7 @@ import DStep01Modal from '../../base-components/modal-components/Diary/DStep01Mo
 import React from 'react'
 import {useModal} from '../../hooks/useModal'
 import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
+import SaleAddPlaceModal2 from "../../base-components/modal-components/sale/SaleSubmitModal2";
 
 const ModalBody = styled.div`
   position: fixed;
@@ -61,7 +62,7 @@ const ReceiptConfirm = ({item}) => {
       </div>
       <hr/>
       <div onClick={() => {
-        openModal({ ...modalData, content: <SaleAddNewModal item={''} detailNo={item.no} /> }) // 여기타고 가자
+        openModal({ ...modalData, content: <SaleAddPlaceModal2 item={item} />}) // 여기타고 가자
       }}>
         <BlueCircleBag />
         <p>영업등록</p>

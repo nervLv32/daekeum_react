@@ -233,7 +233,7 @@ const RPC01Step01Modal = () => {
         },
         거래처세부: {
           ...(await fetchService('/approval/clientDetail', 'post',  {거래처코드: client.거래처코드, 현장코드: site.현장코드})).data
-        }
+        },
       })
     }
 

@@ -4,7 +4,7 @@ import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import {useModal} from "../../../hooks/useModal";
 import {useNavigate} from "react-router-dom";
 import SaleAddNewModal from "./SaleAddNewModal";
-import SaleSubmitModal from './SaleSubmitModal'
+import SaleSubmitModal from './SaleSubmitModal2'
 import RegisAddNewModal from '../regis/RegisAddNewModal'
 import { useRecoilState } from "recoil";
 import { salesStateRecoil } from "../../../recoil/salesAtom"

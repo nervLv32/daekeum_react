@@ -32,7 +32,7 @@ const Inventory = () => {
 
   const [inventoryParam, setInventoryParam] = useState({
     searchword: '',
-    pageSize: '10',
+    pageSize: '300',
     currentPage: '1',
     EmpNo: user.auth.사원코드,
   })

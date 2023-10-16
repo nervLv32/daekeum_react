@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
-import SaleSubmitModal from "./SaleSubmitModal";
+import SaleSubmitModal from "./SaleSubmitModal2";
 
 const SaleVisitListModalWrap = styled.div`
   background-color: #fff;

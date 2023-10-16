@@ -260,15 +260,11 @@ const RPC04Step04Modal = () => {
 
   const submitBody = async () => {
     // console.log(body)
-    
     const res = await fetchService('/approval/approvalSuliReq', 'post', body)
     msg = res.msg
 
-    console.log(res);
-    
-    if(res.code === 200 ) return true
+    if(res.msg === '') return true
     else return false
-
   }
 
   useEffect(() => {
@@ -477,17 +473,16 @@ const RPC04Step04Modal = () => {
         <button className='del-btn' onClick={() => {
           closeModal()
           openModal({...modalData, content: <RPC04Step03Modal/>})
-        }}>이전
+        }}>이전4
         </button>
         <button className='primary-btn' onClick={async () => {
           if(await submitBody()){
             alert('상신되었습니다.')
             window.location.reload()
-            
           }else{
             alert(msg)
           }
-        }}>서류상신
+        }}>서류상신4
         </button>
       </ModalBtm>
     </RPC04Step04ModalBody>

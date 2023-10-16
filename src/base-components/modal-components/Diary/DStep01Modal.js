@@ -299,7 +299,6 @@ const BtnWrap = styled.div`
     color: #f7f7f7;
   }
 `
-
 const DStep01Modal = ({no}) => {
 
   const { openModal, closeModal } = useModal();
@@ -594,6 +593,14 @@ const DStep01Modal = ({no}) => {
         >
           다음
         </button>
+        {/* <button
+          type="button"
+          onClick={() => {
+          alert(companyInfo.접수내용)
+          }}
+        >
+          test
+        </button> */}
       </BtnWrap>
     </ModalWrap>
   )

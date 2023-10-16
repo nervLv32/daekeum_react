@@ -3,6 +3,7 @@ import styled from "styled-components";
 import OrderStateBtn from "../../../components/atom/OrderStateBtn";
 import { useModal } from "../../../hooks/useModal";
 import {useRecoilState, useRecoilValue} from 'recoil'
+import { companyDetailAtom, companyListAtom } from "../../../recoil/salesAtom"
 import {visitDetailAtom, visitListAtom, salesStateAtom, newSaleAtom, siteAtom} from '../../../recoil/salesAtom'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,8 @@ import fetchService from '../../../util/fetchService'
 import userAtom from '../../../recoil/userAtom'
 import SingleDate from "../../../components/calander/SingleDate";
 import moment from "moment";
+import journalAtom from "../../../recoil/journalAtom";
+import {updateReceiptState} from '../../../util/updateReceiptState'
 
 const SaleSubmitModalWrap = styled.div`
   max-height: 70vh;
@@ -174,7 +177,28 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
   const [isSend, setSend] = useState(false)
   const user = useRecoilValue(userAtom)
 
-  console.log(site.현장코드)
+  const [companyInfo, setCompanyInfo] = useState({});
+  const [journal, setJournal] = useRecoilState(journalAtom);
+
+  const receiptDetail = () => {
+    fetchService('/receipt/detail', 'post', {
+      일련번호: item.no
+    }).then((res) => {
+      res?.data && setCompanyInfo(res.data[0]);
+      res.data && setJournal({
+        ...journal,
+        companyInfo: res.data[0],
+      })
+    })
+  }
+  useEffect(() => {
+    receiptDetail();
+  }, []);
+
+  
+
+
+  // console.log(site.현장코드)
 
   const modalData = {
     title: 'Modal',
@@ -222,7 +246,9 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
     setVisitDetail(oldData =>{
       return {
         ...oldData,
-        [key] : val
+        [key] : val,
+        거래처코드: companyInfo.거래처코드,
+        현장코드: companyInfo.현장코드
       }
     })
   }
@@ -256,7 +282,7 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
             회사코드: user.auth.회사코드,
             DIV_CD: user.auth.DIV_CD,
             usergwid: user.auth.usergwid
-          }
+          },
         }
         // ,headers: {
         //   'authorization': `${auth.auth.token}`
@@ -273,7 +299,10 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
             visit: 1
           }
         })
-        handleReLoad()
+        // handleReLoad()
+        updateReceiptState(item.no, '처리완료')
+        alert('영업등록 완료')
+        window.location.replace("/receipt")
       },
       error => {
         console.log(error)
@@ -293,6 +322,9 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
   const searchFetch = async (searchParam) => {
     return await fetchService(searchModal.url, 'post', searchParam)
   }
+  useEffect(() => {
+    receiptDetail();
+  }, []);
 
   useEffect(() => {
     let def = {}
@@ -305,10 +337,10 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
         회사코드: user.auth.회사코드
       }
     }
+
     setVisitDetail({
       ...item,
-      ...def,
-      현장코드: site.현장코드
+      ...def
     })
   }, [])
 
@@ -336,7 +368,7 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
   const handleDateChange = (key, value) => {
     setVisitDetail({
       ...visitDetail,
-      [key]: moment(value).format('YYYY-MM-DD')
+      [key]: moment(value).format('YYYY-MM-DD'),
     })
     close()
   };
@@ -353,13 +385,13 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
               <p>거래처코드</p>
               {/*<input type="text"  readOnly id="거래처코드" value={visitDetail.거래처코드 || ''} onChange={setValue} />*/}
               <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/clientlist')}>
-                {visitDetail.거래처코드 ? visitDetail.거래처코드 : '거래처검색'}
+                {visitDetail.거래처코드 ? visitDetail.거래처코드 : companyInfo.거래처코드}
               </div>
             </li>
             <li className="full required">
               <p>현장코드</p>
               <div className={'input readonly'} onClick={(e) => openSearchModal(e, '/sales/sitelist')}>
-                {visitDetail.현장코드 ? visitDetail.현장코드 : '현장코드검색'}
+                {visitDetail.현장코드 ? visitDetail.현장코드 : companyInfo.현장코드}
               </div>
             </li>
             <li>
@@ -438,10 +470,11 @@ const SaleSubmitModal = ({item, handleReLoad}) => {
           closeModal()
           // openModal({ ...modalData, content: <RPC01Step01Modal /> })
         }}>취소</button>
-                <button className="del-btn" onClick={() => {
-                    alert("일지번호 : " + visitDetail.일지번호 + 
-                    '거래처코드 : ' + visitDetail.거래처코드 + " / 현장코드 : " + visitDetail.현장코드 + " / 방문번호 : " + visitDetail.방문번호)
-        }}>test</button>
+        {/* <button className="del-btn" onClick={() => {
+          // reset(companyInfo);
+          alert('거래처코드 : ' + companyInfo.거래처코드 + " / 현장코드 : " + companyInfo.현장코드 + " / 일지번호 : " + visitDetail.일지번호 + 
+                '거래처코드 : ' + visitDetail.거래처코드 + " / 현장코드 : " + visitDetail.현장코드 + " / 방문번호 : " + visitDetail.방문번호 + "/" + item.no)
+        }}>test</button> */}
         </ModalBtm>
       </SaleSubmitModalWrap>
 

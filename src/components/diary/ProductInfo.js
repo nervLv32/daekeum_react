@@ -163,7 +163,7 @@ const ProductInfoWrap = styled.div`
   }
 `
 
-const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, deleteStatus, typeList}) => {
+const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, deleteStatus, typeList,}) => {
 
   // Count State
   const [count, setCount] = useState(1);
@@ -197,20 +197,20 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
         ...journal,
         품목리스트: [
           ...journal.품목리스트.map((it) =>
-            it.rownum === item.rownum ? { ...it, 유무상구분: "", 무상체크: false } : it
+            it.rownum === item.rownum ? { ...it, 무상구분: "", 무상체크: false, 유무상구분: "유상", 금액: item.단가 * count} : it
           ),
         ],
       });
     }
   }, [freeChecked])
 
-  // 유무상구분 셀렉트박스 상태변경
+  // 무상구분 셀렉트박스 상태변경
   const handleFreeCheck = (v) => {
     setJournal({
       ...journal,
       품목리스트: [
         ...journal.품목리스트.map((it) =>
-          it.rownum === item.rownum ? { ...it, 유무상구분: v, 무상체크: true } : it
+          it.rownum === item.rownum ? { ...it, 무상구분: v, 무상체크: true, 유무상구분: "무상", 금액: item.단가 * count } : it
         ),
       ],
     });
@@ -222,7 +222,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
       ...journal,
       품목리스트: [
         ...journal.품목리스트.map((it) =>
-          it.rownum === item.rownum ? { ...it, 수량: count } : it
+          it.rownum === item.rownum ? { ...it, 수량: count, 금액: item.단가 * count } : it
         ),
       ],
     });
@@ -255,7 +255,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
           <input type="checkbox" checked={freeChecked} onChange={handleChange} />
           무상
           <select
-            value={item.유뮤상구분}
+            value={item.무상구분}
             onChange={(e) => handleFreeCheck(e.target.value)}
             disabled={!freeChecked}
           >
@@ -269,7 +269,8 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
           <div className="price-count">  
             <span>{item.단가}원 X {count}개</span>
           </div>
-          <div className="total-price"><strong>{item.단가 * count}</strong> 원</div>
+          {/* <div className="total-price"><strong>{item.단가 * count}</strong> 원</div> */}
+          <div className="total-price"><strong>{item.금액}</strong> 원</div>
         </div>
       </div>
     </ProductInfoWrap>

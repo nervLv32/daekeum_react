@@ -288,6 +288,7 @@ const PdfWrap = styled.div`
         font-size: 18px;
         font-weight: 500;
         color: #222;
+        text-align: center
       }
 
       span {
@@ -553,7 +554,7 @@ const Pdf = () => {
                   {
                     journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
                       return (
-                        <span key={index} className='mt5'>{item.단가}</span>
+                        <span key={index} className='mt5'>{CommaPrice(item.단가) + item.유무상구분}</span>
                       )
                     })
                   }
@@ -562,7 +563,7 @@ const Pdf = () => {
                   {
                     journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
                       return (
-                        <span key={index} className='mt5'>{item.단가 * item.수량}</span>
+                        <span key={index} className='mt5'>{CommaPrice(item.단가 * item.수량)}</span>
                       )
                     })
                   }
@@ -572,11 +573,16 @@ const Pdf = () => {
                 </td>
               </tr>
               <tr>
-                <td colSpan={3} rowSpan={2} style={{width: '60%'}}>합 계 (VAT별도) {CommaPrice(journal.step04.합계)}원</td>
+                <td colSpan={1} style={{width: '20%'}}>합 계 (VAT별도)</td>
+                <td colSpan={1} style={{width: '20%'}}>네고금액</td>
+                <td colSpan={1} style={{width: '20%'}}>청구금액 (VAT별도)</td>
                 <td>계산서발행일 : {journal.step04.계산서발행일}</td>
                 <td>No</td>
               </tr>
               <tr>
+                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.합계)}원</td>
+                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(Number(journal.step04.네고금액) + Number(journal.step04.무상금액))}원</td>
+                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.청구금액)}원</td>
                 <td colSpan={2} className='bd-l'>결제예정일 : {journal.step04.결제예정일}</td>
               </tr>
               </tbody>
@@ -613,7 +619,7 @@ const Pdf = () => {
             </div>
           </div>
           <div className='footer'>
-            <div className='f-logo'>
+            <div className='f-logo' style={{width: '30%'}}>
               <p>(주)대금지오웰</p>
               <span>DAEKEUM GEOWELL CO.,LTD.</span>
               <span>www.geowell.co.kr</span>

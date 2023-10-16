@@ -190,10 +190,11 @@ const NewRegisModal = ({item, confirm, editable}) => {
         ...newReceipt,
         방문예정담당자: auth.한글이름
       })
-    }else{
+      }else{
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
           if(item){
+
             if(!editable){
               await updateReceiptState(item.no, '접수완료')
             }
@@ -245,7 +246,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
         .then(res => {
           console.log(res.data[0])
           setNewReceipt({
-            ...res.data[0],
+            ...res.data[0]
           })
         })
     }
@@ -330,6 +331,16 @@ const NewRegisModal = ({item, confirm, editable}) => {
                    })}
             />
           </li>
+          <li className="required">
+            <p>접수자</p>
+            <input type="text" placeholder="접수자를 입력하세요"
+                   value={auth.한글이름 ? auth.한글이름 : ''}
+                   onChange={e => setNewReceipt({
+                     ...newReceipt,
+                     접수자: e.target.value
+                   })}
+                   disabled={true} readOnly={true}/>
+          </li>
           <li>
             <p>접수내용</p>
             <textarea placeholder="접수내용을 입력하세요" value={newReceipt.접수내용} onChange={e => setNewReceipt({
@@ -349,10 +360,19 @@ const NewRegisModal = ({item, confirm, editable}) => {
           }}>저장
           </button>
           <button className="del-btn" onClick={() => {
+            
             closeModal()
             // openModal({ ...modalData, content: <RPC01Step01Modal /> })
           }}>취소
           </button>
+          {/* <button className="del-btn" onClick={() => {
+            setNewReceipt({
+              ...newReceipt,
+              접수자: auth.한글이름
+            })
+          alert('auth : ' + auth.한글이름 + ' / ' + '접수자 : ' + newReceipt.접수자)
+          }}>취소
+          </button> */}
         </ModalBtm>
       }
     </NewRegisModalWrap>

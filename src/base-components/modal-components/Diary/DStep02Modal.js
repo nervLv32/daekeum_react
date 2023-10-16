@@ -8,6 +8,8 @@ import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
 import moment from "moment";
 import SingleDate from "../../../components/calander/SingleDate";
+//유저정보불러오기 추가
+import userAtom from "../../../recoil/userAtom";
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -198,6 +200,10 @@ const BtnWrap = styled.div`
 
 const DStep02Modal = () => {
 
+  //유저정보 불러우기 추가////////////////////////////////////////////
+  const [user, setUser] = useRecoilState(userAtom);
+  ///////////////////////////////끝/////////////////////////////////////
+
   // Modal
   const { openModal, closeModal } = useModal();
   const modalData = {
@@ -261,6 +267,7 @@ const DStep02Modal = () => {
   useEffect(() => {
     siteDetail();
   }, []);
+  
 
   console.log(journal)
 
@@ -367,7 +374,7 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                defaultValue={journal?.step02?.점검요원}
+                defaultValue={user.auth.한글이름}
                 onChange={e => handleChange('점검요원',e.target.value)}
               />
             </dd>
@@ -400,6 +407,13 @@ const DStep02Modal = () => {
               openModal({ ...modalData, content: <DStep03Modal /> })
             }}
           >다음</button>
+                    {/* <button
+            type="button"
+            className="btn-blue"
+            onClick={() => {
+              alert(journal.accountCode);
+            }}
+          >test</button> */}
         </BtnWrap>
       </ModalWrap>
       {

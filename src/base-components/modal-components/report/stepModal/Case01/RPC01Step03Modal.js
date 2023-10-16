@@ -236,7 +236,6 @@ const RPC01Step03Modal = () => {
     const copy = {...body}
     delete copy.신규사업내용
     setBody(copy)
-    
 
     fetchService('/approval/validateOutRequest', 'post', body)
       .then(res => {
@@ -246,7 +245,6 @@ const RPC01Step03Modal = () => {
               window.alert(res1.msg)
               if(res1.code === 200){
                 window.location.reload()
-                closeModal();
               }
             })
         }else{
@@ -471,7 +469,7 @@ const RPC01Step03Modal = () => {
           }else{
             submitBody()
           }
-        }}>{body.신규사업여부 ? '다음' : '서류상신' }
+        }}>{body.신규사업여부 ? '다음' : '서류상신1' }
         </button>
       </ModalBtm>
     </RPC01Step03ModalBody>

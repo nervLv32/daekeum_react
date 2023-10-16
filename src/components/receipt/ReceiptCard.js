@@ -163,11 +163,12 @@ const ReceiptCard = ({
             className="state-wrap"
             onClick={() => {
               if(state === '접수완료') {
-                openModal({ ...modalData, content: <DStep01Modal item={{no: no}} /> })
+                // openModal({ ...modalData, content: <DStep01Modal item={{no: no}} /> })
+                openModal({ ...modalData, content: <ReceiptConfirm item={{no: no}} /> }) // 여기타고 가자
               } else if(state === '접수대기'){
                 openModal({ ...modalData, content: <NewRegisModal item={{no: no}} confirm={true}/> })
               } else if(state === '처리완료') {
-                openModal({ ...modalData, content: <ReceiptConfirm item={{no: no}} /> }) // 여기타고 가자
+                // openModal({ ...modalData, content: <ReceiptConfirm item={{no: no}} /> }) // 여기타고 가자
               }
               setJournal({
                 ...journal,

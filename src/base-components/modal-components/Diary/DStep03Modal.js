@@ -214,13 +214,27 @@ const BtnWrap = styled.div`
 `
 
 const DStep03Modal = () => {
-
   const { openModal, closeModal } = useModal();
 
   const modalData = {
     title: 'DStep03Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
+  const [companyInfo, setCompanyInfo] = useState({});
+  const receiptDetail = () => {
+    fetchService('/receipt/detail', 'post', {
+      일련번호: journal?.accountCode
+    }).then((res) => {
+      res?.data && setCompanyInfo(res.data[0]);
+      res.data && setJournal({
+        ...journal,
+        companyInfo: res.data[0]
+      })
+    })
+  };
+  useEffect(() => {
+    receiptDetail();
+  }, []);
 
   // 캘린더
   const [isCalendar, setCalendar] = useState(false);
@@ -300,7 +314,7 @@ const DStep03Modal = () => {
             <dt>요청사항</dt>
             <dd>
               <textarea 
-                defaultValue={journal.step03.요청사항}
+                defaultValue={companyInfo.접수내용}
                 onChange={(e) => handleChange('요청사항', e.target.value)}
                 placeholder="요청사항을 입력하세요."
               ></textarea>
