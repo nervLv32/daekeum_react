@@ -109,7 +109,10 @@ const Receipt = () => {
   };
 
   const { openModal, closeModal } = useModal();
+
   const ref = useRef(null)
+  const refB = useRef(null)
+
   const observeTargetRef = useRef(null)
   const [isLoading, setLoading] = useState(false);
   const [fetchFlag, setFetchFlag] = useState(false);
@@ -199,11 +202,13 @@ const Receipt = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-  const useClickOutside = (target) => {
+  const useClickOutsideTop = (target) => {
     useEffect(() => {
       const onDocumentClick = (event) => {
         const isInside = event.composedPath().includes(target.current)
-        if (!isInside) setTopMenu(false)
+        if (!isInside) {
+          setTopMenu(false)
+        }
       };
       document.addEventListener('click', onDocumentClick);
       return () => {
@@ -212,7 +217,38 @@ const Receipt = () => {
     }, [target]);
   };
 
-  useClickOutside(ref);
+  const useClickOutsideBottom = (target) => {
+    useEffect(() => {
+      const onDocumentClick = (event) => {
+        const isInside = event.composedPath().includes(target.current)
+        if (!isInside) {
+          setIsFOpen(false)
+        }
+      };
+      document.addEventListener('click', onDocumentClick);
+      return () => {
+        document.removeEventListener('click', onDocumentClick);
+      };
+    }, [target]);
+  };
+
+  useClickOutsideTop(ref);
+  useClickOutsideBottom(refB);
+
+  // const useClickOutsideBottom = (target) => {
+  //   useEffect(() => {
+  //     const onDocumentClick = (event) => {
+  //       const isInside = event.composedPath().includes(target.current)
+  //       if (!isInside) setTopMenu(false)
+  //     };
+  //     document.addEventListener('click', onDocumentClick);
+  //     return () => {
+  //       document.removeEventListener('click', onDocumentClick);
+  //     };
+  //   }, [target]);
+  // };
+  //
+  // useClickOutsideBottom(refBottom);
 
   return (
       <>
@@ -289,6 +325,7 @@ const Receipt = () => {
             }
           </ToWrap>
         </RestWrap>
+
         <ReceiptWrap>
           {
             receipts.map((item, key) => {
@@ -310,7 +347,7 @@ const Receipt = () => {
           }
         </ReceiptWrap>
 
-        <FloatingWrap>
+        <FloatingWrap ref={refB}>
           <Floating isFOpen={isFOpen} onClick={() => {
             if (isFDep2) {
               setIsFDep2(prev => !prev);
@@ -386,7 +423,6 @@ const Receipt = () => {
               ) : null
             }
           </FloatingBody>
-
         </FloatingWrap>
         {
           isFDep3.year ? <Year modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
