@@ -10,7 +10,6 @@ import journalAtom from "../../../recoil/journalAtom";
 //추가
 import userAtom from '../../../recoil/userAtom';
 
-
 const ModalWrap = styled.div`
   width: 100%;
   height: auto;
@@ -162,9 +161,8 @@ const DStep05Modal = () => {
   // 체크박스 상태
   const [allCheckStatus, setAllCheckStatus] = useState(false);
 
-    //추가
-    const user = useRecoilValue(userAtom)
-
+  //추가
+  const user = useRecoilValue(userAtom)
 
   // 아이템 배열
   const [params, setParams] = useState({
