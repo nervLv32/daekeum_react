@@ -72,13 +72,6 @@ const FloatingWrap = styled.div`
 
 const FloatingBody = styled.div``
 
-const ToWrap = styled.div`
-  background: red;
-  //width: 100px;
-  height: 100px;
-  position: relative;
-`
-
 const RestWrap = styled.div`
   display: flex;
   flex: 1;
@@ -109,10 +102,8 @@ const Receipt = () => {
   };
 
   const { openModal, closeModal } = useModal();
-
   const ref = useRef(null)
   const refB = useRef(null)
-
   const observeTargetRef = useRef(null)
   const [isLoading, setLoading] = useState(false);
   const [fetchFlag, setFetchFlag] = useState(false);
@@ -202,20 +193,20 @@ const Receipt = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-  const useClickOutsideTop = (target) => {
-    useEffect(() => {
-      const onDocumentClick = (event) => {
-        const isInside = event.composedPath().includes(target.current)
-        if (!isInside) {
-          setTopMenu(false)
-        }
-      };
-      document.addEventListener('click', onDocumentClick);
-      return () => {
-        document.removeEventListener('click', onDocumentClick);
-      };
-    }, [target]);
-  };
+  // const useClickOutsideTop = (target) => {
+  //   useEffect(() => {
+  //     const onDocumentClick = (event) => {
+  //       const isInside = event.composedPath().includes(target.current)
+  //       if (!isInside) {
+  //         setTopMenu(false)
+  //       }
+  //     };
+  //     document.addEventListener('click', onDocumentClick);
+  //     return () => {
+  //       document.removeEventListener('click', onDocumentClick);
+  //     };
+  //   }, [target]);
+  // };
 
   const useClickOutsideBottom = (target) => {
     useEffect(() => {
@@ -232,49 +223,32 @@ const Receipt = () => {
     }, [target]);
   };
 
-  useClickOutsideTop(ref);
+  // useClickOutsideTop(ref);
   useClickOutsideBottom(refB);
-
-  // const useClickOutsideBottom = (target) => {
-  //   useEffect(() => {
-  //     const onDocumentClick = (event) => {
-  //       const isInside = event.composedPath().includes(target.current)
-  //       if (!isInside) setTopMenu(false)
-  //     };
-  //     document.addEventListener('click', onDocumentClick);
-  //     return () => {
-  //       document.removeEventListener('click', onDocumentClick);
-  //     };
-  //   }, [target]);
-  // };
-  //
-  // useClickOutsideBottom(refBottom);
 
   return (
       <>
-        <RestWrap>
            <TopSearch
-              // setTopMenu={setTopMenu}
-              // topMenu={topMenu}
+              setTopMenu={setTopMenu}
+              topMenu={topMenu}
               changeParam={changeParam}
           />
-          <ToWrap ref={ref}>
-            <Button
-                className="submit-btn"
-                onClick={() => setTopMenu(prev => !prev)}
-            >
-              {
-                topMenu ? (
-                  <i>
-                    <img src="../../icons/topmenu-close-x.png" alt="widget icon" />
-                  </i>
-                ) : (
-                  <i>
-                    <img src="../../icons/widgets-icon.png" alt="widget icon" />
-                  </i>
-                )
-              }
-            </Button>
+            {/*<Button*/}
+            {/*    className="submit-btn"*/}
+            {/*    onClick={() => setTopMenu(prev => !prev)}*/}
+            {/*>*/}
+            {/*  {*/}
+            {/*    topMenu ? (*/}
+            {/*      <i>*/}
+            {/*        <img src="../../icons/topmenu-close-x.png" alt="widget icon" />*/}
+            {/*      </i>*/}
+            {/*    ) : (*/}
+            {/*      <i>*/}
+            {/*        <img src="../../icons/widgets-icon.png" alt="widget icon" />*/}
+            {/*      </i>*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*</Button>*/}
             {
               topMenu && (
                 <TopSearchMenu>
@@ -323,9 +297,6 @@ const Receipt = () => {
                 </TopSearchMenu>
               )
             }
-          </ToWrap>
-        </RestWrap>
-
         <ReceiptWrap>
           {
             receipts.map((item, key) => {
@@ -423,6 +394,7 @@ const Receipt = () => {
               ) : null
             }
           </FloatingBody>
+
         </FloatingWrap>
         {
           isFDep3.year ? <Year modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
