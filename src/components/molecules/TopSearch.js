@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import styled from "styled-components";
 
 const TopSearchWrap = styled.div`
@@ -81,7 +81,10 @@ const TopSearch = ({ topMenu, setTopMenu, changeParam }) => {
       <div className="input-wrap">
         <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
       </div>
-      <button className="submit-btn" onClick={() => setTopMenu(prev => !prev)}>
+      <button
+        className="submit-btn"
+        onClick={() => setTopMenu(prev => !prev)}
+      >
         {
           topMenu ? (
             <i>
