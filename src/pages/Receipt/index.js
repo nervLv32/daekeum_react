@@ -17,7 +17,7 @@ import Daily from "../../components/calander/Daily";
 import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 
 const ReceiptWrap = styled.div`
-  padding: 28px 30px 0; 
+  padding: 28px 30px 0;
 `
 
 // 메뉴가 3개 4개 5개로 나뉘어져서 부득이하게
@@ -72,6 +72,13 @@ const FloatingWrap = styled.div`
 
 const FloatingBody = styled.div``
 
+const ToWrap = styled.div`
+  background: red;
+  //width: 100px;
+  height: 100px;
+  position: relative;
+`
+
 const RestWrap = styled.div`
   display: flex;
   flex: 1;
@@ -102,8 +109,10 @@ const Receipt = () => {
   };
 
   const { openModal, closeModal } = useModal();
+
   const ref = useRef(null)
   const refB = useRef(null)
+
   const observeTargetRef = useRef(null)
   const [isLoading, setLoading] = useState(false);
   const [fetchFlag, setFetchFlag] = useState(false);
@@ -158,17 +167,17 @@ const Receipt = () => {
 
   const fetchList = (list) => {
     fetchService('/receipt/list', 'post', receiptParam)
-      .then((res) => {
-        const temp = mappingItem(res)
-        const data = [...list, ...temp]
-        setReceipts( data )
-        console.log(data)
-        if(temp.length > 9) {
-          setTimeout(() => {
-            setLoading(false)
-          }, 1000)
-        }
-      })
+        .then((res) => {
+          const temp = mappingItem(res)
+          const data = [...list, ...temp]
+          setReceipts( data )
+          console.log(data)
+          if(temp.length > 9) {
+            setTimeout(() => {
+              setLoading(false)
+            }, 1000)
+          }
+        })
   }
 
   useEffect(() => {
@@ -193,20 +202,20 @@ const Receipt = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
-  // const useClickOutsideTop = (target) => {
-  //   useEffect(() => {
-  //     const onDocumentClick = (event) => {
-  //       const isInside = event.composedPath().includes(target.current)
-  //       if (!isInside) {
-  //         setTopMenu(false)
-  //       }
-  //     };
-  //     document.addEventListener('click', onDocumentClick);
-  //     return () => {
-  //       document.removeEventListener('click', onDocumentClick);
-  //     };
-  //   }, [target]);
-  // };
+  const useClickOutsideTop = (target) => {
+    useEffect(() => {
+      const onDocumentClick = (event) => {
+        const isInside = event.composedPath().includes(target.current)
+        if (!isInside) {
+          setTopMenu(false)
+        }
+      };
+      document.addEventListener('click', onDocumentClick);
+      return () => {
+        document.removeEventListener('click', onDocumentClick);
+      };
+    }, [target]);
+  };
 
   const useClickOutsideBottom = (target) => {
     useEffect(() => {
@@ -223,96 +232,101 @@ const Receipt = () => {
     }, [target]);
   };
 
-  // useClickOutsideTop(ref);
+  useClickOutsideTop(ref);
   useClickOutsideBottom(refB);
 
   return (
       <>
-           <TopSearch
-              setTopMenu={setTopMenu}
-              topMenu={topMenu}
+        <RestWrap>
+          <TopSearch
+              // setTopMenu={setTopMenu}
+              // topMenu={topMenu}
               changeParam={changeParam}
           />
-            {/*<Button*/}
-            {/*    className="submit-btn"*/}
-            {/*    onClick={() => setTopMenu(prev => !prev)}*/}
-            {/*>*/}
-            {/*  {*/}
-            {/*    topMenu ? (*/}
-            {/*      <i>*/}
-            {/*        <img src="../../icons/topmenu-close-x.png" alt="widget icon" />*/}
-            {/*      </i>*/}
-            {/*    ) : (*/}
-            {/*      <i>*/}
-            {/*        <img src="../../icons/widgets-icon.png" alt="widget icon" />*/}
-            {/*      </i>*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*</Button>*/}
+          <ToWrap ref={ref}>
+            <Button
+                className="submit-btn"
+                onClick={() => setTopMenu(prev => !prev)}
+            >
+              {
+                topMenu ? (
+                    <i>
+                      <img src="../../icons/topmenu-close-x.png" alt="widget icon" />
+                    </i>
+                ) : (
+                    <i>
+                      <img src="../../icons/widgets-icon.png" alt="widget icon" />
+                    </i>
+                )
+              }
+            </Button>
             {
-              topMenu && (
-                <TopSearchMenu>
-                  <TopSearchcMenuWrap>
-                    <li>
-                      <a onClick={() => {
-                        changeParam('처리상태', '')
-                        setTopMenu(false)}}>
-                        <i>
-                          <img src="../icons/icon-topmenu-list.png" alt="topmenu icon" />
-                        </i>
-                        <span>전체</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a onClick={() => {
-                        changeParam('처리상태', '접수대기')
-                        setTopMenu(false)}}>
-                        <i>
-                          <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
-                        </i>
-                        <span>신규접수</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a onClick={() =>
-                        {changeParam('처리상태', '접수완료')
-                        setTopMenu(false)}}>
-                        <i>
-                          <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
-                        </i>
-                        <span>접수확인</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a onClick={() => {
-                        changeParam('처리상태', '처리완료')
-                        setTopMenu(false)}}>
-                        <i>
-                          <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
-                        </i>
-                        <span>처리완료</span>
-                      </a>
-                    </li>
-                  </TopSearchcMenuWrap>
-                </TopSearchMenu>
-              )
+                topMenu && (
+                    <TopSearchMenu>
+                      <TopSearchcMenuWrap>
+                        <li>
+                          <a onClick={() => {
+                            changeParam('처리상태', '')
+                            setTopMenu(false)}}>
+                            <i>
+                              <img src="../icons/icon-topmenu-list.png" alt="topmenu icon" />
+                            </i>
+                            <span>전체</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a onClick={() => {
+                            changeParam('처리상태', '접수대기')
+                            setTopMenu(false)}}>
+                            <i>
+                              <img src="../icons/icon-topmenu-addbox.png" alt="topmenu icon" />
+                            </i>
+                            <span>신규접수</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a onClick={() =>
+                          {changeParam('처리상태', '접수완료')
+                            setTopMenu(false)}}>
+                            <i>
+                              <img src="../icons/icon-topmenu-checklist.png" alt="topmenu icon" />
+                            </i>
+                            <span>접수확인</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a onClick={() => {
+                            changeParam('처리상태', '처리완료')
+                            setTopMenu(false)}}>
+                            <i>
+                              <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
+                            </i>
+                            <span>처리완료</span>
+                          </a>
+                        </li>
+                      </TopSearchcMenuWrap>
+                    </TopSearchMenu>
+                )
             }
+          </ToWrap>
+        </RestWrap>
+
         <ReceiptWrap>
           {
             receipts.map((item, key) => {
               return <ReceiptCard
-                className={""}
-                key={key}
-                no={item.no}
-                date={item.date}
-                state={item.state}
-                company={item.company}
-                regionFirst={item.regionFirst}
-                regionSecond={item.regionSecond}
-                site={item.site}
-                manager={item.manager}
-                item = {item}
-                onClick={() => openModal({ ...modalData, content: <ReceiptListModal item={item} /> })}
+                  className={""}
+                  key={key}
+                  no={item.no}
+                  date={item.date}
+                  state={item.state}
+                  company={item.company}
+                  regionFirst={item.regionFirst}
+                  regionSecond={item.regionSecond}
+                  site={item.site}
+                  manager={item.manager}
+                  item = {item}
+                  onClick={() => openModal({ ...modalData, content: <ReceiptListModal item={item} /> })}
               />
             })
           }
@@ -328,78 +342,77 @@ const Receipt = () => {
           }} bgColor={isFDep2 && "#0129FF"}>
             {
               isFOpen ? (
-                <>
-                  <i className="close-icon"></i>
-                </>
+                  <>
+                    <i className="close-icon"></i>
+                  </>
               ) : <i className="default-icon"></i>
             }
           </Floating>
           <FloatingBody>
             {
               isFOpen ? (
-                <FMenuWrap>
-                  <li onClick={() => setIsFDep2(prev => !prev)}>
-                    <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
-                    <span>기간별조회</span>
-                  </li>
-                  {/* 지역별조회 업데이트 전까지 막음 */}
-                  {/* <li onClick={() => {
+                  <FMenuWrap>
+                    <li onClick={() => setIsFDep2(prev => !prev)}>
+                      <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
+                      <span>기간별조회</span>
+                    </li>
+                    {/* 지역별조회 업데이트 전까지 막음 */}
+                    {/* <li onClick={() => {
                       closeModal()
                       openModal({ ...modalData, content: <SearchRegionModal /> })
                     }}> */}
-                      <li>
-                    <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
-                    {/* <span>지역별조회</span> */}
-                    <span>업데이트중</span>
-                  </li>
-                  <li onClick={() => {
+                    <li>
+                      <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
+                      {/* <span>지역별조회</span> */}
+                      <span>업데이트중</span>
+                    </li>
+                    <li onClick={() => {
                       closeModal()
                       openModal({ ...modalData, content: <NewRegisModal /> })
                       setIsFOpen(false)
                     }}>
-                    <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
-                    <span>신규접수</span>
-                  </li>
-                </FMenuWrap>
+                      <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
+                      <span>신규접수</span>
+                    </li>
+                  </FMenuWrap>
               ) : null
             }
             {
               isFOpen && isFDep2? (
-                <FMenuWrap className="dep2">
-                  <li onClick={() => {
-                    setIsFDep2(false)
-                    setIsFOpen(false)
-                    setIsFDep3({ ... setIsFDep3, year: true})
-                  }}>
-                    <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
-                    <span>년도별조회</span>
-                  </li>
-                  <li onClick={() => {
-                    setIsFDep2(false)
-                    setIsFOpen(false)
-                    setIsFDep3({ ... setIsFDep3, month: true})
-                  }}>
-                    <i><img src="../../icons/icon-f-table.png" alt="floating icon" /></i>
-                    <span>월별조회</span>
-                  </li>
-                  <li onClick={() => {
-                    setIsFDep2(false)
-                    setIsFOpen(false)
-                    setIsFDep3({ ... setIsFDep3, daily: true})
-                  }}>
-                    <i><img src="../../icons/icon-f-viewday.png" alt="flo ting icon" /></i>
-                    <span>일자별조회</span>
-                  </li>
-                </FMenuWrap>
+                  <FMenuWrap className="dep2">
+                    <li onClick={() => {
+                      setIsFDep2(false)
+                      setIsFOpen(false)
+                      setIsFDep3({ ... setIsFDep3, year: true})
+                    }}>
+                      <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
+                      <span>년도별조회</span>
+                    </li>
+                    <li onClick={() => {
+                      setIsFDep2(false)
+                      setIsFOpen(false)
+                      setIsFDep3({ ... setIsFDep3, month: true})
+                    }}>
+                      <i><img src="../../icons/icon-f-table.png" alt="floating icon" /></i>
+                      <span>월별조회</span>
+                    </li>
+                    <li onClick={() => {
+                      setIsFDep2(false)
+                      setIsFOpen(false)
+                      setIsFDep3({ ... setIsFDep3, daily: true})
+                    }}>
+                      <i><img src="../../icons/icon-f-viewday.png" alt="flo ting icon" /></i>
+                      <span>일자별조회</span>
+                    </li>
+                  </FMenuWrap>
               ) : null
             }
           </FloatingBody>
-
         </FloatingWrap>
         {
           isFDep3.year ? <Year modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
-            isFDep3.month ? <Month modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
-              isFDep3.daily ? <Daily  modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> : null
+              isFDep3.month ? <Month modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> :
+                  isFDep3.daily ? <Daily  modal={isFDep3} setModal={setIsFDep3} param={receiptParam} setParam={setReceiptParam}/> : null
         }
         <div ref={observeTargetRef}/>
       </>

@@ -21,6 +21,35 @@ const TopSearchcMenuWrap = styled.ul`
   padding: 47px 30px 0px 25px;
 `
 
+const ToWrap = styled.div`
+  background: red;
+  //width: 100px;
+  height: 100px;
+  position: relative;
+`
+
+const RestWrap = styled.div`
+  display: flex;
+  flex: 1;
+`
+
+const Button = styled.div`
+    width : 43px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0C1D87;
+    border: 1px solid rgba(238, 241, 255, 0.4);
+    border-radius: 15px;
+    cursor: pointer;
+    margin-left: 7px;
+    z-index: 10;
+    position: absolute;
+  top: 0;
+    right: 27px;
+`
+
 const Inventory = () => {
 
   const observeTargetRef = useRef(null)
@@ -29,6 +58,7 @@ const Inventory = () => {
   const user = useRecoilValue(userAtom)
 
   const [isLoading, setLoading] = useState(false)
+  const ref = useRef(null)
 
   const [inventoryParam, setInventoryParam] = useState({
     searchword: '',
@@ -84,8 +114,47 @@ const Inventory = () => {
     return () => onIntersect.disconnect()
   }, [isLoading])
 
+  const useClickOutsideTop = (target) => {
+    useEffect(() => {
+      const onDocumentClick = (event) => {
+        const isInside = event.composedPath().includes(target.current)
+        if (!isInside) {
+          setTopMenu(false)
+        }
+      };
+      document.addEventListener('click', onDocumentClick);
+      return () => {
+        document.removeEventListener('click', onDocumentClick);
+      };
+    }, [target]);
+  };
+
+  useClickOutsideTop(ref);
+
   return <>
-    <TopSearch setTopMenu={setTopMenu} topMenu={topMenu} changeParam={changeParam}/>
+    <RestWrap>
+    <TopSearch
+        // setTopMenu={setTopMenu}
+        // topMenu={topMenu}
+        changeParam={changeParam}
+    />
+      <ToWrap ref={ref}>
+        <Button
+            className="submit-btn"
+            onClick={() => setTopMenu(prev => !prev)}
+        >
+          {
+            topMenu ? (
+                <i>
+                  <img src="../../icons/topmenu-close-x.png" alt="widget icon" />
+                </i>
+            ) : (
+                <i>
+                  <img src="../../icons/widgets-icon.png" alt="widget icon" />
+                </i>
+            )
+          }
+        </Button>
     {
       topMenu && (
         <TopSearchMenu>
@@ -118,6 +187,8 @@ const Inventory = () => {
         </TopSearchMenu>
       )
     }
+      </ToWrap>
+      </RestWrap>
     <InventoryWrap>
       <InventoryTableTop/>
       {

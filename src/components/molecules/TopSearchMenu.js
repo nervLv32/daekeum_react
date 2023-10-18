@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const TopSearchMenuWrap = styled.div`
   position: absolute;
-  top: 100px;
+  top: 40px;
   right: 10px;
   z-index: 99;
   ul {
