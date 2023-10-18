@@ -101,6 +101,13 @@ const Button = styled.div`
     right: 27px;
 `
 
+const ResetWrap = styled.div`
+  display: flex;
+  flex: 1;
+  padding: 0 0 1rem 0;
+  justify-content: flex-end;
+`
+
 const Receipt = () => {
   const modalData = {
     title: 'Receipt Modal',
@@ -196,6 +203,12 @@ const Receipt = () => {
     receiptParam.처리상태,
     receiptParam.지역
   ])
+
+  const reLoad = () => {
+    console.log("========")
+    setLoading(true)
+    fetchList([])
+  }
 
   useEffect(() => {
     !isLoading ? onIntersect.observe(observeTargetRef.current) : onIntersect.disconnect()
@@ -312,9 +325,11 @@ const Receipt = () => {
         </RestWrap>
 
         <ReceiptWrap>
+          <ResetWrap>
+            <button onClick={() => reLoad()}>전체보기</button>
+          </ResetWrap>
           {
             receipts.map((item, key) => {
-              console.log(item.company, item.date)
               return <ReceiptCard
                   className={""}
                   key={key}
