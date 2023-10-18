@@ -12,6 +12,9 @@ import {exportDocumentBody, firstExportDocument} from '../../../../../recoil/rep
 import OptionSelectedMemo from "../../../../../components/optionSelector/OptionSelectorMemo";
 import {CommaPriceRegis} from '../../../../../util/commaPrice'
 import fetchService from "../../../../../util/fetchService";
+import {DateFormat} from '../../../../../util/dateFormat'
+import moment from 'moment'
+import SingleDate from '../../../../../components/calander/SingleDate'
 
 
 const RPC03Step02ModalWrap = styled.div`
@@ -220,13 +223,13 @@ const RPC03Step02Modal = () => {
 
   const { openModal, closeModal } = useModal();
   const [body, setBody] = useRecoilState(exportDocumentBody);
-  const exportDoc = useRecoilValue(firstExportDocument);
+  const [exportDoc, setExportDoc] = useRecoilState(firstExportDocument);
 
   const modalData = {
     title: 'RPDoc01Modal Modal',
     callback: () => alert('Modal Callback()'),
   };
-  
+
   const [options, setOptions] = useState({});
 
   const updateValue = (key, value) => {
@@ -236,6 +239,41 @@ const RPC03Step02Modal = () => {
         ...body.계약현황,
         [key]: value
       }
+    })
+  }
+
+  const [isOpenDate, setOpenDate] = useState({
+    flag: false,
+    index: -1
+  })
+
+  const submit = (key, value) => {
+    // updateValue(key, value)
+
+    const temp = [...exportDoc.equip]
+
+    temp[isOpenDate.index] = {
+      ...temp[isOpenDate.index],
+      입고예정일 : moment(value).format('YYYY-MM-DD')
+    }
+
+    console.log(temp[isOpenDate.index])
+
+    setExportDoc({
+      ...exportDoc,
+      equip: [...temp]
+    })
+    close()
+  }
+
+  const close = (e) => {
+    setOpenDate({
+      flag: false,
+      type: {
+        start: false,
+        end: false,
+        deli: false,
+      },
     })
   }
 
@@ -254,14 +292,17 @@ const RPC03Step02Modal = () => {
         ]
       })
     }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
     setBody({
       ...body,
       장비리스트: [
         ...exportDoc.equip
       ]
     })
-    fetchData()
-  }, [])
+  },[exportDoc])
 
   /******* 입고요청서 케이스의 두번째 *******/
   return <RPC03Step02ModalWrap>
@@ -299,9 +340,9 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>계약개월</dt>
               <dd>
-                <input 
+                <input
                   type="number"
-                  placeholder="계약개월을 입력하세요" 
+                  placeholder="계약개월을 입력하세요"
                   value={body.계약현황['계약개월'] || ''}
                   onChange={(e) => updateValue('계약개월', e.target.value)}
                 />
@@ -312,9 +353,9 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>금액</dt>
               <dd>
-                <input 
+                <input
                   type="text"
-                  placeholder="금액을 입력하세요" 
+                  placeholder="금액을 입력하세요"
                   value={CommaPriceRegis(body.계약현황.금액 || '')}
                   onChange={e => updateValue('금액', e.target.value.replaceAll(',',''))}
                 />
@@ -325,9 +366,9 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>사용개월</dt>
               <dd>
-                <input 
+                <input
                   type="number"
-                  placeholder="사용개월을 입력하세요" 
+                  placeholder="사용개월을 입력하세요"
                   value={body.계약현황['사용개월'] || ''}
                   onChange={(e) => updateValue('사용개월', e.target.value)}
                 />
@@ -366,7 +407,7 @@ const RPC03Step02Modal = () => {
             <dl>
               <dt>비고</dt>
               <dd>
-                <textarea 
+                <textarea
                   value={body.계약현황['비고'] || ''}
                   onChange={(e) => updateValue('비고', e.target.value)}
                 />
@@ -379,6 +420,7 @@ const RPC03Step02Modal = () => {
       <DetailInfoListWrap>
         {
           exportDoc?.equip.length > 0 && exportDoc.equip.map((item, index) => {
+            console.log(item)
             return (
               <li key={index}>
                 <div>
@@ -396,7 +438,13 @@ const RPC03Step02Modal = () => {
                   </dl>
                   <dl>
                     <dt>입고예정일</dt>
-                    <dd></dd>
+                    <dd><p
+                      className={item.입고예정일 ? 'fill' : ''}
+                      onClick={() => setOpenDate({
+                        flag: true,
+                        index: index
+                      })}
+                    >{item.입고예정일 || '항목입력'}</p></dd>
                   </dl>
                   <dl>
                     <dt>DKNO</dt>
@@ -444,6 +492,15 @@ const RPC03Step02Modal = () => {
       }}>다음</button>
       </ModalBtm>
     </RPC03Step02ModalBody>
+
+    {
+      isOpenDate.flag && <SingleDate
+        type={isOpenDate.flag}
+        submit={submit}
+        close={close}
+      />
+    }
+
   </RPC03Step02ModalWrap>
 }
 
