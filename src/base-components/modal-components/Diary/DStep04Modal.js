@@ -405,7 +405,7 @@ const DStep04Modal = () => {
     })
   }, [inputName])
 
-  
+
 
   // 품목무상 리스트 가져오기
   const [typeList, setTypeList] = useState([]);
@@ -513,7 +513,7 @@ const DStep04Modal = () => {
   return (
     <>
       <ModalWrap>
-        {/* <Pdf setPdfBlob={setPdfBlob} /> */}
+         {/*<Pdf/>*/}
         <div className="title">
           <h3>일지작성</h3>
         </div>
@@ -597,7 +597,7 @@ const DStep04Modal = () => {
             <dl>
             <dt>네고금액</dt>
               <dd>
-              <input onChange={(e) => { 
+              <input onChange={(e) => {
                 setInputName(e.target.value);
                 }} />
               </dd>

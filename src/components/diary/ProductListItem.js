@@ -119,13 +119,14 @@ const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus,
     setCheckItemList(journal.품목리스트)
   }, [])
 
+  console.log(item)
 
   return (
     <ItemWrap className={checkStatus ? "on" : ""}>
       <div className="check-box">
-        <input 
-          type="checkbox" 
-          checked={checkStatus} 
+        <input
+          type="checkbox"
+          checked={checkStatus}
           onChange={handleCheckboxChange}
         />
       </div>
@@ -135,11 +136,17 @@ const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus,
       <div className="part">
         {item.파트}
       </div>
+      <div className="part">
+        {item.사용모델}
+      </div>
       <div className="name">
         {item.품명}
       </div>
       <div className="standard">
         {item.규격}
+      </div>
+      <div className="standard">
+        {Number(item.단가).toLocaleString('ko-KR')}
       </div>
       <div className="count">
         {item.재고}

@@ -154,7 +154,7 @@ const ReceiptCard = ({
         </dl>
         <dl className="date">
           <dt>Date.</dt>
-          <dd>{date.toString().substr(0, 10)}</dd>
+          <dd>{moment(date).format('YYYY-MM-DD')}</dd>
         </dl>
       </div>
       {
