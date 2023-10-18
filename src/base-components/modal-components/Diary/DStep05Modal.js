@@ -181,8 +181,6 @@ const DStep05Modal = () => {
   const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
 
-
-
   const onIntersect = new IntersectionObserver(([entry], observer) => {
     // if (entry.isIntersecting) {
     //   setLoading(true);
@@ -334,6 +332,7 @@ const DStep05Modal = () => {
                     setCheckItemList={setCheckItemList}
                     item={item}
                     allCheckStatus={allCheckStatus}
+                    journal={journal}
                   />
                 )
               })

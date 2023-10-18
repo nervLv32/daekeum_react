@@ -24,19 +24,6 @@ const RPCase0401Modal = () => {
   const { openModal, closeModal } = useModal();
   const firstExport = useRecoilValue(firstExportDocument)
 
-  const dummyData = [
-    {
-      company: "(주)대금지오웰",
-      ceo: "이승우",
-      companyNum: "131-81-19404",
-      sector: "제조업",
-      category: "산업기계외",
-      address: "인천광역시 미추홀구 장고개로92번길38(도화동)",
-      manager: "정명길",
-      managerPhone: "010-1234-5678"
-    },
-  ]
-
   const modalData = {
     title: 'RPCase0403Modal',
     callback: () => alert('Modal Callback()'),
@@ -102,7 +89,7 @@ const RPCase0401Modal = () => {
   /******* 입출고 서류상신 - 수리기입고요청서 case 04의 첫 번째 스텝 *******/
   return <RPCase0401ModalWrap>
     <RPModalTop title={firstExport.title} />
-    <RPModalSearch dep1={firstExport.client.업체명} dep2={null} dep3={null} changeParam={changeParam}/>
+    <RPModalSearch dep1={firstExport.client.업체명} dep2={firstExport.site.현장명} dep3={null} changeParam={changeParam}/>
     <RPModalBody>
       <RPModalListTop type="type01" dep1="업체명" dep2="대표자" dep3="사업자번호" />
       {

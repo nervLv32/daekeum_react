@@ -170,9 +170,28 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
 
   // 기본 체크박스 관련
   const [isChecked, setIsChecked] = useState(false);
+  const totalPrice = 0;
   const handleCheckedChange = () => {
     setIsChecked(!isChecked);
   };
+  /////////////////////////단가수정 업데이트/////////////////////////
+  let [inputPrice, setPrice] = useState(0);
+  
+  useEffect(() => {
+    setJournal({
+      ...journal,
+      품목리스트: [
+        ...journal.품목리스트.map((it) =>
+          it.rownum === item.rownum ? { ...it, 
+            단가: inputPrice,
+            수량: count, 
+            금액: inputPrice * count,
+          } : it
+        ),
+      ],
+    });
+  }, [inputPrice])
+  /////////////////////////////////////////////////////////////////
   useEffect(() => {
     allChecked ? setIsChecked(true) : setIsChecked(false);
   }, [allChecked])
@@ -265,10 +284,18 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
             }
           </select>
         </label>
+
+        {/* 단가수정 추가업데이트  시작*/}
         <div className="price-wrap">
           <div className="price-count">  
-            <span>{item.단가}원 X {count}개</span>
+          <input 
+          defaultValue={item.단가}
+          onChange={(e) => { setPrice(e.target.value);}} 
+          />
+            <span>원 X {count}개</span>
           </div>
+          {/* 단가수정 추가업데이트 끝 */}
+
           {/* <div className="total-price"><strong>{item.단가 * count}</strong> 원</div> */}
           <div className="total-price"><strong>{item.금액}</strong> 원</div>
         </div>

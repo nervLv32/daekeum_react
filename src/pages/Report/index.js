@@ -24,6 +24,18 @@ const TopSearchcMenuWrap = styled.ul`
   padding: 47px 30px 0px;
 `
 
+const initDocu = {
+  title: '',
+  client: {
+    업체명: '업체명',
+    거래처코드: '',
+  },
+  site: {
+    현장명: '현장명',
+    현장코드: '',
+  },
+  equip: [],
+}
 
 const Report = () => {
   const [topMenu, setTopMenu] = useState(false)
@@ -134,8 +146,9 @@ const Report = () => {
             </li>
             <li>
               <a onClick={() => {
+                resetBody()
                 setFirstDocument({
-                  ...firstDocument,
+                  ...initDocu,
                   title: '입고요청서',
                 })
                 openModal({...modalData, content: <RPCase0301Modal/>})
@@ -148,8 +161,9 @@ const Report = () => {
             </li>
             <li>
               <a onClick={() => {
+                resetBody()
                 setFirstDocument({
-                  ...firstDocument,
+                  ...initDocu,
                   title: '수리기입고요청서',
                 })
                 openModal({...modalData, content: <RPCase0401Modal/>})
@@ -162,8 +176,10 @@ const Report = () => {
             </li>
             <li>
               <a onClick={() => {
+                resetBody()
+                resetFirstDocument()
                 setFirstDocument({
-                  ...firstDocument,
+                  ...initDocu,
                   title: '수리기출고요청서',
                 })
                 openModal({...modalData, content: <RPCase0401Modal/>})

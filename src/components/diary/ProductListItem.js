@@ -82,19 +82,23 @@ const ItemWrap = styled.li`
   }
 `
 
-const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus}) => {
+const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus, journal}) => {
+
+  // 초기 체크 상태 설정
+  const initialCheckStatus = journal.품목리스트.some(entry => entry.품목코드 === item.품목코드);
 
   // 체크박스 상태
-  const [checkStatus, setCheckStatus] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(initialCheckStatus);
 
-  // 전체 체크박스 상태관리
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if(allCheckStatus) {
-      setCheckStatus(true)
-    } else {
-      setCheckStatus(false)
+    if (loading) {
+      allCheckStatus ? setCheckStatus(true) : setCheckStatus(false)
     }
   }, [allCheckStatus])
+  useEffect(() => {
+    setLoading(true)
+  }, [])
 
   // 체크된 품목 정보들 저장
   const updateItemList = (item) => {
@@ -109,6 +113,11 @@ const ProductListItem = ({checkItemList, setCheckItemList, item, allCheckStatus}
     setCheckStatus(!checkStatus);
     updateItemList(item);
   };
+
+  // 체크된 값 체크
+  useEffect(() => {
+    setCheckItemList(journal.품목리스트)
+  }, [])
 
 
   return (

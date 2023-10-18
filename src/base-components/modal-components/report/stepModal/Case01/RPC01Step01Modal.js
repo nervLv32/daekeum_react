@@ -216,6 +216,8 @@ const RPC01Step01Modal = () => {
 
   useEffect(() => {
 
+    console.log(body)
+
     const fetchData = async () => {
       setBody({
         ...body,
@@ -240,6 +242,9 @@ const RPC01Step01Modal = () => {
     fetchData()
 
   }, [])
+
+  useEffect(() => {
+  }, [body])
 
   /******* 출고요청서(세륜, 축중) 케이스의 첫번째 *******/
   return <RPC01Step01ModalWrap>
