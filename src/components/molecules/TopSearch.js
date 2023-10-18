@@ -1,7 +1,8 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 
 const TopSearchWrap = styled.div`
+  width: 100%;
   background-color: #1F319D;
   border-radius: 0 0 20px 20px;
   padding: 0 30px 30px 30px;
@@ -81,22 +82,22 @@ const TopSearch = ({ topMenu, setTopMenu, changeParam }) => {
       <div className="input-wrap">
         <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
       </div>
-      <button
-        className="submit-btn"
-        onClick={() => setTopMenu(prev => !prev)}
-      >
-        {
-          topMenu ? (
-            <i>
-              <img src="../../icons/topmenu-close-x.png" alt="widget icon" />
-            </i>
-          ) : (
-            <i>
-              <img src="../../icons/widgets-icon.png" alt="widget icon" />
-            </i>
-          )
-        }
-      </button>
+      {/*<button*/}
+      {/*    className="submit-btn"*/}
+      {/*    onClick={() => setTopMenu(prev => !prev)}*/}
+      {/*>*/}
+      {/*  {*/}
+      {/*    topMenu ? (*/}
+      {/*      <i>*/}
+      {/*        <img src="../../icons/topmenu-close-x.png" alt="widget icon" />*/}
+      {/*      </i>*/}
+      {/*    ) : (*/}
+      {/*      <i>*/}
+      {/*        <img src="../../icons/widgets-icon.png" alt="widget icon" />*/}
+      {/*      </i>*/}
+      {/*    )*/}
+      {/*  }*/}
+      {/*</button>*/}
     </div>
   </TopSearchWrap>
 }
