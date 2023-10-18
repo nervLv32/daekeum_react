@@ -221,7 +221,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
         ],
       });
     }
-  }, [freeChecked])
+  }, [])
 
   // 무상구분 셀렉트박스 상태변경
   const handleFreeCheck = (v) => {
@@ -229,7 +229,7 @@ const ProductInfo = ({item, journal, setJournal, allChecked, setCheckListItem, d
       ...journal,
       품목리스트: [
         ...journal.품목리스트.map((it) =>
-          it.rownum === item.rownum ? { ...it, 무상구분: v, 무상체크: true, 유무상구분: "무상", 금액: item.단가 * count } : it
+          it.rownum === item.rownum ? { ...it, 무상구분: v, 무상체크: true, 유무상구분: "무상", 금액: item.단가 * count} : it
         ),
       ],
     });

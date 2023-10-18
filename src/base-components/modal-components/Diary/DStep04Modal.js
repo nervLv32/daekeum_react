@@ -395,12 +395,12 @@ const DStep04Modal = () => {
       ...journal,
       step04: {
         ...journal.step04,
-        네고금액: price01,
-        네고: price01,
+        네고금액: price01 * -1,
+        네고: price01 * -1,
         합계금액: price02,
         합계: price02,
         청구금액: price02 - price01 - inputName,
-        무상금액: inputName
+        무상금액: inputName * -1
       }
     })
   }, [inputName])
@@ -479,7 +479,7 @@ const DStep04Modal = () => {
           ...journal,
           diaryCode: res.data.diaryCode,
           ...journal.step04,
-          네고금액: Number(journal.step04.네고금액) + Number(inputName)
+          네고금액: (Number(journal.step04.네고금액) + Number(inputName)) * -1
         })
         updateReceiptState(journal.accountCode, '처리완료')
           .then(() => openModal({ ...modalData, content: <Pdf /> }))

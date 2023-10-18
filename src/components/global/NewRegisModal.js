@@ -194,7 +194,6 @@ const NewRegisModal = ({item, confirm, editable}) => {
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
           if(item){
-
             if(!editable){
               await updateReceiptState(item.no, '접수완료')
             }
@@ -240,6 +239,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
   }
 
   useEffect(() => {
+    
     resetNewReceipt()
     if(item){
       fetchService('/receipt/detail', 'post', {일련번호: item.no})
@@ -250,6 +250,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
           })
         })
     }
+    setNewReceipt({...newReceipt, 접수자: auth.한글이름})
   }, [])
 
   useEffect(() => {
@@ -294,7 +295,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
               value={newReceipt.지역 ? newReceipt.지역 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                지역: e.target.value
+                지역: e.target.value,
               })}
             />
           </li>
@@ -306,7 +307,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
               value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                현장주소: e.target.value
+                현장주소: e.target.value,
               })}/>
           </li>
           <li>
@@ -317,7 +318,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
               value={newReceipt.담당자 ? newReceipt.담당자 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
-                담당자: e.target.value
+                담당자: e.target.value,
               })}
             />
           </li>
@@ -327,25 +328,16 @@ const NewRegisModal = ({item, confirm, editable}) => {
                    value={newReceipt.연락처 ? newReceipt.연락처 : ''}
                    onChange={e => setNewReceipt({
                      ...newReceipt,
-                     연락처: e.target.value
+                     연락처: e.target.value,
+    
                    })}
             />
-          </li>
-          <li className="required">
-            <p>접수자</p>
-            <input type="text" placeholder="접수자를 입력하세요"
-                   value={auth.한글이름 ? auth.한글이름 : ''}
-                   onChange={e => setNewReceipt({
-                     ...newReceipt,
-                     접수자: e.target.value
-                   })}
-                   disabled={true} readOnly={true}/>
           </li>
           <li>
             <p>접수내용</p>
             <textarea placeholder="접수내용을 입력하세요" value={newReceipt.접수내용} onChange={e => setNewReceipt({
               ...newReceipt,
-              접수내용: e.target.value
+              접수내용: e.target.value,
             })}/>
           </li>
         </InputList>

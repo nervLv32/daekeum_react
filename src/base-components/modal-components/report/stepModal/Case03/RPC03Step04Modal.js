@@ -182,8 +182,10 @@ const RPC03Step04Modal = () => {
     })
   }
 
-  const validateInRequest = () => {
-    console.log(body)
+
+
+  const approvalInRequest = () => {
+
     fetchService('/approval/approvalInRequest', 'post', body).then((res) => {
       window.alert(res.msg)
       if(res.code === 200){
@@ -396,7 +398,8 @@ const RPC03Step04Modal = () => {
         openModal({ ...modalData, content: <RPC03Step03Modal /> })
       }}>이전3</button>
         <button className="primary-btn" onClick={() => {
-          validateInRequest()
+          // validateInRequest()
+          approvalInRequest()
         // FIX 서류 상신 API
       }}>서류상신3</button>
       </ModalBtm>
