@@ -307,11 +307,17 @@ const DStep05Modal = () => {
               <div className="part">
                 파트
               </div>
+              <div className="part">
+                기종
+              </div>
               <div className="name">
                 품명
               </div>
               <div className="standard">
                 규격
+              </div>
+              <div className="standard">
+                단가
               </div>
               <div className="count">
                 재고

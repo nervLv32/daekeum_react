@@ -31,7 +31,7 @@ const PdfWrap = styled.div`
   //  size: A4;
   //  margin: 0;
   //}
-
+  
   .info-wrap {
     width: 100%;
     height: auto;
@@ -174,6 +174,11 @@ const PdfWrap = styled.div`
 
           &.tac {
             text-align: center;
+            
+          }
+          
+          &.t-right {
+            text-align: right;
           }
 
           &.bd-l {
@@ -550,7 +555,7 @@ const Pdf = () => {
                     })
                   }
                 </td>
-                <td className='tac'>
+                <td className='tac t-right'>
                   {
                     journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
                       return (
@@ -559,7 +564,7 @@ const Pdf = () => {
                     })
                   }
                 </td>
-                <td className='tac'>
+                <td className='tac t-right'>
                   {
                     journal.품목리스트?.length > 0 && journal.품목리스트.map((item, index) => {
                       return (
@@ -580,9 +585,9 @@ const Pdf = () => {
                 <td>No</td>
               </tr>
               <tr>
-                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.합계)}원</td>
-                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(Number(journal.step04.네고금액) + Number(journal.step04.무상금액))}원</td>
-                <td colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.청구금액)}원</td>
+                <td className={'t-right'} colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.합계)}원</td>
+                <td className={'t-right'} colSpan={1} style={{width: '20%'}}>{CommaPrice(Number(journal.step04.네고금액) + Number(journal.step04.무상금액))}원</td>
+                <td className={'t-right'} colSpan={1} style={{width: '20%'}}>{CommaPrice(journal.step04.청구금액)}원</td>
                 <td colSpan={2} className='bd-l'>결제예정일 : {journal.step04.결제예정일}</td>
               </tr>
               </tbody>
