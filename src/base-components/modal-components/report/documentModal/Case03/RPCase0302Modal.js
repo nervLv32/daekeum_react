@@ -90,7 +90,7 @@ const RPCase0302Modal = () => {
   /******* 입출고 서류상신 - 입고요청서 case 03의 두 번째 스텝 *******/
   return <RPCase0302ModalWrap>
     <RPModalTop title={firstExport.title} />
-    <RPModalSearch dep1="업체명" dep2="현장명" dep3="장비정보" changeParam={changeParam} />
+    <RPModalSearch dep1={firstExport.client.업체명} dep2={firstExport.site.현장명} dep3={null} changeParam={changeParam}/>
     <RPModalBody>
       <RPModalListTop type="type02" dep1="현장명" dep2="지역분류" dep3="담당센터" />
       {
