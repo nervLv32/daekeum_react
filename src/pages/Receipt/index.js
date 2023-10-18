@@ -314,6 +314,7 @@ const Receipt = () => {
         <ReceiptWrap>
           {
             receipts.map((item, key) => {
+              console.log(item.company, item.date)
               return <ReceiptCard
                   className={""}
                   key={key}
