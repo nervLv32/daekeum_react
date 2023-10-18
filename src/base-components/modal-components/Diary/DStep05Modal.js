@@ -245,10 +245,10 @@ const DStep05Modal = () => {
     const modifiedCheckItemList = checkItemList.map(item => ({
       ...item,
       수량: 1,
-      유무상구분: "",
+      유무상구분: "유상",
       무상체크: false,
       금액: item.단가, // ? 무슨금액?
-      금액: "", // ? 무슨금액?
+      금액: item.단가*1, // ? 무슨금액?
       카운터: "", // 없음
       비고: "", // 없음,
       처리구분: "일반", // 없음
@@ -261,6 +261,7 @@ const DStep05Modal = () => {
       출고공장명: "", // 없음
       시작일: item.시작일.split('T')[0],
       종료일: item.종료일.split('T')[0],
+      무상구분:""
     }));
     setJournal({
       ...journal,
