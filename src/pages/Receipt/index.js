@@ -9,7 +9,7 @@ import Floating from "../../components/molecules/Floating";
 import NewRegisModal from "../../components/global/NewRegisModal";
 import SearchRegionModal from "../../components/global/SearchRegionModal";
 import fetchService from "../../util/fetchService";
-import {useRecoilState} from "recoil";
+import {useRecoilState, useResetRecoilState} from 'recoil'
 import {newReceiptParamAtom, receiptAtom} from "../../recoil/receipt";
 import Year from "../../components/calander/Year";
 import Month from "../../components/calander/Month";
@@ -134,6 +134,7 @@ const Receipt = () => {
   const [topMenu, setTopMenu] = useState(false);
   const [receipts, setReceipts] = useRecoilState(receiptAtom)
   const [receiptParam, setReceiptParam] = useRecoilState(newReceiptParamAtom)
+  const resetReceiptParam = useResetRecoilState(newReceiptParamAtom)
 
   const changeParam = (key, value) => {
     setReceiptParam({
@@ -205,9 +206,7 @@ const Receipt = () => {
   ])
 
   const reLoad = () => {
-    console.log("========")
-    setLoading(true)
-    fetchList([])
+    resetReceiptParam()
   }
 
   useEffect(() => {
@@ -390,6 +389,13 @@ const Receipt = () => {
                       <i><img src="../../icons/icon-f-books.png" alt="floating icon" /></i>
                       <span>신규접수</span>
                     </li>
+                    {/*<li onClick={() => {
+                      closeModal()
+                      setIsFOpen(false)
+                      reLoad()
+                    }}>
+                      <span>초기화</span>
+                    </li>*/}
                   </FMenuWrap>
               ) : null
             }
