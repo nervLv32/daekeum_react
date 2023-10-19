@@ -1,16 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
-import styled from "styled-components";
-import {useModal} from "../../hooks/useModal";
-import fetchService from "../../util/fetchService";
-import {DateFormat} from "../../util/dateFormat";
-import ReceiptListModal from "../../base-components/modal-components/receipt/ReceiptListModal";
+import React, {useEffect, useRef, useState} from 'react'
+import styled from 'styled-components'
+import {useModal} from '../../hooks/useModal'
+import fetchService from '../../util/fetchService'
+import ReceiptListModal from '../../base-components/modal-components/receipt/ReceiptListModal'
 import SearchModal from '../searchModal/index'
 import {useRecoilState, useRecoilValue, useResetRecoilState} from 'recoil'
-import {newReceiptAtom} from "../../recoil/receipt";
-import receipt from '../../pages/Receipt'
+import {newReceiptAtom} from '../../recoil/receipt'
 import {updateReceiptState} from '../../util/updateReceiptState'
 import userAtom from '../../recoil/userAtom'
-import moment from 'moment'
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -166,16 +163,16 @@ const ModalBtm = styled.div`
 
 const NewRegisModal = ({item, confirm, editable}) => {
   /* ****** 신규접수모달 ****** */
-  const {closeModal, openModal} = useModal();
+  const {closeModal, openModal} = useModal()
   const pageTitle = item ? confirm ? '접수확인등록' : '수정' : '신규접수'
   const {auth} = useRecoilValue(userAtom)
-  const now = new Date();
+  const now = new Date()
   const bodyRef = useRef([])
   const modalData = {
     title: 'Receipt Modal',
     content: <ReceiptListModal/>,
     callback: () => alert('Modal Callback()'),
-  };
+  }
   const [newReceipt, setNewReceipt] = useRecoilState(newReceiptAtom)
   const resetNewReceipt = useResetRecoilState(newReceiptAtom)
   const [searchModal, setSearchModal] = useState({
@@ -185,25 +182,32 @@ const NewRegisModal = ({item, confirm, editable}) => {
 
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
-    if(pageTitle === '접수확인등록') {
+    if (pageTitle === '접수확인등록') {
       setNewReceipt({
         ...newReceipt,
-        방문예정담당자: auth.한글이름
+        방문예정담당자: auth.한글이름,
       })
-      }else{
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
-          if(item){
-            if(!editable){
+          if (item) {
+            await updateReceiptState(item.no, '접수완료')
+            window.location.reload()
+          }
+        })
+    } else {
+      fetchService(url, 'post', newReceipt)
+        .then(async (res) => {
+          if (item) {
+            if (!editable || confirm) {
               await updateReceiptState(item.no, '접수완료')
             }
           }
-          if(res.error){
+          if (res.error) {
             const err = res.error.originalError.info.message
-            if(err === 'String or binary data would be truncated.') {
+            if (err === 'String or binary data would be truncated.') {
               alert('접수내용이 너무 깁니다.')
             }
-          }else{
+          } else {
             alert(`성공적으로 ${pageTitle} 되었습니다`)
             window.location.reload()
           }
@@ -213,13 +217,13 @@ const NewRegisModal = ({item, confirm, editable}) => {
   }
 
   useEffect(() => {
-    if(pageTitle === '접수확인등록' && newReceipt.방문예정담당자?.length > 0){
+    if (pageTitle === '접수확인등록' && newReceipt.방문예정담당자?.length > 0 && confirm) {
       const url = item ? '/receipt/update' : '/receipt/add'
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
-          if(item) {
+          if (item) {
             await updateReceiptState(item.no, '접수완료')
-            window.location.reload()
+            // window.location.reload()
           }
         })
     }
@@ -230,7 +234,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
       flag: true,
       content: url.replace('/approval/', ''),
       url: url,
-      elem: e
+      elem: e,
     })
   }
 
@@ -241,12 +245,12 @@ const NewRegisModal = ({item, confirm, editable}) => {
   useEffect(() => {
 
     resetNewReceipt()
-    if(item){
+    if (item) {
       fetchService('/receipt/detail', 'post', {일련번호: item.no})
         .then(res => {
           console.log(res.data[0])
           setNewReceipt({
-            ...res.data[0]
+            ...res.data[0],
           })
         })
     }
@@ -259,20 +263,22 @@ const NewRegisModal = ({item, confirm, editable}) => {
 
   return (
     <NewRegisModalWrap>
-      <div className="modal-top">
-        <h6 className="title">   {pageTitle} </h6>
+      <div className='modal-top'>
+        <h6 className='title'>   {pageTitle} </h6>
       </div>
-      <div className="modal-body">
+      <div className='modal-body'>
         <InputList>
           {
-            item && <li className="required">
+            item && <li className='required'>
               <p>접수번호</p>
-              <input ref={e => bodyRef.current[0] = e} value={item.no} type="text" placeholder="접수번호를 입력하세요" disabled={true} readOnly={true}/>
+              <input ref={e => bodyRef.current[0] = e} value={item.no} type='text' placeholder='접수번호를 입력하세요'
+                     disabled={true} readOnly={true}/>
             </li>
           }
-          <li className="required">
+          <li className='required'>
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={newReceipt.날짜.replaceAll('T',' ').replaceAll('.000Z','')} placeholder="접수일을 입력하세요"
+            <input ref={e => bodyRef.current[1] = e} type='text'
+                   value={newReceipt.날짜.replaceAll('T', ' ').replaceAll('.000Z', '')} placeholder='접수일을 입력하세요'
                    disabled={true} readOnly={true}/>
           </li>
           <li>
@@ -290,8 +296,8 @@ const NewRegisModal = ({item, confirm, editable}) => {
           <li>
             <p>지역</p>
             <input
-              type="text"
-              placeholder="업체명을 입력하세요"
+              type='text'
+              placeholder='업체명을 입력하세요'
               value={newReceipt.지역 ? newReceipt.지역 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
@@ -302,8 +308,8 @@ const NewRegisModal = ({item, confirm, editable}) => {
           <li>
             <p>현장주소</p>
             <input
-              type="text"
-              placeholder="주소를 입력하세요"
+              type='text'
+              placeholder='주소를 입력하세요'
               value={newReceipt.현장주소 ? newReceipt.현장주소 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
@@ -313,8 +319,8 @@ const NewRegisModal = ({item, confirm, editable}) => {
           <li>
             <p>현장담당자</p>
             <input
-              type="text"
-              placeholder="현장담당자를 입력하세요"
+              type='text'
+              placeholder='현장담당자를 입력하세요'
               value={newReceipt.담당자 ? newReceipt.담당자 : ''}
               onChange={e => setNewReceipt({
                 ...newReceipt,
@@ -324,7 +330,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
           </li>
           <li>
             <p>현장연락처</p>
-            <input type="text" placeholder="현장연락처를 입력하세요"
+            <input type='text' placeholder='현장연락처를 입력하세요'
                    value={newReceipt.연락처 ? newReceipt.연락처 : ''}
                    onChange={e => setNewReceipt({
                      ...newReceipt,
@@ -335,23 +341,24 @@ const NewRegisModal = ({item, confirm, editable}) => {
           </li>
           <li>
             <p>접수내용</p>
-            <textarea placeholder="접수내용을 입력하세요" value={newReceipt.접수내용} onChange={e => setNewReceipt({
+            <textarea placeholder='접수내용을 입력하세요' value={newReceipt.접수내용} onChange={e => setNewReceipt({
               ...newReceipt,
               접수내용: e.target.value,
             })}/>
           </li>
         </InputList>
-        {searchModal.flag && <SearchModal dataAtom={newReceiptAtom} data={searchModal} searchFetch={searchFetch} setSearchModal={setSearchModal}/>}
+        {searchModal.flag && <SearchModal dataAtom={newReceiptAtom} data={searchModal} searchFetch={searchFetch}
+                                          setSearchModal={setSearchModal}/>}
       </div>
       {
         !searchModal.flag && <ModalBtm>
-          <button className="primary-btn" onClick={() => {
+          <button className='primary-btn' onClick={() => {
             updateReceipt()
             // closeModal()
             // openModal({ ...modalData, content: <RPC01Step03Modal /> })
           }}>저장
           </button>
-          <button className="del-btn" onClick={() => {
+          <button className='del-btn' onClick={() => {
 
             closeModal()
             // openModal({ ...modalData, content: <RPC01Step01Modal /> })
@@ -372,4 +379,4 @@ const NewRegisModal = ({item, confirm, editable}) => {
 }
 
 
-export default NewRegisModal;
+export default NewRegisModal
