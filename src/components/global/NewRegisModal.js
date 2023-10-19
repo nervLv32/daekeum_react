@@ -229,6 +229,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
   const close = () => {setCalendar(false)};
 
   const handleDateChange = (key, value) => {
+    value.setHours(value.getHours() + 12)
     setNewReceipt({...newReceipt,날짜: value})
     close()
   }

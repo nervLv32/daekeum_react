@@ -322,7 +322,7 @@ const ReceiptListModal = ({ item }) => {
             <li>
               <dl>
                 <dt>현 장 담 당 자</dt>
-                <dd>{item.manager}</dd>
+                <dd>{item.현장담당자}</dd>
               </dl>
               <dl>
                 <dt>현 장 연 락 처</dt>

@@ -31,6 +31,7 @@ const RPCase0301Modal = () => {
   const observeTargetRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  
   const [params, setParams] = useState({
     searchword: '',
     currentPage: '1',
