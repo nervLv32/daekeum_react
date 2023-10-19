@@ -11,6 +11,7 @@ import receipt from '../../pages/Receipt'
 import {updateReceiptState} from '../../util/updateReceiptState'
 import userAtom from '../../recoil/userAtom'
 import moment from 'moment'
+import SingleDate from "../../components/calander/SingleDate";
 
 const NewRegisModalWrap = styled.div`
   max-height: 70vh;
@@ -212,6 +213,22 @@ const NewRegisModal = ({item, confirm, editable}) => {
 
   }
 
+  // 캘린더 추가 시작//
+  const [type, setType] = useState("");
+  const [isCalendar, setCalendar] = useState(false);
+  const handleType = (t) => {
+    setType(t)
+    setCalendar(true)
+  };
+
+  const close = () => {setCalendar(false)};
+
+  const handleDateChange = (key, value) => {
+    setNewReceipt({...newReceipt,날짜: value})
+    close()
+  }
+  // 캘린더 추가 끝//
+
   useEffect(() => {
     if(pageTitle === '접수확인등록' && newReceipt.방문예정담당자?.length > 0){
       const url = item ? '/receipt/update' : '/receipt/add'
@@ -272,8 +289,9 @@ const NewRegisModal = ({item, confirm, editable}) => {
           }
           <li className="required">
             <p>접수일</p>
-            <input ref={e => bodyRef.current[1] = e} type="text" value={newReceipt.날짜.replaceAll('T',' ').replaceAll('.000Z','')} placeholder="접수일을 입력하세요"
-                   disabled={true} readOnly={true}/>
+            <div className={'input'} onClick={() => handleType("처리일")}>
+              <span>{moment(new Date()).format('YYYY-MM-DD HH:mm:ss') ? moment(newReceipt?.날짜).format('YYYY-MM-DD HH:mm:ss') : '날짜를 선택해주세요'}</span>
+            </div>
           </li>
           <li>
             <p>업체명</p>
@@ -366,8 +384,14 @@ const NewRegisModal = ({item, confirm, editable}) => {
           }}>취소
           </button> */}
         </ModalBtm>
+        
       }
-    </NewRegisModalWrap>
+      {
+        isCalendar && (
+          <SingleDate submit={handleDateChange} close={close} type={type} />
+        )
+      }
+    </NewRegisModalWrap>   
   )
 }
 
