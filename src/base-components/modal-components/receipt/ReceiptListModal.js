@@ -308,7 +308,7 @@ const ReceiptListModal = ({ item }) => {
           </dl>
           <dl>
             <dt>지역</dt>
-            <dd>{item.regionFirst}-{item.regionSecond}</dd>
+            <dd>{item.regionSecond}</dd>
           </dl>
         </li>
         <li>
