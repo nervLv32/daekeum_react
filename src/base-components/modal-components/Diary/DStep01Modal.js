@@ -315,7 +315,7 @@ const DStep01Modal = ({no}) => {
   const [companyInfo, setCompanyInfo] = useState({});
   const receiptDetail = () => {
     fetchService('/receipt/detail', 'post', {
-      일련번호: journal?.accountCode
+      일련번호: journal?.accountCode || no
     }).then((res) => {
       res?.data && setCompanyInfo(res.data[0]);
       res.data && setJournal({
@@ -331,6 +331,7 @@ const DStep01Modal = ({no}) => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchStatus, setSearchStatus] = useState(false);
   console.log(companyInfo)
+  console.log(journal)
   const getEquipList = () => {
     fetchService('/enroll/equipList', 'post', {
       searchword: searchKeyword,
@@ -384,7 +385,7 @@ const DStep01Modal = ({no}) => {
   // 진입시 불러오기
   useEffect(() => {
     receiptDetail();
-  }, []);
+  }, [no]);
 
 
   const handleRadioChange = (k, v) => {

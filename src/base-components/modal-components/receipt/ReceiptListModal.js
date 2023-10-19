@@ -363,7 +363,7 @@ const ReceiptListModal = ({ item }) => {
                 </button>
               </li>
               <li>
-                <button className="done" onClick={() => openModal({ ...modalData, content: <DStep01Modal /> })}>
+                <button className="done" onClick={() => openModal({ ...modalData, content: <DStep01Modal no={item.no}/> })}>
                   <i></i>
                   <span>처리완료</span>
                 </button>

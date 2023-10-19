@@ -213,7 +213,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
   }
 
   useEffect(() => {
-    if(newReceipt.방문예정담당자?.length > 0){
+    if(pageTitle === '접수확인등록' && newReceipt.방문예정담당자?.length > 0){
       const url = item ? '/receipt/update' : '/receipt/add'
       fetchService(url, 'post', newReceipt)
         .then(async (res) => {
@@ -239,7 +239,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
   }
 
   useEffect(() => {
-    
+
     resetNewReceipt()
     if(item){
       fetchService('/receipt/detail', 'post', {일련번호: item.no})
@@ -329,7 +329,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
                    onChange={e => setNewReceipt({
                      ...newReceipt,
                      연락처: e.target.value,
-    
+
                    })}
             />
           </li>
@@ -352,7 +352,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
           }}>저장
           </button>
           <button className="del-btn" onClick={() => {
-            
+
             closeModal()
             // openModal({ ...modalData, content: <RPC01Step01Modal /> })
           }}>취소
