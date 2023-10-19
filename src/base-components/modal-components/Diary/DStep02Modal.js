@@ -236,13 +236,25 @@ const DStep02Modal = () => {
     })
   };
   const handleDateChange = (key, value) => {
-    setJournal({
-      ...journal,
-      step02: {
-        ...journal.step02,
-        [key]: moment(value).format('YYYY-MM-DD')
-      }
-    })
+    if([key] == "처리일"){
+      setJournal({
+        ...journal,
+        step02: {
+          ...journal.step02,
+          처리일: moment(value).format('YYYY-MM-DD'),
+          도착일: moment(value).format('YYYY-MM-DD'),
+          종료일: moment(value).format('YYYY-MM-DD')
+        }
+      })
+    } else {
+      setJournal({
+        ...journal,
+        step02: {
+          ...journal.step02,
+          [key]: moment(value).format('YYYY-MM-DD')
+        }
+      })
+  }
     close()
   };
 
