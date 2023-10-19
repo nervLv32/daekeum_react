@@ -258,6 +258,7 @@ const DStep02Modal = () => {
         ...journal,
         step02: {
           ...journal.step02,
+          이메일: "", //이메일 발송방지 임시 업데이트
           ...data,
           접수일: moment().format('YYYY-MM-DD')
         }
@@ -341,7 +342,8 @@ const DStep02Modal = () => {
             <dd>
               <input
                 type="text"
-                value={journal?.step02?.이메일}
+                // value={journal?.step02?.이메일}
+                value={""} //이메일 발송방지 임시 업데이트
                 onChange={(e) => handleChange('이메일', e.target.value)}
               /></dd>
           </dl>
