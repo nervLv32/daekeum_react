@@ -350,11 +350,11 @@ const DStep01Modal = ({no}) => {
   const [equipActive, setEquipActive] = useState();
   const handleSubmit = () => {
     getEquipList();
-    searchKeyword.length > 0 ? setSearchStatus(true) : setSearchStatus(false);
+    searchKeyword.length >= 0 ? setSearchStatus(true) : setSearchStatus(false);
   };
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      searchKeyword.length > 0 ? setSearchStatus(true) : setSearchStatus(false);
+      searchKeyword.length >= 0 ? setSearchStatus(true) : setSearchStatus(false);
       getEquipList();
     }
   };
