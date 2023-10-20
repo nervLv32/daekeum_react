@@ -1,10 +1,11 @@
-import styled from 'styled-components'
-import {BlueCircleBag, BlueCircleClock, RightArrow} from '../../assets/icon/Svg'
-import DStep01Modal from '../../base-components/modal-components/Diary/DStep01Modal'
-import React from 'react'
-import {useModal} from '../../hooks/useModal'
-import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal'
+import styled from 'styled-components';
+import {BlueCircleBag, BlueCircleClock, RightArrow} from '../../assets/icon/Svg';
+import DStep01Modal from '../../base-components/modal-components/Diary/DStep01Modal';
+import React from 'react';
+import {useModal} from '../../hooks/useModal';
+import SaleAddNewModal from '../../base-components/modal-components/sale/SaleAddNewModal';
 import SaleAddPlaceModal2 from "../../base-components/modal-components/sale/SaleSubmitModal2";
+import {updateReceiptState} from '../../util/updateReceiptState';
 
 const ModalBody = styled.div`
   position: fixed;
@@ -66,6 +67,17 @@ const ReceiptConfirm = ({item}) => {
       }}>
         <BlueCircleBag />
         <p>영업등록</p>
+        <RightArrow />
+      </div>
+      <hr/>
+      <div onClick={() => {
+        updateReceiptState(item.no, '처리완료')
+        closeModal()
+        window.location.replace("/receipt")
+        alert('처리완료')
+      }}>
+        <BlueCircleBag />
+        <p>처리완료</p>
         <RightArrow />
       </div>
     </Content>
