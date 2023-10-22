@@ -5,6 +5,8 @@ import DStep02Modal from './DStep02Modal'
 import fetchService from "../../../util/fetchService";
 import {useRecoilState} from "recoil";
 import journalAtom from "../../../recoil/journalAtom";
+import OptionSelector from '../../../components/optionSelector'
+import {exportDocumentBody, firstExportDocuBody} from '../../../recoil/reportAtom'
 
 const ModalWrap = styled.div`
   width: 100%;
@@ -388,16 +390,94 @@ const DStep01Modal = ({no}) => {
   }, [no]);
 
 
+
   const handleRadioChange = (k, v) => {
     setJournal({
       ...journal,
       step01: {
         ...journal.step01,
-        [k]: v
+        [k]: v,
       }
     })
   };
 
+//수기입력 업데이트
+const 수기입력 = 1;
+const [selectIndex, setSelectIndex] = useState(0)
+const [body, setBody] = useRecoilState(exportDocumentBody)
+const [options, setOptions] = useState({
+  business: [],
+  sale: [],
+  equip: [],
+  eqName: [],
+  detail: [],
+  volt: [],
+  direction: [],
+  chungType: [],
+})
+
+const updateBody = (key, value) => {
+  let copy = [...body.계약사항]
+  copy[selectIndex] = {
+    ...copy[selectIndex],
+    [key]: value
+  }
+
+  setBody({
+    ...body,
+    계약사항: [...copy]
+  })
+  if([key] == '장비구분') {key = '모델'}
+  setJournal({
+    ...journal,
+    step01: {
+      ...journal.step01,
+      [key]: value
+    }
+  })
+}
+useEffect(() => {
+  fetchData().then((res) => {
+    setOptions(res)
+  })
+}, [body])
+const fetchData = async () => {
+  let copy = {...options}
+  if (!copy.business.length) {
+    copy = {
+      ...copy,
+      business: await callData('comboBizType', {type: body.신규사업여부 ? '신사업' : '세륜축중'}), // [1] 사업구분 아이템 조회
+      sale: await callData('comboSalesType', {type: '세륜축중'}), // [2] 매출타입 아이템 조회
+      equip: await callData('comboEquipType', {type: '세륜'}), // [3] 장비구분 아이템 조회
+      volt: await callData('comboVolt', {}), // [6] 전압 아이템 조회
+      direction: await callData('comboDirection', {}), // [7] 방향 아이템 조회
+      chungType: await callData('comboChunguType', {}), // [8] 청구구분 아이템 조회
+    }
+    console.log(copy)
+  }
+
+  if (body.계약사항[selectIndex].사업구분) {
+    copy = {
+      ...copy,
+      eqName: await callData('comboEquipName', {bizVal: body.계약사항[selectIndex].사업구분}), // [4] 기종명 아이템 조회
+      detail: await callData('comboEtcDetail', {bizVal: body.계약사항[selectIndex].사업구분}), // [5] 세부사항 아이템 조회
+    }
+    console.log(body.계약사항)
+  }
+  return copy
+}
+
+const callData = async (url, param) => {
+  const res = await fetchService(`/approval/${url}`, 'post', param)
+  return res.data
+  // .then((res) => setOptions({...options, [key] : res.data}) )
+}
+
+const [radiobox04,setGender]=useState('Y');
+
+   const handleChange=(e)=>{
+       setGender(e.target.value);
+    }
   return (
     <ModalWrap>
       <div className="title">
@@ -430,11 +510,9 @@ const DStep01Modal = ({no}) => {
           <dt className="essential">장비정보</dt>
           <dd ref={searchListRef}>
             <label>
-              <input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} onKeyDown={handleKeyDown} />
-              <button type="button" onClick={handleSubmit}>
-                <img src="../icons/search-icon.png" alt="검색 아이콘" />
-                <span>장비검색</span>
-              </button>
+            {/* {radiobox04==="Y" && */}
+              {radiobox04==="Y" &&<input type="text" placeholder="해당업체 장비를 검색하세요." value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} onKeyDown={handleKeyDown} />}
+              {radiobox04==="Y" &&<button type="button" onClick={handleSubmit}> <img src="../icons/search-icon.png" alt="검색 아이콘" /> <span>장비검색</span> </button>}
             </label>
             {
               equipList?.length > 0 && searchStatus && (
@@ -479,9 +557,58 @@ const DStep01Modal = ({no}) => {
           </dd>
         </dl>
         <div className="product-info">
-          <dl>
-            <dt>MODEL-NO</dt>
-            <dd>{journal.step01?.모델}</dd>
+          
+        <dl>
+            <dt>입력타입</dt>
+            <dd>
+              <label htmlFor="existence04">
+                <input
+                  defaultChecked
+                  type="radio"
+                  name="radiobox04"
+                  id="existence04"
+                  value={"Y"}
+                  onChange={handleChange}
+                />
+                <span>자동입력</span>
+              </label>
+              <label htmlFor="nonexistence04">
+                <input
+                  type="radio"
+                  name="radiobox04"
+                  id="nonexistence04"
+                  value={"N"}
+                  onChange={handleChange}
+                />
+                <span>수기입력</span>
+              </label>
+            </dd>
+          </dl>
+        <dl>
+            {/* <dt>MODEL-NO</dt> */}
+            <dt>모델명</dt>
+              {/* <dd>{journal.step01?.모델}</dd> */}
+            {radiobox04==="Y" && <dd>{journal.step01?.모델}</dd>}
+            {radiobox04==="N" &&
+            <dd className='select-dd'>
+                <OptionSelector 
+                list={options.business || []}
+                updateValue={updateBody}
+                body={body}
+                selectedIndex={selectIndex}
+                depth1={'계약사항'}
+                depth2={'사업구분'}
+                />
+                <OptionSelector 
+                list={options.eqName || []}
+                updateValue={updateBody}
+                body={body}
+                selectedIndex={selectIndex}
+                depth1={'계약사항'}
+                depth2={'장비구분'} 
+                />
+            </dd>
+          }
           </dl>
           <dl>
             <dt>수조</dt>
@@ -542,16 +669,55 @@ const DStep01Modal = ({no}) => {
             </dd>
           </dl>
           <dl>
-            <dt>MFG-NO</dt>
-            <dd>{journal.step01?.DKNO}</dd>
+            
+            {/* <dt>MFG-NO</dt> */}
+            <dt>DKNO</dt>
+            {radiobox04==="Y" && <dd>{journal.step01?.DKNO}</dd>}
+            {radiobox04==="N" && <dd>
+            <input 
+              value = {journal.step01?.DKNO}
+              onChange={e => handleRadioChange('DKNO',e.target.value)} 
+            /></dd>}
           </dl>
           <dl>
             <dt>사용전압</dt>
-            <dd>{journal.step01?.전압}</dd>
+            {radiobox04==="Y" &&<dd>{journal.step01?.전압}</dd>}
+            {/* <dd>
+              <input
+               value = {journal.step01?.전압}
+               onChange={e => handleRadioChange('방향',e.target.value)}
+              />
+            </dd> */}
+            {radiobox04==="N" &&<dd className='select-dd'>
+                <OptionSelector 
+                list={options.volt || []}
+                updateValue={updateBody}
+                body={body}
+                selectedIndex={selectIndex}
+                depth1={'계약사항'}
+                depth2={'전압'} 
+                />
+            </dd>}
           </dl>
           <dl>
             <dt>설치방향</dt>
-            <dd>{journal.step01?.방향}</dd>
+            {radiobox04==="Y" && <dd>{journal.step01?.방향}</dd>}
+            {/* <dd>
+              <input
+               value = {journal.step01?.방향}
+               onChange={e => handleRadioChange('방향',e.target.value)}
+              />
+            </dd> */}
+             {radiobox04==="N" && <dd className='select-dd'>
+                <OptionSelector 
+                list={options.direction || []}
+                updateValue={updateBody}
+                body={body}
+                selectedIndex={selectIndex}
+                depth1={'계약사항'}
+                depth2={'방향'} 
+                />
+            </dd>}
           </dl>
           <dl>
             <dt>침전제</dt>
@@ -597,7 +763,7 @@ const DStep01Modal = ({no}) => {
         {/* <button
           type="button"
           onClick={() => {
-          alert(companyInfo.접수내용)
+          alert(options.eqName)
           }}
         >
           test
