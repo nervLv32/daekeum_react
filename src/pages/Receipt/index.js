@@ -159,6 +159,7 @@ const Receipt = () => {
         managerPhone: it.현장연락처,
         siteAddress: it.현장주소,
         detail: it.접수내용,
+        receptionist: it.접수자
       }
     }) : []
   }
@@ -341,6 +342,7 @@ const Receipt = () => {
                   site={item.site}
                   manager={item.manager}
                   item = {item}
+                  receptionist={item.receptionist}
                   onClick={() => openModal({ ...modalData, content: <ReceiptListModal item={item} /> })}
               />
             })

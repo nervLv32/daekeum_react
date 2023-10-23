@@ -133,7 +133,8 @@ const ReceiptCard = ({
   manager,
   className,
   item,
-  onClick
+  onClick,
+  receptionist
 }) => {
 
   // 업체정보 Recoil
@@ -209,6 +210,14 @@ const ReceiptCard = ({
           <dd>{regionFirst}</dd>
         </dl>
       </div>
+      {state === '접수대기' && (
+        <div>
+          <dl>
+            <dt>접수자</dt>
+            <dd>{receptionist}</dd>
+          </dl>
+        </div>
+      )}
       {state === '접수완료' && (
         <div>
           <dl>
