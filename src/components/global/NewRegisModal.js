@@ -184,7 +184,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
 
   const updateReceipt = () => {
     const url = item ? '/receipt/update' : '/receipt/add'
-    if (pageTitle === '접수확인등록') {
+    if (pageTitle == '접수확인등록') {
       setNewReceipt({
         ...newReceipt,
         방문예정담당자: auth.한글이름,
