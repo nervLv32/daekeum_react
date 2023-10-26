@@ -659,11 +659,11 @@ const DStep04Modal = () => {
             className="btn-blue"
             onClick={() => submit()}
           >저장</button>
-                    <button
+                    {/* <button
             type="button"
             className="btn-blue"
             onClick={() => {alert(journal.step02.거래처명)}}
-          >테스트</button>
+          >테스트</button> */}
         </BtnWrap>
       </ModalWrap>
       {/* 자사담당 */}
