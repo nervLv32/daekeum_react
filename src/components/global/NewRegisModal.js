@@ -255,6 +255,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
       url: url,
       elem: e,
     })
+    console.log(e)
   }
 
   const searchFetch = async (searchParam) => {
@@ -302,14 +303,29 @@ const NewRegisModal = ({item, confirm, editable}) => {
           </li>
           <li>
             <p>업체명</p>
-            <div className={'input'} onClick={(e) => openSearchModal(e, '/approval/clientlist')}>
+            <div className={'input'} onClick={(e) => {
+              openSearchModal(e, '/approval/clientlist')
+              }}>
               {newReceipt.거래처명 ? newReceipt.거래처명 : '거래처검색'}
             </div>
           </li>
           <li>
             <p>현장명</p>
-            <div className={'input'} onClick={(e) => openSearchModal(e, '/approval/sitelist')}>
+            <div className={'input'} onClick={(e) => {
+              openSearchModal(e, '/approval/sitelist')
+              }}>
               {newReceipt.현장명 ? newReceipt.현장명 : '현장검색'}
+            </div>
+          </li>
+          <li>
+            <p>담당센터</p>
+            <div className={'input'} onClick={(e) => {
+              openSearchModal(e, '/approval/deptlist')
+            }}>
+              {
+              newReceipt.부서코드 ? newReceipt.부서코드 : '센터검색',
+              newReceipt.부서명 ? newReceipt.부서명 : '센터검색'
+              }
             </div>
           </li>
           <li>
@@ -372,6 +388,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
       {
         !searchModal.flag && <ModalBtm>
           <button className='primary-btn' onClick={() => {
+            console.log(newReceipt)
             updateReceipt()
             // closeModal()
             // openModal({ ...modalData, content: <RPC01Step03Modal /> })
@@ -388,7 +405,7 @@ const NewRegisModal = ({item, confirm, editable}) => {
               ...newReceipt,
               접수자: auth.한글이름
             })
-          alert('auth : ' + auth.한글이름 + ' / ' + '접수자 : ' + newReceipt.접수자)
+          alert(newReceipt.부서명 + newReceipt.부서코드)
           }}>취소
           </button> */}
         </ModalBtm>

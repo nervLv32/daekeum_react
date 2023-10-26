@@ -418,6 +418,7 @@ const DStep04Modal = () => {
   }, [])
 
   const [params, setParams] = useState({
+    no: journal.accountCode,
     사업부코드: journal.step01.사업장코드, // 확인되지 않음
     접수시간: null, // 접수일시?
     접수내용: null, // 확인되지 않음
@@ -440,7 +441,7 @@ const DStep04Modal = () => {
     사용전압: journal.step01.전압,
     설치방향: journal.step01.방향, // 설치방향?
     연락처: null, // 현장연락처?
-    자사담당: null,
+    자사담당: user.auth.한글이름,
     자사담당자연락처: null,
     날짜: moment().format('YYYY-MM-DD'),
   });
@@ -479,7 +480,10 @@ const DStep04Modal = () => {
           ...journal,
           diaryCode: res.data.diaryCode,
           ...journal.step04,
-          네고금액: (Number(journal.step04.네고금액) + Number(inputName)) * -1
+          네고금액: (Number(journal.step04.네고금액) + Number(inputName)) * -1,
+        })
+        setParams({
+          no:journal.accountCode
         })
         updateReceiptState(journal.accountCode, '처리완료')
           .then(() => openModal({ ...modalData, content: <Pdf /> }))
@@ -492,7 +496,10 @@ const DStep04Modal = () => {
     console.log(journal)
     const processedData = processEmptyStrings({
       ...params,
+      자사담당: user.auth.한글이름,
+      no: journal.accountCode,
       ...journal.step01,
+      일련번호:journal.accountCode,
       ...journal.step02,
       ...journal.step03,
       ...journal.step04,
@@ -505,7 +512,7 @@ const DStep04Modal = () => {
       접수일: moment().format('YYYY-MM-DD'),
       사원코드: user.auth.사원코드,
       부서코드: user.auth.부서코드,
-      접수내용: journal.step03.업무내용
+      접수내용: journal.step03.업무내용,
     });
     setParams(processedData)
   }, [journal])
@@ -652,8 +659,14 @@ const DStep04Modal = () => {
             className="btn-blue"
             onClick={() => submit()}
           >저장</button>
+                    <button
+            type="button"
+            className="btn-blue"
+            onClick={() => {alert(journal.step02.거래처명)}}
+          >테스트</button>
         </BtnWrap>
       </ModalWrap>
+      {/* 자사담당 */}
       {
         isCalendar && (
           <SingleDate submit={updateCalendar} close={close} type={type} />

@@ -159,7 +159,9 @@ const Receipt = () => {
         managerPhone: it.현장연락처,
         siteAddress: it.현장주소,
         detail: it.접수내용,
-        receptionist: it.접수자
+        receptionist: it.접수자,
+        자사담당: it.자사담당,
+        센터:it.센터
       }
     }) : []
   }
@@ -343,6 +345,8 @@ const Receipt = () => {
                   manager={item.manager}
                   item = {item}
                   receptionist={item.receptionist}
+                  자사담당={item.자사담당}
+                  센터={item.센터}
                   onClick={() => openModal({ ...modalData, content: <ReceiptListModal item={item} /> })}
               />
             })
@@ -373,15 +377,13 @@ const Receipt = () => {
                       <i><img src="../../icons/icon-f-calendar.png" alt="floating icon" /></i>
                       <span>기간별조회</span>
                     </li>
-                    {/* 지역별조회 업데이트 전까지 막음 */}
-                    {/* <li onClick={() => {
+                    <li onClick={() => {
                       closeModal()
                       openModal({ ...modalData, content: <SearchRegionModal /> })
-                    }}> */}
-                    <li>
+                    }}>
                       <i><img src="../../icons/icon-f-location.png" alt="floating icon" /></i>
-                      {/* <span>지역별조회</span> */}
-                      <span>업데이트중</span>
+                      <span>지역별조회</span>
+                      {/* <span>업데이트중</span> */}
                     </li>
                     <li onClick={() => {
                       closeModal()

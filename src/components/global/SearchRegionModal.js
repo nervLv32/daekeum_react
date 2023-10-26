@@ -40,7 +40,7 @@ const SearchRegionModalWrap = styled.div`
     }
 
     label {
-      width: 32%;
+      width: 48%;
       text-align: center;
       padding: 1.2rem 0;
       border-radius: 10px;
@@ -122,34 +122,32 @@ const SearchRegionModal = () => {
   /* ****** 지역별조회 모달 ****** */
   const {closeModal} = useModal();
 
-  const [sector1, setSector1] = useState("수도권A");
+  const [sector1, setSector1] = useState("센터");
   const [sector2, setSector2] = useState("");
 
   const [receiptParam, setReceiptParam] = useRecoilState(newReceiptParamAtom)
 
   const [selectorList, setSelectorList] = useState({
     selector1: [
-      {label: '수도권A', value: '수도권A'},
-      {label: '수도권B', value: '수도권B'},
-      {label: '대구', value: '대구'},
+      {label: '센터', value: '센터'},
+      {label: '지사', value: '지사'},
     ],
     selector2: [
       {
-        label: '수도권A', data: [
-          {label: '인천', value: '인천'},
-          {label: '서울', value: '서울'},
+        label: '센터', data: [
+          {label: '수도권A', value: '수도권A'},
+          {label: '수도권B', value: '수도권B'},
+          {label: '부산', value: '부산'},
+          {label: '대구', value: '대구'},
         ]
       },
       {
-        label: '수도권B', data: [
-          {label: '경기북부', value: '경기북부'},
-          {label: '경기남부', value: '경기남부'},
-        ]
-      },
-      {
-        label: '대구', data: [
-          {label: '대구1', value: '대구1'},
-          {label: '대구2', value: '대구2'},
+        label: '지사', data: [
+          {label: '강원', value: '강원'},
+          {label: '충북', value: '충북'},
+          {label: '전북', value: '전북'},
+          {label: '충남', value: '충남'},
+          {label: '광주', value: '광주'},
         ]
       },
     ]
@@ -159,7 +157,7 @@ const SearchRegionModal = () => {
     setReceiptParam({
       ...receiptParam,
       currentPage: '1',
-      지역: sector1 + '-' + sector2
+      지역: sector2
     })
   }
 

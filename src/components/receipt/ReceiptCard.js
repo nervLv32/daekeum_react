@@ -134,7 +134,9 @@ const ReceiptCard = ({
   className,
   item,
   onClick,
-  receptionist
+  receptionist,
+  자사담당,
+  센터
 }) => {
 
   // 업체정보 Recoil
@@ -215,6 +217,8 @@ const ReceiptCard = ({
           <dl>
             <dt>접수자</dt>
             <dd>{receptionist}</dd>
+            <dt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;담당센터</dt>
+            <dd>{센터}</dd>
           </dl>
         </div>
       )}
@@ -223,6 +227,18 @@ const ReceiptCard = ({
           <dl>
             <dt>방문예정담당자</dt>
             <dd>{manager}</dd>
+            <dt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;담당센터</dt>
+            <dd>{센터}</dd>
+          </dl>
+        </div>
+      )}
+            {state === '처리완료' && (
+        <div>
+          <dl>
+            <dt>처리자</dt>
+            <dd>{자사담당}</dd>
+            <dt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;담당센터</dt>
+            <dd>{센터}</dd>
           </dl>
         </div>
       )}

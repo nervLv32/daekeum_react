@@ -322,8 +322,10 @@ const DStep01Modal = ({no}) => {
       res?.data && setCompanyInfo(res.data[0]);
       res.data && setJournal({
         ...journal,
+        ...journal.step02,
+        업체명:companyInfo.거래처명,
         companyInfo: res.data[0],
-        no: no
+        no: no,
       })
     })
   };

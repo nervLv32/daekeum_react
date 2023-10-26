@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useEffect, useState} from "react";
 import ClientList from "./ClientList";
 import SiteList from "./SiteList";
+import DeptList from "./DeptList";
 import {useRecoilState} from "recoil";
 import {newReceiptAtom} from "../../recoil/receipt";
 
@@ -92,9 +93,11 @@ const Index = ({dataAtom, data, searchFetch, setSearchModal}) => {
         <Input type={'text'} placeholder={'업체명을 입력해주세요'} value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
         <Ul>
           {
-            data.content === 'clientlist' ?
-              <ClientList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/> :
-              <SiteList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/>
+            data.content === 'clientlist' 
+            ? <ClientList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/>
+            : (data.content === 'sitelist' ) 
+            ? <SiteList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/>
+            :  <DeptList dataAtom={dataAtom} searchModal={data} setSearchModal={setSearchModal} searchList={searchList} searchWord={searchWord}/>
           }
         </Ul>
       </ModalBody>

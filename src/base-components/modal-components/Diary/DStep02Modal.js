@@ -271,6 +271,7 @@ const DStep02Modal = () => {
         step02: {
           ...journal.step02,
           이메일: "", //이메일 발송방지 임시 업데이트
+          업체명:journal?.companyInfo?.거래처명,
           ...data,
           접수일: moment().format('YYYY-MM-DD')
         }
