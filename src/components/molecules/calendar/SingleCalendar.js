@@ -63,6 +63,12 @@ const StandardCalenderContainer = styled.div`
     font-size: 15px;
     color: #555555;
   }
+  .react-calendar__month-view__days__day:nth-child(7n + 1){
+    color: #cc0000
+  }
+  .react-calendar__month-view__days__day:nth-child(7n){
+    color: #0000cc
+  }
   
   .react-calendar__tile{
     margin: 5px 0;
@@ -73,6 +79,13 @@ const StandardCalenderContainer = styled.div`
   .react-calendar__month-view__days__day--neighboringMonth {
     color: #9DA2AE;
   }
+
+  .react-calendar__month-view__weekdays__weekday:nth-child(7n + 1){
+    color: #ff0000
+  }
+  .react-calendar__month-view__weekdays__weekday:nth-child(7n){
+    color: #0000ff
+  }
   .react-calendar__month-view__weekdays{
     > div > abbr { text-decoration: none; }
   }
@@ -82,7 +95,7 @@ const StandardCalenderContainer = styled.div`
   .react-calendar__tile--rangeStart,
   .react-calendar__tile--rangeEnd{
     border-radius: 10px;
-    background: #0129FF;
+    background: #ccc;
     color: white;
   }
 `
@@ -100,6 +113,7 @@ const SingleCalendar = ({setDay}) => {
       formatDay={(locale, date) => moment(date).format("DD")}
       selectRange={false}
       locale={'kr'}
+      calendarType={'US'}
     />
   </StandardCalenderContainer>
 }
