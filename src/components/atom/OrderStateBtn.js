@@ -26,6 +26,12 @@ const OrderStateBtnComponent = styled.button`
       background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
     }
   }
+  &.cancel {
+    background-color: #555555;
+    i {
+      background : url('../icons/receipt-cancel-icon.png') no-repeat 50% center / cover;
+    }
+  }
   i {
     display: inline-block;
     width: 14px;

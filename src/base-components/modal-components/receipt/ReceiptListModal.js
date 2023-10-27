@@ -142,6 +142,12 @@ const ReceiptListModalWrap = styled.div`
                 background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
               }
             }
+            &.cancel {
+              background-color: #555555;
+              i {
+                background : url('../icons/receipt-cancel-icon.png') no-repeat 50% center / cover;
+              }
+            }
             i {
               display: inline-block;
               width: 14px;
@@ -217,7 +223,7 @@ const ReceiptListModal = ({ item }) => {
     callback: () => alert('Modal Callback()'),
   }
 
-  const {openModal} = useModal()
+  const {openModal, closeModal} = useModal()
   const [changeStateWrap, setChangeStateWrap] = useState(false);
   const [receipt, setReceipt] = useRecoilState(receiptAtom);
   const [alertState, setAlertState] = useState({
@@ -237,6 +243,8 @@ const ReceiptListModal = ({ item }) => {
         tempReceipt[idx] = copy
         setReceipt(tempReceipt)
         setChangeStateWrap(false)
+        closeModal()
+        alert(value + ' 상태로 변경 되었습니다.')
       })
   }
 
@@ -366,6 +374,12 @@ const ReceiptListModal = ({ item }) => {
                 <button className="done" onClick={() => openModal({ ...modalData, content: <DStep01Modal no={item.no}/> })}>
                   <i></i>
                   <span>처리완료</span>
+                </button>
+              </li>
+              <li>
+                <button className="cancel" onClick={() => updateState('접수취소')} >
+                  <i></i>
+                  <span>접수취소</span>
                 </button>
               </li>
             </ul>)

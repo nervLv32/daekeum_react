@@ -23,6 +23,8 @@
         return 'add'
       case '처리완료':
         return 'done'
+      case '접수취소':
+        return 'cancel'
       default:
         return;
     }

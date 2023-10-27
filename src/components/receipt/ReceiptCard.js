@@ -77,6 +77,12 @@ const ReceiptCardComponent = styled.li`
             background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
           }
         }
+        &.cancel {
+          background-color: #555555;
+          i {
+            background : url('../icons/receipt-cancel-icon.png') no-repeat 50% center / cover;
+          }
+        }
         i {
           display: inline-block;
           width: 14px;
@@ -183,7 +189,11 @@ const ReceiptCard = ({
           >
             <button
               type="button"
-              className={state === "접수대기" ? "ready" : state === "접수완료" ? "add" : state === "처리완료" ? "done" : ""}
+              className={
+                state === "접수대기" ? "ready" : 
+                state === "접수완료" ? "add" : 
+                state === "처리완료" ? "done" :
+                state === "접수취소" ? "cancel" : ""}
             >
               <i></i>
               <span>{state}</span>

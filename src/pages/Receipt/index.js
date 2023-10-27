@@ -24,8 +24,8 @@ const ReceiptWrap = styled.div`
 // wrapper 잡아야함. li에 대한 스타일은 TopSearchMenu에 있습니다
 const TopSearchcMenuWrap = styled.ul`
   width: 175px;
-  height: 240px;
-  background: url('../images/topmenu-search-bg.png') no-repeat 50% center / cover;;
+  height: 280px;
+  background: url('../images/topmenu-search-bg_h280.png') no-repeat 50% center / cover;;
   padding: 43px 30px 0px 25px;
 `
 
@@ -317,6 +317,16 @@ const Receipt = () => {
                               <img src="../icons/icon-topmenu-done.png" alt="topmenu icon" />
                             </i>
                             <span>처리완료</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a onClick={() => {
+                            changeParam('처리상태', '접수취소')
+                            setTopMenu(false)}}>
+                            <i>
+                              <img src="../icons/icon-topmenu-cancel.png" alt="topmenu icon" />
+                            </i>
+                            <span>접수취소</span>
                           </a>
                         </li>
                       </TopSearchcMenuWrap>

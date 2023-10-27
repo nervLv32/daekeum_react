@@ -145,6 +145,12 @@ const SaleVisitListModalWrap = styled.div`
                 background : url('../icons/receipt-done-icon.png') no-repeat 50% center / cover;
               }
             }
+            &.cancel {
+              background-color: #0CA35A;
+              i {
+                background : url('../icons/receipt-cancel-icon.png') no-repeat 50% center / cover;
+              }
+            }
             i {
               display: inline-block;
               width: 14px;
